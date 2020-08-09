@@ -1,7 +1,9 @@
 package com.bottle.pay.modules.sys.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.bottle.pay.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +24,9 @@ public class SysOrgController extends AbstractController {
 
 	@Autowired
 	private SysOrgService sysOrgService;
+
+	@Autowired
+	private SysUserService sysUserService;
 	
 	/**
 	 * 机构列表
@@ -29,6 +34,8 @@ public class SysOrgController extends AbstractController {
 	 */
 	@RequestMapping("/list")
 	public List<SysOrgEntity> list() {
+		// TODO :  修改为只能查看自己所属机构及下属机构的数据
+		//sysUserService.getUserById(getUserId())
 		return sysOrgService.listOrg();
 	}
 	
