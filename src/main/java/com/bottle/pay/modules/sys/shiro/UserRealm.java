@@ -46,6 +46,7 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        //TODO 封装用户角色信息
         String username = (String) token.getPrincipal();
         String password = new String((char[])token.getCredentials());
         SysUserEntity user = sysUserService.getByUserName(username);

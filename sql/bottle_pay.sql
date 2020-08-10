@@ -10,10 +10,65 @@ Target Server Type    : MYSQL
 Target Server Version : 50730
 File Encoding         : 65001
 
-Date: 2020-08-09 21:41:30
+Date: 2020-08-10 12:50:11
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for balance
+-- ----------------------------
+DROP TABLE IF EXISTS `balance`;
+CREATE TABLE `balance` (
+  `id` int(11) NOT NULL,
+  `user_name` varchar(64) NOT NULL COMMENT '用户名',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `balance` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '可用余额',
+  `balance_frozen` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '冻结余额',
+  `balance_paying` decimal(13,4) NOT NULL DEFAULT '0.0000',
+  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `agent_id` int(11) NOT NULL COMMENT '代理商id',
+  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `role_id` bigint(20) NOT NULL COMMENT '角色id',
+  `role_name` varchar(100) NOT NULL COMMENT '角色名称',
+  PRIMARY KEY (`id`),
+  KEY `index_agent` (`user_name`,`user_id`,`agent_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of balance
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for balance_procurement
+-- ----------------------------
+DROP TABLE IF EXISTS `balance_procurement`;
+CREATE TABLE `balance_procurement` (
+  `id` int(11) NOT NULL,
+  `out_business_id` int(11) NOT NULL,
+  `out_business_name` varchar(32) NOT NULL,
+  `in_business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
+  `in_business_id` int(11) NOT NULL COMMENT '付款专员ID',
+  `price` decimal(13,4) NOT NULL COMMENT '账单金额',
+  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `agent_id` int(11) NOT NULL COMMENT '代理商id',
+  `in_bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
+  `in_bank_name` varchar(20) NOT NULL COMMENT '银行名称',
+  `out_bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
+  `out_bank_name` varchar(20) NOT NULL COMMENT '银行名称',
+  `in_before_balance` decimal(13,4) DEFAULT NULL,
+  `out_before_balance` decimal(13,4) DEFAULT NULL,
+  `in_after_balance` decimal(13,4) DEFAULT NULL,
+  `out_after_balance` decimal(13,4) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index` (`out_business_id`,`out_business_name`,`in_business_name`,`in_business_id`,`create_time`,`agent_id`,`in_bank_card_no`,`in_bank_name`,`out_bank_card_no`,`out_bank_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of balance_procurement
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for bank
@@ -155,56 +210,29 @@ CREATE TABLE `bill_out` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for fund_procurement
+-- Table structure for frozen_detail
 -- ----------------------------
-DROP TABLE IF EXISTS `fund_procurement`;
-CREATE TABLE `fund_procurement` (
-  `id` int(11) NOT NULL,
-  `out_business_id` int(11) NOT NULL,
-  `out_business_name` varchar(32) NOT NULL,
-  `in_business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
-  `in_business_id` int(11) NOT NULL COMMENT '付款专员ID',
-  `price` decimal(13,4) NOT NULL COMMENT '账单金额',
-  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `agent_id` int(11) NOT NULL COMMENT '代理商id',
-  `in_bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
-  `in_bank_name` varchar(20) NOT NULL COMMENT '银行名称',
-  `out_bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
-  `out_bank_name` varchar(20) NOT NULL COMMENT '银行名称',
-  `in_before_balance` decimal(13,4) DEFAULT NULL,
-  `out_before_balance` decimal(13,4) DEFAULT NULL,
-  `in_after_balance` decimal(13,4) DEFAULT NULL,
-  `out_after_balance` decimal(13,4) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `index` (`out_business_id`,`out_business_name`,`in_business_name`,`in_business_id`,`create_time`,`agent_id`,`in_bank_card_no`,`in_bank_name`,`out_bank_card_no`,`out_bank_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of fund_procurement
--- ----------------------------
-
--- ----------------------------
--- Table structure for merchant_balance
--- ----------------------------
-DROP TABLE IF EXISTS `merchant_balance`;
-CREATE TABLE `merchant_balance` (
+DROP TABLE IF EXISTS `frozen_detail`;
+CREATE TABLE `frozen_detail` (
   `id` int(11) NOT NULL,
   `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
   `merchant_id` bigint(20) NOT NULL COMMENT '商户ID',
-  `balance` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '可用余额',
   `balance_frozen` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '冻结余额',
-  `balance_paying` decimal(13,4) NOT NULL DEFAULT '0.0000',
+  `balance_unfrozen` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '解冻余额',
+  `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
+  `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
+  `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `agent_id` int(11) NOT NULL COMMENT '代理商id',
   `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
-  PRIMARY KEY (`id`),
-  KEY `index_agent` (`merchant_name`,`merchant_id`,`agent_id`)
+  `business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
+  `business_id` int(11) NOT NULL COMMENT '付款专员ID',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of merchant_balance
+-- Records of frozen_detail
 -- ----------------------------
 
 -- ----------------------------
@@ -358,7 +386,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 -- ----------------------------
 -- Records of qrtz_scheduler_state
 -- ----------------------------
-INSERT INTO `qrtz_scheduler_state` VALUES ('quartzScheduler', 'DESKTOP-N9NLQH51596978685493', '1596980488811', '15000');
+INSERT INTO `qrtz_scheduler_state` VALUES ('quartzScheduler', 'DESKTOP-N9NLQH51597028571522', '1597035009878', '15000');
 
 -- ----------------------------
 -- Table structure for qrtz_simple_triggers
@@ -462,7 +490,7 @@ CREATE TABLE `quartz_job` (
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='定时任务';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='定时任务';
 
 -- ----------------------------
 -- Records of quartz_job
@@ -4035,7 +4063,7 @@ CREATE TABLE `sys_log` (
   `ip` varchar(64) DEFAULT NULL COMMENT 'IP地址',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COMMENT='系统日志';
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COMMENT='系统日志';
 
 -- ----------------------------
 -- Records of sys_log
@@ -4098,6 +4126,9 @@ INSERT INTO `sys_log` VALUES ('55', '1', 'admin', '修改菜单', '7', 'com.bott
 INSERT INTO `sys_log` VALUES ('56', '1', 'admin', '修改菜单', '6', 'com.bottle.pay.modules.sys.controller.SysMenuController.update()', '{\"menuId\":76,\"parentId\":74,\"parentName\":\"报表\",\"name\":\"专员付款日报表\",\"url\":null,\"perms\":null,\"type\":1,\"icon\":\"fa fa-circle-o\",\"orderNum\":1,\"gmtCreate\":null,\"gmtModified\":null,\"open\":null,\"list\":null}', '0:0:0:0:0:0:0:1', '2020-08-09 21:28:30');
 INSERT INTO `sys_log` VALUES ('57', '1', 'admin', '修改菜单', '7', 'com.bottle.pay.modules.sys.controller.SysMenuController.update()', '{\"menuId\":68,\"parentId\":66,\"parentName\":\"交易\",\"name\":\"商户充值\",\"url\":\"base/user/list.html\",\"perms\":null,\"type\":1,\"icon\":\"fa fa-circle-o\",\"orderNum\":0,\"gmtCreate\":null,\"gmtModified\":null,\"open\":null,\"list\":null}', '0:0:0:0:0:0:0:1', '2020-08-09 21:29:22');
 INSERT INTO `sys_log` VALUES ('58', '1', 'admin', '修改菜单', '6', 'com.bottle.pay.modules.sys.controller.SysMenuController.update()', '{\"menuId\":67,\"parentId\":66,\"parentName\":\"交易\",\"name\":\"代付订单\",\"url\":null,\"perms\":null,\"type\":1,\"icon\":\"fa fa-circle-o\",\"orderNum\":1,\"gmtCreate\":null,\"gmtModified\":null,\"open\":null,\"list\":null}', '0:0:0:0:0:0:0:1', '2020-08-09 21:40:08');
+INSERT INTO `sys_log` VALUES ('59', '1', 'admin', '登录', '11', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-10 11:03:18');
+INSERT INTO `sys_log` VALUES ('60', '1', 'admin', '新增定时任务', '55', 'com.bottle.pay.modules.sys.controller.QuartzJobController.save()', '{\"jobId\":2,\"beanName\":\"111\",\"methodName\":\"111\",\"params\":null,\"cronExpression\":\"0 15 10 * * ? *\",\"status\":1,\"remark\":null,\"gmtCreate\":null,\"gmtModified\":null}', '0:0:0:0:0:0:0:1', '2020-08-10 12:02:38');
+INSERT INTO `sys_log` VALUES ('61', '1', 'admin', '删除定时任务', '42', 'com.bottle.pay.modules.sys.controller.QuartzJobController.remove()', '[2,1]', '0:0:0:0:0:0:0:1', '2020-08-10 12:02:46');
 
 -- ----------------------------
 -- Table structure for sys_macro
