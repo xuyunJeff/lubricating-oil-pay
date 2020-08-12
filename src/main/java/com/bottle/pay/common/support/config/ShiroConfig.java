@@ -146,6 +146,8 @@ public class ShiroConfig {
         filterMap.put("/login", "anon");
         filterMap.put("/captcha.jpg", "anon");
         filterMap.put("/rest/**", "anon");
+        filterMap.put("/test/**", "anon");
+        //TODO 添加匿名访问
         return filterMap;
     }
 
