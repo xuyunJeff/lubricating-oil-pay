@@ -228,7 +228,8 @@ CREATE TABLE `frozen_detail` (
   `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
   `business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
   `business_id` int(11) NOT NULL COMMENT '付款专员ID',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `index_agent` (`agent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
@@ -4517,3 +4518,29 @@ CREATE TABLE `sys_user_token` (
 -- Records of sys_user_token
 -- ----------------------------
 INSERT INTO `sys_user_token` VALUES ('1', 'a3c646202882f1213b63fe74dc118e9d', '2017-10-26 22:10:52', '2017-10-26 10:10:52');
+
+CREATE TABLE `block_bank_card` (
+  `id` bigint(20) NOT NULL,
+  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
+  `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
+  `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
+  `agent_id` int(11) NOT NULL COMMENT '代理商id',
+  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  PRIMARY KEY (`id`),
+  KEY `index_bankcard` (`bank_card_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `ip_limit` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip_list` varchar(255) NOT NULL,
+  `agent_id` int(11) NOT NULL COMMENT '代理商id',
+  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `is_white` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1: 白名单 ； 0：黑名单',
+  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:商户对应服务器 2 商户登录后台的电脑',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
