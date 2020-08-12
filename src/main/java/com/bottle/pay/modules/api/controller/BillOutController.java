@@ -1,4 +1,4 @@
-package ${package}.modules.${module}.controller;
+package com.bottle.pay.modules.api.controller;
 
 import java.util.Map;
 
@@ -11,19 +11,16 @@ import com.bottle.pay.common.annotation.SysLog;
 import com.bottle.pay.modules.sys.controller.AbstractController;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
-import ${package}.modules.api.entity.${className}Entity;
-import ${package}.modules.api.service.${className}Service;
+import com.bottle.pay.modules.api.entity.BillOutEntity;
+import com.bottle.pay.modules.api.service.BillOutService;
 
-/**
- * ${comments}
- * @author ${author}<${email}>
- */
+
 @RestController
-@RequestMapping("/${requestMapping}")
-public class ${className}Controller extends AbstractController {
+@RequestMapping("/apiV1/BillOut")
+public class BillOutController extends AbstractController {
 	
 	@Autowired
-	private ${className}Service ${objName}Service;
+	private BillOutService billOutService;
 	
 	/**
 	 * 列表
@@ -31,19 +28,19 @@ public class ${className}Controller extends AbstractController {
 	 * @return
 	 */
 	@RequestMapping("/list")
-	public Page<${className}Entity> list(@RequestBody Map<String, Object> params) {
-		return ${objName}Service.list${className}(params);
+	public Page<BillOutEntity> list(@RequestBody Map<String, Object> params) {
+		return billOutService.listBillOut(params);
 	}
 		
 	/**
 	 * 新增
-	 * @param ${objName}
+	 * @param billOut
 	 * @return
 	 */
-	@SysLog("新增${comments}")
+	@SysLog("新增")
 	@RequestMapping("/save")
-	public R save(@RequestBody ${className}Entity ${objName}) {
-		return ${objName}Service.save${className}(${objName});
+	public R save(@RequestBody BillOutEntity billOut) {
+		return billOutService.saveBillOut(billOut);
 	}
 	
 	/**
@@ -53,18 +50,18 @@ public class ${className}Controller extends AbstractController {
 	 */
 	@RequestMapping("/info")
 	public R getById(@RequestBody Long id) {
-		return ${objName}Service.get${className}ById(id);
+		return billOutService.getBillOutById(id);
 	}
 	
 	/**
 	 * 修改
-	 * @param ${objName}
+	 * @param billOut
 	 * @return
 	 */
-	@SysLog("修改${comments}")
+	@SysLog("修改")
 	@RequestMapping("/update")
-	public R update(@RequestBody ${className}Entity ${objName}) {
-		return ${objName}Service.update${className}(${objName});
+	public R update(@RequestBody BillOutEntity billOut) {
+		return billOutService.updateBillOut(billOut);
 	}
 	
 	/**
@@ -72,10 +69,10 @@ public class ${className}Controller extends AbstractController {
 	 * @param id
 	 * @return
 	 */
-	@SysLog("删除${comments}")
+	@SysLog("删除")
 	@RequestMapping("/remove")
 	public R batchRemove(@RequestBody Long[] id) {
-		return ${objName}Service.batchRemove(id);
+		return billOutService.batchRemove(id);
 	}
 	
 }

@@ -29,7 +29,7 @@ public class GenUtils {
 		templates.add("template/Mapper.java.btl");
 		templates.add("template/Mapper.xml.btl");
 		templates.add("template/Service.java.btl");
-		templates.add("template/ServiceImpl.java.btl");
+//		templates.add("template/ServiceImpl.java.btl");
 		templates.add("template/Controller.java.btl");
 		templates.add("template/list.html.btl");
 		templates.add("template/list.js.btl");

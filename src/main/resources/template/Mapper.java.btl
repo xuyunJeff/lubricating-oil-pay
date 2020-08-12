@@ -2,8 +2,8 @@ package ${package}.modules.${module}.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import ${package}.modules.${module}.entity.${className}Entity;
-import net.chenlin.dp.modules.sys.dao.BaseMapper;
+import ${package}.modules.api.entity.${className}Entity;
+import com.bottle.pay.modules.modules.sys.dao.BaseMapper;
 
 /**
  * ${comments}
