@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50730
 File Encoding         : 65001
 
-Date: 2020-08-10 12:50:11
+Date: 2020-08-13 03:46:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -20,7 +20,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `balance`;
 CREATE TABLE `balance` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(64) NOT NULL COMMENT '用户名',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `balance` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '可用余额',
@@ -45,7 +45,7 @@ CREATE TABLE `balance` (
 -- ----------------------------
 DROP TABLE IF EXISTS `balance_procurement`;
 CREATE TABLE `balance_procurement` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `out_business_id` int(11) NOT NULL,
   `out_business_name` varchar(32) NOT NULL,
   `in_business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
@@ -119,7 +119,7 @@ INSERT INTO `bank` VALUES ('29', '上海银行', 'BOSC', '/temppic/bank/BOSC.png
 -- ----------------------------
 DROP TABLE IF EXISTS `bank_card`;
 CREATE TABLE `bank_card` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
@@ -145,7 +145,7 @@ CREATE TABLE `bank_card` (
 -- ----------------------------
 DROP TABLE IF EXISTS `bill_in`;
 CREATE TABLE `bill_in` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
@@ -179,7 +179,7 @@ CREATE TABLE `bill_in` (
 -- ----------------------------
 DROP TABLE IF EXISTS `bill_out`;
 CREATE TABLE `bill_out` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
@@ -210,11 +210,32 @@ CREATE TABLE `bill_out` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for block_bank_card
+-- ----------------------------
+DROP TABLE IF EXISTS `block_bank_card`;
+CREATE TABLE `block_bank_card` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
+  `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
+  `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
+  `agent_id` int(11) NOT NULL COMMENT '代理商id',
+  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  PRIMARY KEY (`id`),
+  KEY `index_bankcard` (`bank_card_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of block_bank_card
+-- ----------------------------
+INSERT INTO `block_bank_card` VALUES ('1', '2020-08-12 19:20:08', 'ewqe', 'qwe', 'wefq', '1', 'we');
+
+-- ----------------------------
 -- Table structure for frozen_detail
 -- ----------------------------
 DROP TABLE IF EXISTS `frozen_detail`;
 CREATE TABLE `frozen_detail` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
   `merchant_id` bigint(20) NOT NULL COMMENT '商户ID',
   `balance_frozen` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '冻结余额',
@@ -234,6 +255,26 @@ CREATE TABLE `frozen_detail` (
 
 -- ----------------------------
 -- Records of frozen_detail
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for ip_limit
+-- ----------------------------
+DROP TABLE IF EXISTS `ip_limit`;
+CREATE TABLE `ip_limit` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip_list` varchar(255) NOT NULL,
+  `agent_id` int(11) NOT NULL COMMENT '代理商id',
+  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `is_white` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1: 白名单 ； 0：黑名单',
+  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:商户对应服务器 2 商户登录后台的电脑',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of ip_limit
 -- ----------------------------
 
 -- ----------------------------
@@ -387,7 +428,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 -- ----------------------------
 -- Records of qrtz_scheduler_state
 -- ----------------------------
-INSERT INTO `qrtz_scheduler_state` VALUES ('quartzScheduler', 'DESKTOP-N9NLQH51597028571522', '1597035009878', '15000');
+INSERT INTO `qrtz_scheduler_state` VALUES ('quartzScheduler', 'DESKTOP-N9NLQH51597261325845', '1597261583421', '15000');
 
 -- ----------------------------
 -- Table structure for qrtz_simple_triggers
@@ -491,7 +532,7 @@ CREATE TABLE `quartz_job` (
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`job_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='定时任务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='定时任务';
 
 -- ----------------------------
 -- Records of quartz_job
@@ -4064,7 +4105,7 @@ CREATE TABLE `sys_log` (
   `ip` varchar(64) DEFAULT NULL COMMENT 'IP地址',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8 COMMENT='系统日志';
+) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8 COMMENT='系统日志';
 
 -- ----------------------------
 -- Records of sys_log
@@ -4130,6 +4171,24 @@ INSERT INTO `sys_log` VALUES ('58', '1', 'admin', '修改菜单', '6', 'com.bott
 INSERT INTO `sys_log` VALUES ('59', '1', 'admin', '登录', '11', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-10 11:03:18');
 INSERT INTO `sys_log` VALUES ('60', '1', 'admin', '新增定时任务', '55', 'com.bottle.pay.modules.sys.controller.QuartzJobController.save()', '{\"jobId\":2,\"beanName\":\"111\",\"methodName\":\"111\",\"params\":null,\"cronExpression\":\"0 15 10 * * ? *\",\"status\":1,\"remark\":null,\"gmtCreate\":null,\"gmtModified\":null}', '0:0:0:0:0:0:0:1', '2020-08-10 12:02:38');
 INSERT INTO `sys_log` VALUES ('61', '1', 'admin', '删除定时任务', '42', 'com.bottle.pay.modules.sys.controller.QuartzJobController.remove()', '[2,1]', '0:0:0:0:0:0:0:1', '2020-08-10 12:02:46');
+INSERT INTO `sys_log` VALUES ('62', '1', 'admin', '登录', '12', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 00:03:39');
+INSERT INTO `sys_log` VALUES ('63', '1', 'admin', '登录', '11', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 01:24:17');
+INSERT INTO `sys_log` VALUES ('64', '1', 'admin', '登录', '10', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 01:35:41');
+INSERT INTO `sys_log` VALUES ('65', '1', 'admin', '登录', '9', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 01:39:26');
+INSERT INTO `sys_log` VALUES ('66', '1', 'admin', '登录', '10', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 01:43:55');
+INSERT INTO `sys_log` VALUES ('67', '1', 'admin', '修改菜单', '12', 'com.bottle.pay.modules.sys.controller.SysMenuController.update()', '{\"menuId\":67,\"parentId\":66,\"parentName\":\"交易\",\"name\":\"代付订单\",\"url\":\"modules/billOut/list.html\",\"perms\":null,\"type\":1,\"icon\":\"fa fa-circle-o\",\"orderNum\":1,\"gmtCreate\":null,\"gmtModified\":null,\"open\":null,\"list\":null}', '0:0:0:0:0:0:0:1', '2020-08-13 01:50:36');
+INSERT INTO `sys_log` VALUES ('68', '1', 'admin', '新增菜单', '11', 'com.bottle.pay.modules.sys.controller.SysMenuController.save()', '{\"menuId\":null,\"parentId\":67,\"parentName\":\"代付订单\",\"name\":\"刷新\",\"url\":null,\"perms\":null,\"type\":1,\"icon\":\"fa fa-circle-o\",\"orderNum\":0,\"gmtCreate\":null,\"gmtModified\":null,\"open\":null,\"list\":null}', '0:0:0:0:0:0:0:1', '2020-08-13 01:51:23');
+INSERT INTO `sys_log` VALUES ('69', '1', 'admin', '修改菜单', '11', 'com.bottle.pay.modules.sys.controller.SysMenuController.update()', '{\"menuId\":80,\"parentId\":67,\"parentName\":\"代付订单\",\"name\":\"刷新\",\"url\":null,\"perms\":\"apiV1:billOut:list\",\"type\":2,\"icon\":\"fa fa-circle-o\",\"orderNum\":0,\"gmtCreate\":null,\"gmtModified\":null,\"open\":null,\"list\":null}', '0:0:0:0:0:0:0:1', '2020-08-13 01:51:53');
+INSERT INTO `sys_log` VALUES ('70', '1', 'admin', '登录', '9', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 01:54:13');
+INSERT INTO `sys_log` VALUES ('71', '1', 'admin', '新增菜单', '12', 'com.bottle.pay.modules.sys.controller.SysMenuController.save()', '{\"menuId\":null,\"parentId\":67,\"parentName\":\"代付订单\",\"name\":\"订单成功\",\"url\":null,\"perms\":\"apiV1:billOut:success\",\"type\":2,\"icon\":\"fa fa-circle-o\",\"orderNum\":0,\"gmtCreate\":null,\"gmtModified\":null,\"open\":null,\"list\":null}', '0:0:0:0:0:0:0:1', '2020-08-13 02:06:18');
+INSERT INTO `sys_log` VALUES ('72', '1', 'admin', '登录', '10', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 02:18:17');
+INSERT INTO `sys_log` VALUES ('73', '1', 'admin', '登录', '8', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 03:05:06');
+INSERT INTO `sys_log` VALUES ('74', '1', 'admin', '登录', '8', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 03:11:58');
+INSERT INTO `sys_log` VALUES ('75', '1', 'admin', '登录', '9', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 03:22:16');
+INSERT INTO `sys_log` VALUES ('76', '1', 'admin', '登录', '11', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 03:31:00');
+INSERT INTO `sys_log` VALUES ('77', '1', 'admin', '登录', '8', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 03:38:08');
+INSERT INTO `sys_log` VALUES ('78', '1', 'admin', '登录', '8', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-13 03:39:52');
+INSERT INTO `sys_log` VALUES ('79', '1', 'admin', '登录', '8', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '127.0.0.1', '2020-08-13 03:42:10');
 
 -- ----------------------------
 -- Table structure for sys_macro
@@ -4169,7 +4228,7 @@ CREATE TABLE `sys_menu` (
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=80 DEFAULT CHARSET=utf8 COMMENT='菜单管理';
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8 COMMENT='菜单管理';
 
 -- ----------------------------
 -- Records of sys_menu
@@ -4234,7 +4293,7 @@ INSERT INTO `sys_menu` VALUES ('62', '1', '系统监控', 'druid/index.html', nu
 INSERT INTO `sys_menu` VALUES ('63', '47', '更多', null, 'quartz:job:more', '1', null, '0', '2017-09-13 22:11:51', '2017-09-13 22:12:12');
 INSERT INTO `sys_menu` VALUES ('64', '1', '接口管理', 'swagger-ui.html', null, '1', 'fa fa-support', '7', '2017-09-10 17:01:59', '2017-09-10 17:02:19');
 INSERT INTO `sys_menu` VALUES ('66', '0', '交易', null, null, '0', 'fa fa-circle-o', '2', '2020-08-09 21:02:33', '2020-08-09 21:25:28');
-INSERT INTO `sys_menu` VALUES ('67', '66', '代付订单', null, null, '1', 'fa fa-circle-o', '1', '2020-08-09 21:03:34', '2020-08-09 21:40:08');
+INSERT INTO `sys_menu` VALUES ('67', '66', '代付订单', 'base/billOut/list.html', null, '1', 'fa fa-circle-o', '1', '2020-08-09 21:03:34', '2020-08-13 01:50:36');
 INSERT INTO `sys_menu` VALUES ('68', '66', '商户充值', 'base/user/list.html', null, '1', 'fa fa-circle-o', '0', '2020-08-09 21:06:24', '2020-08-09 21:29:22');
 INSERT INTO `sys_menu` VALUES ('69', '66', '资金调度', null, null, '1', 'fa fa-circle-o', '4', '2020-08-09 21:07:06', '2020-08-09 21:24:36');
 INSERT INTO `sys_menu` VALUES ('70', '66', '商户冻结', null, null, '1', 'fa fa-circle-o', '3', '2020-08-09 21:07:33', '2020-08-09 21:24:24');
@@ -4247,6 +4306,12 @@ INSERT INTO `sys_menu` VALUES ('76', '74', '专员付款日报表', null, null, 
 INSERT INTO `sys_menu` VALUES ('77', '0', '历史数据', null, null, '0', 'fa fa-circle-o', '5', '2020-08-09 21:17:50', '2020-08-09 21:26:17');
 INSERT INTO `sys_menu` VALUES ('78', '3', '在线成员', null, null, '1', 'fa fa-circle-o', '3', '2020-08-09 21:19:34', '2020-08-09 21:28:03');
 INSERT INTO `sys_menu` VALUES ('79', '66', '商户管理', null, null, '1', 'fa fa-circle-o', '2', '2020-08-09 21:22:01', '2020-08-09 21:24:09');
+INSERT INTO `sys_menu` VALUES ('80', '67', '刷新', '/apiV1/billOut/list', 'apiV1:billOut:list', '2', 'fa fa-circle-o', '0', '2020-08-13 01:51:23', '2020-08-13 01:51:53');
+INSERT INTO `sys_menu` VALUES ('81', '67', '成功', '/apiV1/billOut/success', 'apiV1:billOut:success', '2', 'fa fa-circle-o', '1', '2020-08-13 02:06:18', null);
+INSERT INTO `sys_menu` VALUES ('82', '67', '失败', '/apiV1/billOut/failed', 'apiV1:billOut:failed', '2', 'fa fa-circle-o', '2', null, null);
+INSERT INTO `sys_menu` VALUES ('83', '67', '回退', '/apiV1/billOut/goBack', 'apiV1:billOut:goBack', '2', 'fa fa-circle-o', '3', null, null);
+INSERT INTO `sys_menu` VALUES ('84', '67', '指定', '/apiV1/billOut/appoint/people', 'apiV1:billOut:appoint:people', '2', 'fa fa-circle-o', '4', null, null);
+INSERT INTO `sys_menu` VALUES ('85', '67', '自动开关', '/apiV1/billOut/appoint/aoto', 'apiV1:billOut:appoint:aoto', '2', 'fa fa-circle-o', '5', null, null);
 
 -- ----------------------------
 -- Table structure for sys_org
@@ -4285,7 +4350,7 @@ CREATE TABLE `sys_role` (
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='系统角色';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='系统角色';
 
 -- ----------------------------
 -- Records of sys_role
@@ -4303,7 +4368,7 @@ CREATE TABLE `sys_role_menu` (
   `role_id` bigint(20) DEFAULT NULL COMMENT '角色ID',
   `menu_id` bigint(20) DEFAULT NULL COMMENT '菜单ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=135 DEFAULT CHARSET=utf8 COMMENT='角色与菜单对应关系';
+) ENGINE=InnoDB AUTO_INCREMENT=141 DEFAULT CHARSET=utf8 COMMENT='角色与菜单对应关系';
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -4440,6 +4505,12 @@ INSERT INTO `sys_role_menu` VALUES ('131', '1', '76');
 INSERT INTO `sys_role_menu` VALUES ('132', '1', '77');
 INSERT INTO `sys_role_menu` VALUES ('133', '1', '78');
 INSERT INTO `sys_role_menu` VALUES ('134', '1', '79');
+INSERT INTO `sys_role_menu` VALUES ('135', '1', '80');
+INSERT INTO `sys_role_menu` VALUES ('136', '1', '81');
+INSERT INTO `sys_role_menu` VALUES ('137', '1', '82');
+INSERT INTO `sys_role_menu` VALUES ('138', '1', '83');
+INSERT INTO `sys_role_menu` VALUES ('139', '1', '84');
+INSERT INTO `sys_role_menu` VALUES ('140', '1', '85');
 
 -- ----------------------------
 -- Table structure for sys_role_org
@@ -4518,29 +4589,3 @@ CREATE TABLE `sys_user_token` (
 -- Records of sys_user_token
 -- ----------------------------
 INSERT INTO `sys_user_token` VALUES ('1', 'a3c646202882f1213b63fe74dc118e9d', '2017-10-26 22:10:52', '2017-10-26 10:10:52');
-
-CREATE TABLE `block_bank_card` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
-  `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
-  `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
-  `agent_id` int(11) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
-  PRIMARY KEY (`id`),
-  KEY `index_bankcard` (`bank_card_no`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
-
-
-CREATE TABLE `ip_limit` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip_list` varchar(255) NOT NULL,
-  `agent_id` int(11) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
-  `is_white` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1: 白名单 ； 0：黑名单',
-  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:商户对应服务器 2 商户登录后台的电脑',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
