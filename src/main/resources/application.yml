@@ -56,3 +56,9 @@ spring:
 mybatis:
   configLocation: classpath:mybatis.xml
   mapper-locations: classpath*:com/bottle/pay/**/mapper/*.xml
+
+#pagehelper:
+#  helperDialect: mysql
+#  reasonable: true
+#  supportMethodsArguments: true
+#  pageSizeZero: false #pageSize=0

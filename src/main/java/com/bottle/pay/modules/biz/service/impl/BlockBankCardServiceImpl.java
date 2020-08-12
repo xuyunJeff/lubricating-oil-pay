@@ -30,7 +30,7 @@ public class BlockBankCardServiceImpl implements IBlockBankCardService {
     public Page<BlockBankCardEntity> listBlockBankCard(Map<String, Object> params) {
         Query query = new Query(params);
         Page<BlockBankCardEntity> page = new Page<>(query);
-//        blockBankCardMapper.listForPage(page, query);
+        blockBankCardMapper.listForPage(page, query);
         return page;
     }
 

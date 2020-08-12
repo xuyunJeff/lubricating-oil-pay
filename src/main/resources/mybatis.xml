@@ -59,6 +59,7 @@
     <plugins>
         <plugin interceptor="com.bottle.pay.common.support.orm.plugins.PaginationResultSetHandlerInterceptor"/>
         <plugin interceptor="com.bottle.pay.common.support.orm.plugins.PaginationStatementHandlerInterceptor"/>
+        <!---->
     </plugins>
 
     <mappers>

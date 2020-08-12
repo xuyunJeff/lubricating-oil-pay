@@ -1,5 +1,6 @@
 package com.bottle.pay.modules.biz.controller;
 
+import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
 import com.bottle.pay.modules.biz.service.IBlockBankCardService;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by zhy on 2020/8/13.
@@ -30,5 +34,13 @@ public class TestController {
         entity.setBankName("qwe");
         entity.setCreateTime(new Date());
         blockBankCardService.saveBlockBankCard(entity);
+    }
+
+    @RequestMapping("/bank/list")
+    public Page listBank(){
+        Map m = new HashMap();
+        m.put("pageNumber",1);
+        m.put("pageSize","1");
+       return blockBankCardService.listBlockBankCard(m);
     }
 }

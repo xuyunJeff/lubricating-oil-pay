@@ -1,15 +1,18 @@
 package ${package}.modules.${module}.dao;
 
+import tk.mybatis.mapper.common.Mapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import com.bottle.pay.common.mapper.BottleBaseMapper;
 import ${package}.modules.api.entity.${className}Entity;
 import com.bottle.pay.modules.modules.sys.dao.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * ${comments}
  * @author ${author}<${email}>
  */
 @Mapper
-public interface ${className}Mapper extends BaseMapper<${className}Entity> {
+public interface ${className}Mapper extends BottleBaseMapper<${className}Entity> {
 	
 }

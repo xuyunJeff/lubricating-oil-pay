@@ -24,6 +24,7 @@ public class BillOutService {
      * @return
      */
     public Page<BillOutEntity> listBillOut(Map<String, Object> params){
+
         Query query = new Query(params);
         Page<BillOutEntity> page = new Page<>(query);
         billOutMapper.listForPage(page, query);
@@ -36,7 +37,7 @@ public class BillOutService {
      * @return
      */
     public R saveBillOut(BillOutEntity billOut){
-        int count = billOutMapper.save(billOut);
+        int count = billOutMapper.insert(billOut);
         return CommonUtils.msg(count);
         }
 
@@ -46,7 +47,7 @@ public class BillOutService {
      * @return
      */
     public R getBillOutById(Long id){
-        BillOutEntity billOut = billOutMapper.getObjectById(id);
+        BillOutEntity billOut = billOutMapper.selectByPrimaryKey(id);
         return CommonUtils.msg(billOut);
         }
 
@@ -56,7 +57,7 @@ public class BillOutService {
      * @return
      */
     public R updateBillOut(BillOutEntity billOut){
-        int count = billOutMapper.update(billOut);
+        int count = billOutMapper.updateByPrimaryKey(billOut);
         return CommonUtils.msg(count);
         }
 
@@ -66,7 +67,7 @@ public class BillOutService {
      * @return
      */
     public R batchRemove(Long[] id){
-        int count = billOutMapper.batchRemove(id);
+        int count = billOutMapper.deleteByPrimaryKey(id);
         return CommonUtils.msg(id, count);
         }
 	

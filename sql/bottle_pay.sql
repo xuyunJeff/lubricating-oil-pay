@@ -4520,7 +4520,7 @@ CREATE TABLE `sys_user_token` (
 INSERT INTO `sys_user_token` VALUES ('1', 'a3c646202882f1213b63fe74dc118e9d', '2017-10-26 22:10:52', '2017-10-26 10:10:52');
 
 CREATE TABLE `block_bank_card` (
-  `id` bigint(20) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
   `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
@@ -4529,7 +4529,7 @@ CREATE TABLE `block_bank_card` (
   `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
   PRIMARY KEY (`id`),
   KEY `index_bankcard` (`bank_card_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
 
