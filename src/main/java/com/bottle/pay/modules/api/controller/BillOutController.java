@@ -92,6 +92,7 @@ public class BillOutController extends AbstractController {
 				billOutView.getBankCardNo(),billOutView.getBankName(),billOutView.getBankAccountName());
 		// TODO 去查询商户的发过来的订单是否存在？
 		billOutService.BillsOutBalanceChange(billOutView.getMerchantId(),billOutView.getPrice());
+		// TODO 判断银行卡是否在黑名单内
 		if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto)){
 			// 自动派单给出款员
 		}

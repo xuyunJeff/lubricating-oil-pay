@@ -22,21 +22,23 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `balance`;
 CREATE TABLE `balance` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(64) NOT NULL COMMENT '用户名',
-  `user_id` bigint NOT NULL COMMENT '用户ID',
+  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `balance` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '可用余额',
   `balance_frozen` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '冻结余额',
   `balance_paying` decimal(13,4) NOT NULL DEFAULT '0.0000',
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `agent_id` int NOT NULL COMMENT '代理商id',
+  `agent_id` int(11) NOT NULL COMMENT '代理商id',
   `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
-  `role_id` bigint NOT NULL COMMENT '角色id',
+  `role_id` bigint(20) NOT NULL COMMENT '角色id',
   `role_name` varchar(100) NOT NULL COMMENT '角色名称',
+  `bill_out_limit` decimal(13,4) NOT NULL DEFAULT '3000.0000' COMMENT '自动出款上线额度，超出额度要手动派单',
   PRIMARY KEY (`id`),
   KEY `index_agent` (`user_name`,`user_id`,`agent_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- ----------------------------
 -- Table structure for balance_procurement
