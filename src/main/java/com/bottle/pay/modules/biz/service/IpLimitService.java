@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 
 /**
  * 
- * @author zhy
+ * @author ZhouChenglin<yczclcn@163.com>
  */
  @Service("ipLimitService")
 public class IpLimitService  extends BottleBaseService<IpLimitMapper,IpLimitEntity>{
 
-	
+
 }
