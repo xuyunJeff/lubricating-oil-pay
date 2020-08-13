@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bottle.pay.modules.biz.dao.IpLimitMapper">
+	
+	<select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.IpLimitEntity">
+		SELECT
+			`id`, 
+			`ip_list`, 
+			`agent_id`, 
+			`agent_name`, 
+			`is_white`, 
+			`create_time`, 
+			`last_update`, 
+			`type`
+		FROM
+			ip_limit
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO ip_limit (
+			`ip_list`, 
+			`agent_id`, 
+			`agent_name`, 
+			`is_white`, 
+			`create_time`, 
+			`last_update`, 
+			`type`
+		)
+		VALUES (
+			#{ipList}, 
+			#{agentId}, 
+			#{agentName}, 
+			#{isWhite}, 
+			#{createTime}, 
+			#{lastUpdate}, 
+			#{type}
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.IpLimitEntity">
+		SELECT
+			`id`, 
+			`ip_list`, 
+			`agent_id`, 
+			`agent_name`, 
+			`is_white`, 
+			`create_time`, 
+			`last_update`, 
+			`type`
+		FROM
+			ip_limit
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE ip_limit
+	 	<set>
+			<if test="ipList != null">`ip_list` = #{ipList}, </if>
+			<if test="agentId != null">`agent_id` = #{agentId}, </if>
+			<if test="agentName != null">`agent_name` = #{agentName}, </if>
+			<if test="isWhite != null">`is_white` = #{isWhite}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
+			<if test="type != null">`type` = #{type}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			ip_limit
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

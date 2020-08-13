@@ -1,5 +1,6 @@
 package com.bottle.pay.modules.api.entity;
 
+import com.bottle.pay.common.entity.BottleBaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,23 +20,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "bill_out")
-public class BillOutEntity implements Serializable {
+public class BillOutEntity extends BottleBaseEntity {
 	
-	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY,generator = "JDBC")
-	private Long id;
 	
-	/**
-	 * 
-	 */
-	private Date createTime;
-	
-	/**
-	 * 
-	 */
-	private Date lastUpdate;
+
 	
 	/**
 	 * 商户名
@@ -106,16 +95,7 @@ public class BillOutEntity implements Serializable {
 	 * 1 手动 2 自动 3 大额 4 订单退回机构
 	 */
 	private Integer billType;
-	
-	/**
-	 * 代理商id
-	 */
-	private Integer agentId;
-	
-	/**
-	 * 代理商姓名
-	 */
-	private String agentName;
+
 
     /**
      * BillOutEntity.toString()

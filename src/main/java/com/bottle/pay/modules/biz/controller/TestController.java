@@ -2,13 +2,13 @@ package com.bottle.pay.modules.biz.controller;
 
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
-import com.bottle.pay.modules.biz.service.IBlockBankCardService;
+import com.bottle.pay.modules.biz.service.BlockBankCardService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,11 @@ import java.util.Map;
 public class TestController {
 
     @Autowired
-    private IBlockBankCardService blockBankCardService;
+    private StringRedisTemplate stringRedisTemplate;
+
+
+    @Autowired
+    private BlockBankCardService blockBankCardService;
 
     @RequestMapping("/bank/add")
     public void addBank(){
@@ -42,5 +46,11 @@ public class TestController {
         m.put("pageNumber",1);
         m.put("pageSize","1");
        return blockBankCardService.listBlockBankCard(m);
+    }
+
+    @RequestMapping("/redis/set")
+    public String setRedis(String key,String value){
+        stringRedisTemplate.opsForValue().set(key,value);
+        return stringRedisTemplate.opsForValue().get(key);
     }
 }
