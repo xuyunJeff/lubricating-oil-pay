@@ -32,7 +32,7 @@ public class ${className}Controller extends AbstractController {
 	 */
 	@RequestMapping("/list")
 	public Page<${className}Entity> list(@RequestBody Map<String, Object> params) {
-		return ${objName}Service.list${className}(params);
+		return ${objName}Service.listEntity(params);
 	}
 		
 	/**
@@ -43,7 +43,7 @@ public class ${className}Controller extends AbstractController {
 	@SysLog("新增${comments}")
 	@RequestMapping("/save")
 	public R save(@RequestBody ${className}Entity ${objName}) {
-		return ${objName}Service.save${className}(${objName});
+		return ${objName}Service.saveEntity(${objName});
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class ${className}Controller extends AbstractController {
 	 */
 	@RequestMapping("/info")
 	public R getById(@RequestBody Long id) {
-		return ${objName}Service.get${className}ById(id);
+		return ${objName}Service.getEntityById(id);
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class ${className}Controller extends AbstractController {
 	@SysLog("修改${comments}")
 	@RequestMapping("/update")
 	public R update(@RequestBody ${className}Entity ${objName}) {
-		return ${objName}Service.update${className}(${objName});
+		return ${objName}Service.updateEntity(${objName});
 	}
 	
 	/**
