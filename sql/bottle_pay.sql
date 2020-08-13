@@ -4605,3 +4605,13 @@ CREATE TABLE `sys_user_token` (
 -- Records of sys_user_token
 -- ----------------------------
 INSERT INTO `sys_user_token` VALUES ('1', 'a3c646202882f1213b63fe74dc118e9d', '2017-10-26 22:10:52', '2017-10-26 10:10:52');
+
+CREATE TABLE `online_business` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `agent_id` bigint(20) NOT NULL COMMENT '代理商id',
+  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
+  `business_id` bigint(20) NOT NULL COMMENT '付款专员ID',
+  `position` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
