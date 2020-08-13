@@ -3,6 +3,7 @@ package ${package}.modules.${module}.service;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.bottle.pay.common.service.BottleBaseService;
 
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;

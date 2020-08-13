@@ -19,10 +19,10 @@ class PayApplicationTests {
     void contextLoads() {
 
             for (int i = 0; i < 1000; i++) {
-            service.incrUserBillOutBalance(106L, BigDecimal.valueOf(0.01));
-            service.incrUserBillOutBalance(104L, BigDecimal.valueOf(0.01));
-            service.incrUserBillOutBalance(103L, BigDecimal.valueOf(0.01));
-            service.incrUserBillOutBalance(102L, BigDecimal.valueOf(0.01));
+//            service.incrUserBillOutBalance(106L, BigDecimal.valueOf(0.01));
+//            service.incrUserBillOutBalance(104L, BigDecimal.valueOf(0.01));
+//            service.incrUserBillOutBalance(103L, BigDecimal.valueOf(0.01));
+//            service.incrUserBillOutBalance(102L, BigDecimal.valueOf(0.01));
         }
 
     }

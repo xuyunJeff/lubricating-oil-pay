@@ -1,0 +1,77 @@
+@layout("../../system/layout.html", {title: ""}){
+<table class="form" id="form">
+    <tr>
+        <td class="formTitle">用户名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="balance.userName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">用户ID<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户ID" v-model="balance.userId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">可用余额<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="可用余额" v-model="balance.balance" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">冻结余额<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="冻结余额" v-model="balance.balanceFrozen" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="balance.balancePaying" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="balance.createTime" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="balance.lastUpdate" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">代理商id<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商id" v-model="balance.agentId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">代理商姓名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商姓名" v-model="balance.agentName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">角色id<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="角色id" v-model="balance.roleId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">角色名称<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="角色名称" v-model="balance.roleName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">自动出款上线额度，超出额度要手动派单<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="自动出款上线额度，超出额度要手动派单" v-model="balance.billOutLimit" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+</table>
+<script src="${ctxPath}/static/js/modules/balance/edit.js"></script>
+@}

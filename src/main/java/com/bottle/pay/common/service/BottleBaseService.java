@@ -8,6 +8,7 @@ import com.bottle.pay.common.mapper.BottleBaseMapper;
 import com.bottle.pay.common.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,6 +64,16 @@ public abstract class BottleBaseService<M extends BottleBaseMapper,E extends Bot
     public R batchRemove(Long[] ids){
         int count =  mapper.batchRemove(ids);
         return CommonUtils.msg(count);
+    }
+
+    public List<E> select(E e) {
+        return mapper.select(e);
+    }
+
+    public E selectOne(E e) {
+        List<E> list= mapper.select(e);
+        if(list.isEmpty()) return null ;
+        return list.get(0);
     }
 
 }

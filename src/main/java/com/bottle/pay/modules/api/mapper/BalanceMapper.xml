@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bottle.pay.modules.api.dao.BalanceMapper">
+	
+	<select id="listForPage" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
+		SELECT
+			`id`, 
+			`user_name`, 
+			`user_id`, 
+			`balance`, 
+			`balance_frozen`, 
+			`balance_paying`, 
+			`create_time`, 
+			`last_update`, 
+			`agent_id`, 
+			`agent_name`, 
+			`role_id`, 
+			`role_name`, 
+			`bill_out_limit`
+		FROM
+			balance
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO balance (
+			`user_name`, 
+			`user_id`, 
+			`balance`, 
+			`balance_frozen`, 
+			`balance_paying`, 
+			`create_time`, 
+			`last_update`, 
+			`agent_id`, 
+			`agent_name`, 
+			`role_id`, 
+			`role_name`, 
+			`bill_out_limit`
+		)
+		VALUES (
+			#{userName}, 
+			#{userId}, 
+			#{balance}, 
+			#{balanceFrozen}, 
+			#{balancePaying}, 
+			#{createTime}, 
+			#{lastUpdate}, 
+			#{agentId}, 
+			#{agentName}, 
+			#{roleId}, 
+			#{roleName}, 
+			#{billOutLimit}
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
+		SELECT
+			`id`, 
+			`user_name`, 
+			`user_id`, 
+			`balance`, 
+			`balance_frozen`, 
+			`balance_paying`, 
+			`create_time`, 
+			`last_update`, 
+			`agent_id`, 
+			`agent_name`, 
+			`role_id`, 
+			`role_name`, 
+			`bill_out_limit`
+		FROM
+			balance
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE balance
+	 	<set>
+			<if test="userName != null">`user_name` = #{userName}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="balance != null">`balance` = #{balance}, </if>
+			<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>
+			<if test="balancePaying != null">`balance_paying` = #{balancePaying}, </if>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
+			<if test="agentId != null">`agent_id` = #{agentId}, </if>
+			<if test="agentName != null">`agent_name` = #{agentName}, </if>
+			<if test="roleId != null">`role_id` = #{roleId}, </if>
+			<if test="roleName != null">`role_name` = #{roleName}, </if>
+			<if test="billOutLimit != null">`bill_out_limit` = #{billOutLimit}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			balance
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+	<select id="selectForUpdate" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
+		SELECT
+			   `id`,
+			   `user_name`,
+			   `user_id`,
+			   `balance`,
+			   `balance_frozen`,
+			   `balance_paying`,
+			   `create_time`,
+			   `last_update`,
+			   `agent_id`,
+			   `agent_name`,
+			   `role_id`,
+			   `role_name`,
+			   `bill_out_limit`
+		FROM
+			 balance
+		where
+			`user_id` = #{userId}
+		for update
+	</select>
+
+	<update id="billoutBalanceMerchantChange">
+		UPDATE balance
+		<set>
+			`balance` = balance - #{amount},
+			`balance_paying` = balance_paying + #{amount}
+		</set>
+		WHERE
+		id = #{id}
+	</update>
+</mapper>

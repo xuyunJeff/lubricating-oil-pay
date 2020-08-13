@@ -6,7 +6,10 @@ import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.common.utils.DateUtils;
 import com.bottle.pay.modules.api.dao.BillOutMapper;
+import com.bottle.pay.modules.api.entity.BalanceEntity;
 import com.bottle.pay.modules.api.entity.BillOutEntity;
+import com.bottle.pay.modules.api.entity.BillOutView;
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,29 @@ public class BillOutService  extends BottleBaseService<BillOutMapper,BillOutEnti
     @Autowired
     private RedisCacheManager redisCacheManager;
 
+    @Autowired
+    BalanceService balanceService;
+
+
+    @Transactional
+    public BillOutEntity billsOutAgent(BillOutView billOutView, String ip, SysUserEntity userEntity){
+        //第一步保存订单
+        BillOutEntity bill = saveNewBillOut(billOutView.getMerchantName(),billOutView.getMerchantId(),
+                billOutView.getOrderNo(),ip,userEntity.getOrgId(),userEntity.getOrgName(),billOutView.getPrice(),
+                billOutView.getBankCardNo(),billOutView.getBankName(),billOutView.getBankAccountName());
+        // TODO 去查询商户的发过来的订单是否存在？@mighty
+        // 第二步 增加商户代付中余额，扣除商户可用余额
+        billsOutBalanceChangeMerchant(billOutView.getMerchantId(),billOutView.getPrice());
+        return bill;
+    }
+
+    public BillOutEntity billsOutBusiness(){
+        // 第一步获取在线的出款员
+        // 第二步判断出款员余额是否够出款
+        // 第三步派单给出款员事务，付款银行卡默认为当前开启的银行卡
+        // 第四步增加出款员代付中余额，扣除可用余额
+        return  null;
+    }
 
     /**
      * 增加代付中余额，扣除商户可用余额
@@ -32,19 +58,19 @@ public class BillOutService  extends BottleBaseService<BillOutMapper,BillOutEnti
      * @param amount
      */
     @Transactional
-    public void BillsOutBalanceChange(Long merchantId,BigDecimal amount){
-        // TODO 扣商户可用余额
-        // TODO增加代付中余额
-        this.incrUserBillOutBalance(merchantId,amount);
-
+    public BalanceEntity billsOutBalanceChangeMerchant(Long merchantId,BigDecimal amount){
+        // step 1: 扣商户可用余额，增加商户代付中余额
+        return balanceService.billOutMerchantBalance(amount.multiply(new BigDecimal(-1)),merchantId);
     }
 
+
+
     /**
-     *
+     *  Redis 出款员代付中余额
      * @param userId
      * @param amount 最小1，分为单位
      */
-    public synchronized void incrUserBillOutBalance(Long userId, BigDecimal amount){
+    public synchronized void incrBusinessBillOutBalance(Long userId, BigDecimal amount){
         amount = amount.multiply(BigDecimal.valueOf(100));
         String redisKey = BillConstant.BillRedisKey.billOutBalance(userId.toString());
         BigDecimal balanceBefore = getUserBillOutBalance(userId);
@@ -78,7 +104,7 @@ public class BillOutService  extends BottleBaseService<BillOutMapper,BillOutEnti
         entity.setBankAccountName(bankCardNo);
         entity.setBankName(bankName);
         entity.setBankAccountName(bankAccountName);
-        entity.setBillType(setBillType(price).getCode());
+        entity.setBillType(setBillType(price,merchantId).getCode());
         entity.setAgentId(agentId);
         entity.setAgentName(agentName);
         entity.setPosition(BillConstant.BillPostionEnum.Agent.getCode());
@@ -90,9 +116,14 @@ public class BillOutService  extends BottleBaseService<BillOutMapper,BillOutEnti
         return entity;
     }
 
-    private BillConstant.BillTypeEnum setBillType(BigDecimal price) {
-        // TODO 获取不同商户的自动派单配置 @mighty
-        BigDecimal billOutLimit = BigDecimal.valueOf(3000);
+    private BillConstant.BillTypeEnum setBillType(BigDecimal price,Long merchantId) {
+        BalanceEntity balance = new BalanceEntity();
+        balance.setUserId(merchantId);
+        balance = balanceService.selectOne(balance);
+        if(balance == null) {
+            // TODO 创建balance账户 @Mighty
+        }
+        BigDecimal billOutLimit = balance.getBillOutLimit();
         if(price.compareTo(billOutLimit) == -1) {
             return BillConstant.BillTypeEnum.Auto ;
         }

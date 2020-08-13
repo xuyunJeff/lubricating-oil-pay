@@ -3,8 +3,10 @@ package ${package}.modules.${module}.entity;
 import com.bottle.pay.common.entity.BottleBaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.util.Date;
+import javax.persistence.Table;
+import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 <% if(has(hasDecimal) && hasDecimal == true) { %>
 import java.math.BigDecimal;
@@ -12,9 +14,10 @@ import java.math.BigDecimal;
 
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "")
+@ToString
+@NoArgsConstructor
 public class ${className}Entity extends BottleBaseEntity {
 	
 <% for (column in columns!) { %>
@@ -24,46 +27,5 @@ public class ${className}Entity extends BottleBaseEntity {
 	private ${column.fieldType} ${column.fieldName};
 	
 <% } %>
-    /**
-     * ${className}Entity constructor
-     */
-	public ${className}Entity() {
-		super();
-	}
-
-<% for (column in columns) { %>
-    /**
-     * setter for ${column.fieldName}
-     * @param ${column.fieldName}
-     */
-	public void set${column.methodName}(${column.fieldType} ${column.fieldName}) {
-		this.${column.fieldName} = ${column.fieldName};
-	}
-
-    /**
-     * getter for ${column.fieldName}
-     */
-	public ${column.fieldType} get${column.methodName}() {
-		return ${column.fieldName};
-	}
-
-<% } %>
-    /**
-     * ${className}Entity.toString()
-     */
-    @Override
-    public String toString() {
-        return "${" +
-               <% for (column in columns) { %>
-               <% if (columnLP.first) { %>
-               "${column.fieldName}:'" + ${column.fieldName} + '\'' +
-               <% } else { %>
-               ", ${column.fieldName}:'" + ${column.fieldName} + '\'' +
-               <% } %>
-               <% if (columnLP.last) { %>
-               '}';
-               <% } %>
-               <% } %>
-    }
 
 }

@@ -87,13 +87,9 @@ public class BillOutController extends AbstractController {
 		SysUserEntity userEntity =	getUser();
 		String ip =request.getRemoteAddr();
 		// 第一步保存订单,派单给机构
-		BillOutEntity bill =billOutService.saveNewBillOut(billOutView.getMerchantName(),billOutView.getMerchantId(),
-				billOutView.getOrderNo(),ip,userEntity.getOrgId(),userEntity.getOrgName(),billOutView.getPrice(),
-				billOutView.getBankCardNo(),billOutView.getBankName(),billOutView.getBankAccountName());
-		// TODO 去查询商户的发过来的订单是否存在？
-		billOutService.BillsOutBalanceChange(billOutView.getMerchantId(),billOutView.getPrice());
+		BillOutEntity bill =billOutService.billsOutAgent(billOutView,ip,userEntity);
 		// TODO 判断银行卡是否在黑名单内
-		if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto)){
+		if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())){
 			// 自动派单给出款员
 		}
 
