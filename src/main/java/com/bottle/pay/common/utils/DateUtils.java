@@ -12,6 +12,8 @@ public class DateUtils {
 	/** 时间格式(yyyy-MM-dd) */
 	public final static String DATE_PATTERN = "yyyy-MM-dd";
 
+	public final static String DATE_PATTERN_1 = "yyyyMMdd";
+
 	/** 时间格式(yyyy/MM/dd) */
 	public final static String DATE_PATTERN_SLASH = "yyyy/MM/dd";
 	
@@ -21,8 +23,8 @@ public class DateUtils {
 	/** 时间格式(yyyy年M月dd日 ah:mm:ss) 代码生成器使用 */
 	public final static String DATE_TIME_CHN_PATTERN = "yyyy年M月dd日 ah:mm:ss";
 
-	/** 时间格式(yyyyMddahmmss) 代码生成器使用 */
 	public final static String DATE_TIME_PATTERN_1 = "yyyyMMddHHmmss";
+
 
 
 	public static String format(Date date) {

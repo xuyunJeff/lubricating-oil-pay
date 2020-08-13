@@ -9,6 +9,7 @@ import com.bottle.pay.common.entity.R;
 import ${package}.modules.api.entity.${className}Entity;
 import com.bottle.pay.common.entity.Query;
 import com.bottle.pay.common.utils.CommonUtils;
+import lombok.extern.slf4j.Slf4j;
 import ${package}.modules.api.dao.${className}Mapper;
 
 /**
@@ -16,6 +17,7 @@ import ${package}.modules.api.dao.${className}Mapper;
  * @author ${author}<${email}>
  */
  @Service("${objName}Service")
+ @Slf4j
 public class ${className}Service  extends BottleBaseService<${className}Mapper,${className}Entity> {
 
 	

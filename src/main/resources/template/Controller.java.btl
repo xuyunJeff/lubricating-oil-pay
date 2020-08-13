@@ -13,6 +13,7 @@ import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
 import ${package}.modules.api.entity.${className}Entity;
 import ${package}.modules.api.service.${className}Service;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * ${comments}
@@ -20,6 +21,7 @@ import ${package}.modules.api.service.${className}Service;
  */
 @RestController
 @RequestMapping("/${requestMapping}")
+@Slf4j
 public class ${className}Controller extends AbstractController {
 	
 	@Autowired
