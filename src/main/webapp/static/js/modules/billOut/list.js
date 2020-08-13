@@ -24,8 +24,8 @@ function getGrid() {
 		columns: [
 			{checkbox: true},
             {field : "id", title : "", width : "100px"},
-            {field : "createTime", title : "", width : "100px"},
-            {field : "lastUpdate", title : "", width : "100px"},
+            {field : "createTime", title : "时间", width : "100px"},
+            // {field : "lastUpdate", title : "", width : "100px"},
             {field : "merchantName", title : "商户名", width : "100px"},
             {field : "merchantId", title : "商户ID", width : "100px"},
             {field : "billId", title : "订单号：商户id+时间戳 + 4位自增", width : "100px"},
@@ -33,13 +33,16 @@ function getGrid() {
             {field : "ip", title : "第三方订单派发服务器ip", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px"},
             {field : "businessId", title : "付款专员ID", width : "100px"},
-            {field : "billStatus", title : "订单状态：  1未支付 2 成功 3 失败", width : "100px"},
-            {field : "notice", title : "回调：1未通知 2 已通知 3 失败", width : "100px"},
+            //：  1未支付 2 成功 3 失败
+            {field : "billStatus", title : "订单状态", width : "100px"},
+            //：1未通知 2 已通知 3 失败
+            {field : "notice", title : "回调", width : "100px"},
             {field : "price", title : "账单金额", width : "100px"},
             {field : "bankCardNo", title : "付款会员的卡号", width : "100px"},
             {field : "bankName", title : "银行名称", width : "100px"},
             {field : "bankAccountName", title : "付款用户名", width : "100px"},
-            {field : "billType", title : "1 手动 2 自动 3 大额 4 订单退回机构", width : "100px"},
+            //1 手动 2 自动 3 大额 4 订单退回机构
+            {field : "billType", title : "操作", width : "100px"},
             {field : "agentId", title : "代理商id", width : "100px"},
             {field : "agentName", title : "代理商姓名", width : "100px"},
             {title : "操作", formatter : function(value, row, index) {

@@ -1,6 +1,8 @@
 package com.bottle.pay.modules.api.service;
 
 import java.util.Map;
+
+import com.bottle.pay.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +72,14 @@ public class BillOutService {
         int count = billOutMapper.deleteByPrimaryKey(id);
         return CommonUtils.msg(id, count);
         }
-	
+
+    /**
+     *  生成代付id
+     *  订单号：商户id+时间戳 + 4位自增
+     * @return
+     */
+//    public String generateBillOutBillId(String merchantId){
+//       return merchantId+ System.currentTimeMillis()+
+//    }
+
 }
