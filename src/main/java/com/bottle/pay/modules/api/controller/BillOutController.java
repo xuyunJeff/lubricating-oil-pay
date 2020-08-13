@@ -29,7 +29,7 @@ public class BillOutController extends AbstractController {
 	 */
 	@RequestMapping("/list")
 	public Page<BillOutEntity> list(@RequestBody Map<String, Object> params) {
-		return billOutService.listBillOut(params);
+		return billOutService.listEntity(params);
 	}
 		
 	/**
@@ -40,7 +40,7 @@ public class BillOutController extends AbstractController {
 	@SysLog("新增")
 	@RequestMapping("/save")
 	public R save(@RequestBody BillOutEntity billOut) {
-		return billOutService.saveBillOut(billOut);
+		return billOutService.saveEntity(billOut);
 	}
 	
 	/**
@@ -50,7 +50,7 @@ public class BillOutController extends AbstractController {
 	 */
 	@RequestMapping("/info")
 	public R getById(@RequestBody Long id) {
-		return billOutService.getBillOutById(id);
+		return billOutService.getEntityById(id);
 	}
 	
 	/**
@@ -61,7 +61,7 @@ public class BillOutController extends AbstractController {
 	@SysLog("修改")
 	@RequestMapping("/update")
 	public R update(@RequestBody BillOutEntity billOut) {
-		return billOutService.updateBillOut(billOut);
+		return billOutService.updateEntity(billOut);
 	}
 	
 	/**
