@@ -16,44 +16,7 @@ import ${package}.modules.api.dao.${className}Mapper;
  * @author ${author}<${email}>
  */
  @Service("${objName}Service")
-public class ${className}Service {
+public class ${className}Service  extends BottleBaseService<${className}Mapper,${className}Entity> {
 
-    @Autowired
-    private ${className}Mapper ${objName}Mapper;
-
-    /**
-     * 分页查询
-     * @param params
-     * @return
-     */
-	public Page<${className}Entity> list${className}(Map<String, Object> params);
-
-    /**
-     * 新增
-     * @param ${objName}
-     * @return
-     */
-	public R save${className}(${className}Entity ${objName});
-
-    /**
-     * 根据id查询
-     * @param id
-     * @return
-     */
-	public R get${className}ById(Long id);
-
-    /**
-     * 修改
-     * @param ${objName}
-     * @return
-     */
-	public R update${className}(${className}Entity ${objName});
-
-    /**
-     * 删除
-     * @param id
-     * @return
-     */
-	public R batchRemove(Long[] id);
 	
 }
