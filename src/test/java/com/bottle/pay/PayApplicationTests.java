@@ -6,15 +6,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigDecimal;
+
 @SpringBootTest
 @Slf4j
 class PayApplicationTests {
 
     @Autowired
     BillOutService service;
+
     @Test
     void contextLoads() {
-       String value = service.generateBillOutBillId("106");
+
+            for (int i = 0; i < 1000; i++) {
+            service.incrUserBillOutBalance(106L, BigDecimal.valueOf(0.01));
+            service.incrUserBillOutBalance(104L, BigDecimal.valueOf(0.01));
+            service.incrUserBillOutBalance(103L, BigDecimal.valueOf(0.01));
+            service.incrUserBillOutBalance(102L, BigDecimal.valueOf(0.01));
+        }
+
     }
 
 }

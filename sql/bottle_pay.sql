@@ -167,30 +167,32 @@ CREATE TABLE `bill_in` (
 -- ----------------------------
 DROP TABLE IF EXISTS `bill_out`;
 CREATE TABLE `bill_out` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
-  `merchant_id` bigint NOT NULL COMMENT '商户ID',
+  `merchant_id` bigint(20) NOT NULL COMMENT '商户ID',
   `bill_id` varchar(20) NOT NULL COMMENT '订单号：商户id+时间戳 + 4位自增',
   `third_bill_id` varchar(64) NOT NULL COMMENT '第三方订单号',
   `ip` varchar(20) NOT NULL COMMENT '第三方订单派发服务器ip',
   `business_name` varchar(32) DEFAULT NULL COMMENT '付款专员姓名',
-  `business_id` int DEFAULT NULL COMMENT '付款专员ID',
-  `bill_status` tinyint NOT NULL COMMENT '订单状态：  1未支付 2 成功 3 失败',
-  `notice` tinyint NOT NULL COMMENT '回调：1未通知 2 已通知 3 失败',
+  `business_id` int(11) DEFAULT NULL COMMENT '付款专员ID',
+  `bill_status` tinyint(4) NOT NULL COMMENT '订单状态：  1未支付 2 成功 3 失败',
+  `notice` tinyint(4) NOT NULL COMMENT '回调：1未通知 2 已通知 3 失败',
   `price` decimal(13,4) NOT NULL COMMENT '账单金额',
   `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
   `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
   `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
-  `bill_type` tinyint NOT NULL COMMENT '1 手动 2 自动 3 大额 4 订单退回机构',
-  `agent_id` int NOT NULL COMMENT '代理商id',
+  `bill_type` tinyint(4) NOT NULL COMMENT '1 手动 2 自动 3 大额 4 订单退回机构',
+  `agent_id` int(11) NOT NULL COMMENT '代理商id',
   `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `position` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1: 机构 2：出款员',
   PRIMARY KEY (`id`),
   KEY `index_agent` (`agent_id`,`create_time`,`last_update`) USING BTREE,
   KEY `index_merchant` (`create_time`,`last_update`,`merchant_name`,`agent_id`),
   KEY `index_type` (`bank_card_no`,`bank_account_name`,`bill_type`,`agent_id`),
-  KEY `index_business` (`create_time`,`last_update`,`business_name`,`business_id`,`agent_id`)
+  KEY `index_business` (`create_time`,`last_update`,`business_name`,`business_id`,`agent_id`),
+  KEY `index_postion` (`position`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------

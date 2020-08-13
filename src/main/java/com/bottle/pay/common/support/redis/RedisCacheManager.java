@@ -47,6 +47,27 @@ public class RedisCacheManager {
     }
 
     /**
+     * 指定缓存失效时间
+     *
+     * @param key
+     *            键
+     * @param time
+     *            时间(秒)
+     * @return
+     */
+    public boolean expireHours(String key, long time) {
+        try {
+            if (time > 0) {
+                redisTemplate.expire(key, time, TimeUnit.HOURS);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
      * 根据key 获取过期时间
      *
      * @param key
@@ -156,11 +177,28 @@ public class RedisCacheManager {
      *            要增加几(大于0)
      * @return
      */
-    public long incr(String key, long delta) {
+    public long incr(String key, long delta,long hour) {
         if (delta < 0) {
             throw new RuntimeException("递增因子必须大于0");
         }
-        return redisTemplate.opsForValue().increment(key, delta);
+        long incr = redisTemplate.opsForValue().increment(key, delta);
+        expireHours(key,hour);
+        return incr;
+    }
+
+    /**
+     * 递增
+     *
+     * @param key
+     *            键
+     * @param delta
+     *            要增加几,可以是负数
+     * @return
+     */
+    public Double incr(String key, double delta) {
+        double incr = redisTemplate.opsForValue().increment(key, delta);
+        expireHours(key,-1);
+        return incr;
     }
 
     /**

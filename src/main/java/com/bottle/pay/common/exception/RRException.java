@@ -11,10 +11,13 @@ public class RRException extends RuntimeException {
     private String msg;
     
     private int code = 500;
+
+    private Long systemCode;
     
     public RRException(String msg) {
 		super(msg);
 		this.msg = msg;
+		systemCode = System.currentTimeMillis();
 	}
 	
 	public RRException(String msg, Throwable e) {

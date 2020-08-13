@@ -53,7 +53,7 @@ public class BillOutEntity extends BottleBaseEntity {
 	/**
 	 * 付款专员ID
 	 */
-	private Integer businessId;
+	private Long businessId;
 	
 	/**
 	 * 订单状态：  1未支付 2 成功 3 失败
@@ -90,6 +90,12 @@ public class BillOutEntity extends BottleBaseEntity {
 	 */
 	private Integer billType;
 
+	/**
+	 * 1: 机构 2：出款员
+	 */
+	private Integer position;
+
+
 
     /**
      * BillOutEntity.toString()
@@ -116,6 +122,7 @@ public class BillOutEntity extends BottleBaseEntity {
                ", billType='" + billType + '\'' +
                ", agentId='" + agentId + '\'' +
                ", agentName='" + agentName + '\'' +
+				", position='" + position + '\'' +
                '}';
     }
 

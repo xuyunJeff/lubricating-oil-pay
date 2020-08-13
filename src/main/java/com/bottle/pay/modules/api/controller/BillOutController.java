@@ -2,7 +2,11 @@ package com.bottle.pay.modules.api.controller;
 
 import java.util.Map;
 
+import com.bottle.pay.common.constant.BillConstant;
+import com.bottle.pay.modules.api.entity.BillOutView;
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +17,8 @@ import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
 import com.bottle.pay.modules.api.entity.BillOutEntity;
 import com.bottle.pay.modules.api.service.BillOutService;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -74,5 +80,22 @@ public class BillOutController extends AbstractController {
 	public R batchRemove(@RequestBody Long[] id) {
 		return billOutService.batchRemove(id);
 	}
-	
+
+	@SysLog("后端派单")
+	@PostMapping("/push/order")
+	public R pushOrder(@RequestBody BillOutView billOutView, HttpServletRequest request){
+		SysUserEntity userEntity =	getUser();
+		String ip =request.getRemoteAddr();
+		// 第一步保存订单,派单给机构
+		BillOutEntity bill =billOutService.saveNewBillOut(billOutView.getMerchantName(),billOutView.getMerchantId(),
+				billOutView.getOrderNo(),ip,userEntity.getOrgId(),userEntity.getOrgName(),billOutView.getPrice(),
+				billOutView.getBankCardNo(),billOutView.getBankName(),billOutView.getBankAccountName());
+		// TODO 去查询商户的发过来的订单是否存在？
+		billOutService.BillsOutBalanceChange(billOutView.getMerchantId(),billOutView.getPrice());
+		if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto)){
+			// 自动派单给出款员
+		}
+
+		return R.ok();
+	}
 }

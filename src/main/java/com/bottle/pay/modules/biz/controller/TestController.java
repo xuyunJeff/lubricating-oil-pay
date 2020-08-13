@@ -31,7 +31,7 @@ public class TestController {
     @RequestMapping("/bank/add")
     public void addBank(){
         BlockBankCardEntity entity = new BlockBankCardEntity();
-        entity.setAgentId(1);
+        entity.setAgentId(1L);
         entity.setAgentName("we");
         entity.setBankAccountName("wefq");
         entity.setBankCardNo("ewqe");
