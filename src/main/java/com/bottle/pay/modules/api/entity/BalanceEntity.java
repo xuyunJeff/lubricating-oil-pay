@@ -61,9 +61,7 @@ public class BalanceEntity extends BottleBaseEntity {
 	 */
 	private BigDecimal billOutLimit;
 
-    /**
-     * BalanceEntity.toString()
-     */
+
     @Override
     public String toString() {
         return "BalanceEntity{" +
@@ -75,8 +73,8 @@ public class BalanceEntity extends BottleBaseEntity {
                               ", balancePaying='" + balancePaying + '\'' +
                               ", createTime='" + createTime + '\'' +
                               ", lastUpdate='" + lastUpdate + '\'' +
-                              ", agentId='" + agentId + '\'' +
-                              ", agentName='" + agentName + '\'' +
+                              ", orgId='" + orgId + '\'' +
+                              ", agentName='" + orgName + '\'' +
                               ", roleId='" + roleId + '\'' +
                               ", roleName='" + roleName + '\'' +
                               ", billOutLimit='" + billOutLimit + '\'' +

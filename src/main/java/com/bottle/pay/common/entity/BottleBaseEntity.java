@@ -39,10 +39,10 @@ public abstract class BottleBaseEntity implements Serializable {
     /**
      * 代理商id
      */
-    public Long agentId;
+    public Long orgId;
 
     /**
      * 代理商姓名
      */
-    public String agentName;
+    public String orgName;
 }

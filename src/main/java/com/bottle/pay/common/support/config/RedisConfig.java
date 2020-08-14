@@ -20,7 +20,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-    @Bean
+    @Bean("redisTemplate")
     public RedisTemplate<String, Object> redisTemplate(LettuceConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
@@ -44,7 +44,7 @@ public class RedisConfig {
         return template;
     }
 
-    @Bean
+    @Bean("stringRedisTemplate")
     public StringRedisTemplate stringRedisTemplate(LettuceConnectionFactory redisConnectionFactory) {
         StringRedisTemplate redisTemplate = new StringRedisTemplate();
         redisTemplate.setConnectionFactory(redisConnectionFactory);

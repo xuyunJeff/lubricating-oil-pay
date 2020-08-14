@@ -13,50 +13,50 @@ File Encoding         : 65001
 Date: 2020-08-14 00:42:48
 */
 
-SET FOREIGN_KEY_CHECKS=0;
-
 -- ----------------------------
 -- Table structure for balance
 -- ----------------------------
 DROP TABLE IF EXISTS `balance`;
 CREATE TABLE `balance` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `user_name` varchar(64) NOT NULL COMMENT '用户名',
-  `user_id` bigint(20) NOT NULL COMMENT '用户ID',
+  `user_id` bigint NOT NULL COMMENT '用户ID',
   `balance` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '可用余额',
   `balance_frozen` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '冻结余额',
   `balance_paying` decimal(13,4) NOT NULL DEFAULT '0.0000',
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `agent_id` bigint(20) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
-  `role_id` bigint(20) NOT NULL COMMENT '角色id',
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `org_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '代理商姓名',
+  `role_id` bigint NOT NULL COMMENT '角色id',
   `role_name` varchar(100) NOT NULL COMMENT '角色名称',
   `bill_out_limit` decimal(13,4) NOT NULL DEFAULT '3000.0000' COMMENT '自动出款上线额度，超出额度要手动派单',
   PRIMARY KEY (`id`),
   UNIQUE KEY `undex_userId` (`user_id`),
-  KEY `index_agent` (`user_name`,`user_id`,`agent_id`)
+  KEY `index_agent` (`user_name`,`user_id`,`org_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of balance
 -- ----------------------------
-INSERT INTO `balance` VALUES ('1', '106', '4', '70.0000', '0.0000', '0.0000', '2020-08-13 23:47:31', '2020-08-13 23:47:31', '2', 'DaXiong', '3', '商户', '3000.0000');
+BEGIN;
+INSERT INTO `balance` VALUES (1, '106', 4, 70.0000, 0.0000, 0.0000, '2020-08-13 23:47:31', '2020-08-13 23:47:31', 2, 'DaXiong', 3, '商户', 3000.0000);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for balance_procurement
 -- ----------------------------
 DROP TABLE IF EXISTS `balance_procurement`;
 CREATE TABLE `balance_procurement` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `out_business_id` bigint(20) NOT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `out_business_id` bigint NOT NULL,
   `out_business_name` varchar(32) NOT NULL,
   `in_business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
-  `in_business_id` bigint(20) NOT NULL COMMENT '付款专员ID',
+  `in_business_id` bigint NOT NULL COMMENT '付款专员ID',
   `price` decimal(13,4) NOT NULL COMMENT '账单金额',
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `agent_id` bigint(20) NOT NULL COMMENT '代理商id',
+  `org_id` bigint NOT NULL COMMENT '代理商id',
   `in_bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
   `in_bank_name` varchar(20) NOT NULL COMMENT '银行名称',
   `out_bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
@@ -66,166 +66,152 @@ CREATE TABLE `balance_procurement` (
   `in_after_balance` decimal(13,4) DEFAULT NULL,
   `out_after_balance` decimal(13,4) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `index` (`out_business_id`,`out_business_name`,`in_business_name`,`in_business_id`,`create_time`,`agent_id`,`in_bank_card_no`,`in_bank_name`,`out_bank_card_no`,`out_bank_name`)
+  KEY `index` (`out_business_id`,`out_business_name`,`in_business_name`,`in_business_id`,`create_time`,`org_id`,`in_bank_card_no`,`in_bank_name`,`out_bank_card_no`,`out_bank_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of balance_procurement
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for bank
 -- ----------------------------
 DROP TABLE IF EXISTS `bank`;
 CREATE TABLE `bank` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `bankName` varchar(40) DEFAULT NULL,
   `bankCode` varchar(20) DEFAULT NULL,
   `bankLog` varchar(80) DEFAULT NULL,
-  `wDEnable` tinyint(4) DEFAULT NULL COMMENT '是否支持取款(1,是，0否)',
+  `wDEnable` tinyint DEFAULT NULL COMMENT '是否支持取款(1,是，0否)',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of bank
 -- ----------------------------
-INSERT INTO `bank` VALUES ('1', '中国银行', 'BOC', '/temppic/bank/BOC.png', '1');
-INSERT INTO `bank` VALUES ('3', '中国农业银行', 'ABC', '/temppic/bank/ABC.png', '1');
-INSERT INTO `bank` VALUES ('4', '中国工商银行', 'ICBC', '/temppic/bank/ICBC.png', '1');
-INSERT INTO `bank` VALUES ('5', '民生银行', 'CMBC', '/temppic/bank/CMBC.png', '1');
-INSERT INTO `bank` VALUES ('6', '招商银行', 'CMB', '/temppic/bank/CMB.png', '1');
-INSERT INTO `bank` VALUES ('7', '兴业银行', 'CIB', '/temppic/bank/CIB.png', '1');
-INSERT INTO `bank` VALUES ('8', '交通银行', 'BOCOM', '/temppic/bank/BOCOM.png', '1');
-INSERT INTO `bank` VALUES ('9', '中信银行', 'CITIC', '/temppic/bank/CITIC.png', '1');
-INSERT INTO `bank` VALUES ('10', '中国光大银行', 'CEB', '/temppic/bank/CEB.png', '1');
-INSERT INTO `bank` VALUES ('11', '华夏银行', 'HXBC', '/temppic/bank/HXBC.png', '1');
-INSERT INTO `bank` VALUES ('12', '广发银行', 'CGB', '/temppic/bank/CGB.png', '1');
-INSERT INTO `bank` VALUES ('14', '浦发银行', 'SPDB', '/temppic/bank/SPDB.png', '1');
-INSERT INTO `bank` VALUES ('15', '平安银行', 'PAB', '/temppic/bank/PAB.png', '1');
-INSERT INTO `bank` VALUES ('16', '东亚银行', 'BEA', '/temppic/bank/BEA.png', '0');
-INSERT INTO `bank` VALUES ('17', '渤海银行', 'CBHB', '/temppic/bank/CBHB.png', '0');
-INSERT INTO `bank` VALUES ('18', '北京农商银行', 'BJNSB', '/temppic/bank/BJNSB.png', '0');
-INSERT INTO `bank` VALUES ('19', '北京银行', 'BOB', '/temppic/bank/BOB.png', '0');
-INSERT INTO `bank` VALUES ('20', '中国建设银行', 'CCB', '/temppic/bank/CCB.png', '0');
-INSERT INTO `bank` VALUES ('21', '宁波银行', 'NBCB', '/temppic/bank/NBCB.png', '0');
-INSERT INTO `bank` VALUES ('22', '南京银行', 'NJCB', '/temppic/bank/NJCB.png', '0');
-INSERT INTO `bank` VALUES ('23', '在线支付', 'PAY', '/temppic/bank/PAY.png', '0');
-INSERT INTO `bank` VALUES ('24', '中国邮政储蓄银行', 'PSBC', '/temppic/bank/PSBC.png', '0');
-INSERT INTO `bank` VALUES ('25', '支付宝', 'ZFB', '/temppic/bank/ZFB.png', '0');
-INSERT INTO `bank` VALUES ('26', '深圳发展银行', 'SFB', '/temppic/bank/SFB.png', '0');
-INSERT INTO `bank` VALUES ('27', '微信支付', 'WCP', '/temppic/bank/WCP.png', '0');
-INSERT INTO `bank` VALUES ('28', '上海农商行', 'SRCB', '/temppic/bank/SRCB.png', '0');
-INSERT INTO `bank` VALUES ('29', '上海银行', 'BOSC', '/temppic/bank/BOSC.png', '0');
+BEGIN;
+INSERT INTO `bank` VALUES (1, '中国银行', 'BOC', '/temppic/bank/BOC.png', 1);
+INSERT INTO `bank` VALUES (3, '中国农业银行', 'ABC', '/temppic/bank/ABC.png', 1);
+INSERT INTO `bank` VALUES (4, '中国工商银行', 'ICBC', '/temppic/bank/ICBC.png', 1);
+INSERT INTO `bank` VALUES (5, '民生银行', 'CMBC', '/temppic/bank/CMBC.png', 1);
+INSERT INTO `bank` VALUES (6, '招商银行', 'CMB', '/temppic/bank/CMB.png', 1);
+INSERT INTO `bank` VALUES (7, '兴业银行', 'CIB', '/temppic/bank/CIB.png', 1);
+INSERT INTO `bank` VALUES (8, '交通银行', 'BOCOM', '/temppic/bank/BOCOM.png', 1);
+INSERT INTO `bank` VALUES (9, '中信银行', 'CITIC', '/temppic/bank/CITIC.png', 1);
+INSERT INTO `bank` VALUES (10, '中国光大银行', 'CEB', '/temppic/bank/CEB.png', 1);
+INSERT INTO `bank` VALUES (11, '华夏银行', 'HXBC', '/temppic/bank/HXBC.png', 1);
+INSERT INTO `bank` VALUES (12, '广发银行', 'CGB', '/temppic/bank/CGB.png', 1);
+INSERT INTO `bank` VALUES (14, '浦发银行', 'SPDB', '/temppic/bank/SPDB.png', 1);
+INSERT INTO `bank` VALUES (15, '平安银行', 'PAB', '/temppic/bank/PAB.png', 1);
+INSERT INTO `bank` VALUES (16, '东亚银行', 'BEA', '/temppic/bank/BEA.png', 0);
+INSERT INTO `bank` VALUES (17, '渤海银行', 'CBHB', '/temppic/bank/CBHB.png', 0);
+INSERT INTO `bank` VALUES (18, '北京农商银行', 'BJNSB', '/temppic/bank/BJNSB.png', 0);
+INSERT INTO `bank` VALUES (19, '北京银行', 'BOB', '/temppic/bank/BOB.png', 0);
+INSERT INTO `bank` VALUES (20, '中国建设银行', 'CCB', '/temppic/bank/CCB.png', 0);
+INSERT INTO `bank` VALUES (21, '宁波银行', 'NBCB', '/temppic/bank/NBCB.png', 0);
+INSERT INTO `bank` VALUES (22, '南京银行', 'NJCB', '/temppic/bank/NJCB.png', 0);
+INSERT INTO `bank` VALUES (23, '在线支付', 'PAY', '/temppic/bank/PAY.png', 0);
+INSERT INTO `bank` VALUES (24, '中国邮政储蓄银行', 'PSBC', '/temppic/bank/PSBC.png', 0);
+INSERT INTO `bank` VALUES (25, '支付宝', 'ZFB', '/temppic/bank/ZFB.png', 0);
+INSERT INTO `bank` VALUES (26, '深圳发展银行', 'SFB', '/temppic/bank/SFB.png', 0);
+INSERT INTO `bank` VALUES (27, '微信支付', 'WCP', '/temppic/bank/WCP.png', 0);
+INSERT INTO `bank` VALUES (28, '上海农商行', 'SRCB', '/temppic/bank/SRCB.png', 0);
+INSERT INTO `bank` VALUES (29, '上海银行', 'BOSC', '/temppic/bank/BOSC.png', 0);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for bank_card
 -- ----------------------------
 DROP TABLE IF EXISTS `bank_card`;
 CREATE TABLE `bank_card` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
-  `business_id` int(11) NOT NULL COMMENT '付款专员ID',
+  `business_id` int NOT NULL COMMENT '付款专员ID',
   `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
   `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
   `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
-  `agent_id` int(11) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `org_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '代理商姓名',
   `balance` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '可用余额',
-  `card_status` tinyint(4) NOT NULL COMMENT '1 可用 2 冻结 ',
-  `enable` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 禁用 1 启用',
+  `card_status` tinyint NOT NULL COMMENT '1 可用 2 冻结 ',
+  `enable` tinyint NOT NULL DEFAULT '0' COMMENT '0 禁用 1 启用',
   `balance_daily_limit` decimal(13,4) NOT NULL DEFAULT '50000.0000',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of bank_card
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for bill_in
 -- ----------------------------
 DROP TABLE IF EXISTS `bill_in`;
 CREATE TABLE `bill_in` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
-  `merchant_id` bigint(20) NOT NULL COMMENT '商户ID',
+  `merchant_id` bigint NOT NULL COMMENT '商户ID',
   `bill_id` varchar(20) NOT NULL COMMENT '订单号：商户id+时间戳 + 4位自增',
   `third_bill_id` varchar(64) NOT NULL COMMENT '第三方订单号',
   `ip` varchar(20) NOT NULL COMMENT '第三方订单派发服务器ip',
   `business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
-  `business_id` int(11) NOT NULL COMMENT '付款专员ID',
-  `bill_status` tinyint(4) NOT NULL COMMENT '订单状态：  1未支付 2 成功 3 失败',
+  `business_id` int NOT NULL COMMENT '付款专员ID',
+  `bill_status` tinyint NOT NULL COMMENT '订单状态：  1未支付 2 成功 3 失败',
   `price` decimal(13,4) NOT NULL COMMENT '账单金额',
   `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
   `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
   `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
-  `agent_id` int(11) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `org_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '代理商姓名',
   `comment` varchar(128) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `index_agent` (`agent_id`,`create_time`,`last_update`) USING BTREE,
-  KEY `index_merchant` (`create_time`,`last_update`,`merchant_name`,`agent_id`),
-  KEY `index_type` (`bank_card_no`,`bank_account_name`,`agent_id`),
-  KEY `index_business` (`create_time`,`last_update`,`business_name`,`business_id`,`agent_id`)
+  KEY `index_agent` (`org_id`,`create_time`,`last_update`) USING BTREE,
+  KEY `index_merchant` (`create_time`,`last_update`,`merchant_name`,`org_id`),
+  KEY `index_type` (`bank_card_no`,`bank_account_name`,`org_id`),
+  KEY `index_business` (`create_time`,`last_update`,`business_name`,`business_id`,`org_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of bill_in
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for bill_out
 -- ----------------------------
 DROP TABLE IF EXISTS `bill_out`;
 CREATE TABLE `bill_out` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
-  `merchant_id` bigint(20) NOT NULL COMMENT '商户ID',
+  `merchant_id` bigint NOT NULL COMMENT '商户ID',
   `bill_id` varchar(20) NOT NULL COMMENT '订单号：商户id+时间戳 + 4位自增',
   `third_bill_id` varchar(64) NOT NULL COMMENT '第三方订单号',
   `ip` varchar(20) NOT NULL COMMENT '第三方订单派发服务器ip',
   `business_name` varchar(32) DEFAULT NULL COMMENT '付款专员姓名',
-  `business_id` bigint(20) DEFAULT NULL COMMENT '付款专员ID',
-  `bill_status` tinyint(4) NOT NULL COMMENT '订单状态：  1未支付 2 成功 3 失败',
-  `notice` tinyint(4) NOT NULL COMMENT '回调：1未通知 2 已通知 3 失败',
+  `business_id` bigint DEFAULT NULL COMMENT '付款专员ID',
+  `bill_status` tinyint NOT NULL COMMENT '订单状态：  1未支付 2 成功 3 失败',
+  `notice` tinyint NOT NULL COMMENT '回调：1未通知 2 已通知 3 失败',
   `price` decimal(13,4) NOT NULL COMMENT '账单金额',
   `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
   `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
   `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
-  `bill_type` tinyint(4) NOT NULL COMMENT '1 手动 2 自动 3 大额 4 订单退回机构',
-  `agent_id` bigint(20) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
-  `position` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1: 机构 2：出款员',
+  `bill_type` tinyint NOT NULL COMMENT '1 手动 2 自动 3 大额 4 订单退回机构',
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `org_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '代理商姓名',
+  `position` tinyint NOT NULL DEFAULT '1' COMMENT '1: 机构 2：出款员',
   PRIMARY KEY (`id`),
-  KEY `index_agent` (`agent_id`,`create_time`,`last_update`) USING BTREE,
-  KEY `index_merchant` (`create_time`,`last_update`,`merchant_name`,`agent_id`),
-  KEY `index_type` (`bank_card_no`,`bank_account_name`,`bill_type`,`agent_id`),
-  KEY `index_business` (`create_time`,`last_update`,`business_name`,`business_id`,`agent_id`),
+  KEY `index_agent` (`org_id`,`create_time`,`last_update`) USING BTREE,
+  KEY `index_merchant` (`create_time`,`last_update`,`merchant_name`,`org_id`),
+  KEY `index_type` (`bank_card_no`,`bank_account_name`,`bill_type`,`org_id`),
+  KEY `index_business` (`create_time`,`last_update`,`business_name`,`business_id`,`org_id`),
   KEY `index_postion` (`position`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of bill_out
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for block_bank_card
 -- ----------------------------
 DROP TABLE IF EXISTS `block_bank_card`;
 CREATE TABLE `block_bank_card` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
   `bank_name` varchar(20) NOT NULL COMMENT '银行名称',
   `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
-  `agent_id` bigint(20) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `org_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '代理商姓名',
   PRIMARY KEY (`id`),
   KEY `index_bankcard` (`bank_card_no`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -233,16 +219,18 @@ CREATE TABLE `block_bank_card` (
 -- ----------------------------
 -- Records of block_bank_card
 -- ----------------------------
-INSERT INTO `block_bank_card` VALUES ('1', '2020-08-12 19:20:08', 'ewqe', 'qwe', 'wefq', '1', 'we');
+BEGIN;
+INSERT INTO `block_bank_card` VALUES (1, '2020-08-12 19:20:08', 'ewqe', 'qwe', 'wefq', 1, 'we');
+COMMIT;
 
 -- ----------------------------
 -- Table structure for frozen_detail
 -- ----------------------------
 DROP TABLE IF EXISTS `frozen_detail`;
 CREATE TABLE `frozen_detail` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
-  `merchant_id` bigint(20) NOT NULL COMMENT '商户ID',
+  `merchant_id` bigint NOT NULL COMMENT '商户ID',
   `balance_frozen` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '冻结余额',
   `balance_unfrozen` decimal(13,4) NOT NULL DEFAULT '0.0000' COMMENT '解冻余额',
   `bank_card_no` varchar(19) NOT NULL COMMENT '付款会员的卡号',
@@ -250,34 +238,45 @@ CREATE TABLE `frozen_detail` (
   `bank_account_name` varchar(32) NOT NULL COMMENT '付款用户名',
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `agent_id` bigint(20) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `org_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '代理商姓名',
   `business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
-  `business_id` bigint(20) NOT NULL COMMENT '付款专员ID',
+  `business_id` bigint NOT NULL COMMENT '付款专员ID',
   PRIMARY KEY (`id`),
-  KEY `index_agent` (`agent_id`)
+  KEY `index_agent` (`org_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of frozen_detail
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for ip_limit
 -- ----------------------------
 DROP TABLE IF EXISTS `ip_limit`;
 CREATE TABLE `ip_limit` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id` bigint NOT NULL AUTO_INCREMENT,
   `ip_list` varchar(255) NOT NULL,
-  `agent_id` bigint(20) NOT NULL COMMENT '代理商id',
-  `agent_name` varchar(32) NOT NULL COMMENT '代理商姓名',
-  `is_white` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1: 白名单 ； 0：黑名单',
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `org_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '代理商姓名',
+  `is_white` tinyint NOT NULL DEFAULT '1' COMMENT '1: 白名单 ； 0：黑名单',
   `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
   `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1:商户对应服务器 2 商户登录后台的电脑',
+  `type` tinyint NOT NULL DEFAULT '1' COMMENT '1:商户对应服务器 2 商户登录后台的电脑',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Table structure for online_business
+-- ----------------------------
+DROP TABLE IF EXISTS `online_business`;
+CREATE TABLE `online_business` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `org_name` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '代理商姓名',
+  `business_name` varchar(32) NOT NULL COMMENT '付款专员姓名',
+  `business_id` bigint NOT NULL COMMENT '付款专员ID',
+  `position` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+SET FOREIGN_KEY_CHECKS = 1;
 -- ----------------------------
 -- Records of ip_limit
 -- ----------------------------

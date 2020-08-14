@@ -10,8 +10,8 @@
 			`bank_card_no`, 
 			`bank_name`, 
 			`bank_account_name`, 
-			`agent_id`, 
-			`agent_name`
+			`org_id`,
+			`org_name`
 		FROM
 			block_bank_card
 		ORDER BY
@@ -24,16 +24,16 @@
 			`bank_card_no`, 
 			`bank_name`, 
 			`bank_account_name`, 
-			`agent_id`, 
-			`agent_name`
+			`org_id`,
+			`org_name`
 		)
 		VALUES (
 			#{createTime}, 
 			#{bankCardNo}, 
 			#{bankName}, 
 			#{bankAccountName}, 
-			#{agentId}, 
-			#{agentName}
+			#{orgId},
+			#{orgName}
 		)
 	</insert>
 	
@@ -44,8 +44,8 @@
 			`bank_card_no`, 
 			`bank_name`, 
 			`bank_account_name`, 
-			`agent_id`, 
-			`agent_name`
+			`org_id`,
+			`org_name`
 		FROM
 			block_bank_card
 		WHERE
@@ -59,8 +59,8 @@
 			<if test="bankCardNo != null">`bank_card_no` = #{bankCardNo}, </if>
 			<if test="bankName != null">`bank_name` = #{bankName}, </if>
 			<if test="bankAccountName != null">`bank_account_name` = #{bankAccountName}, </if>
-			<if test="agentId != null">`agent_id` = #{agentId}, </if>
-			<if test="agentName != null">`agent_name` = #{agentName}</if>
+			<if test="orgId != null">`org_id` = #{orgId}, </if>
+			<if test="orgName != null">`org_name` = #{orgName}</if>
 		</set>
 		WHERE
 			id = #{id}

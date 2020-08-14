@@ -2,6 +2,7 @@ package com.bottle.pay.common.entity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 页面响应entity
@@ -44,6 +45,15 @@ public class R extends HashMap<String, Object> {
 	
 	public static R ok() {
 		return new R();
+	}
+
+	public Integer getCode(){
+		Object obj = Optional.ofNullable(get("code")).orElse(500);
+		return (Integer)obj;
+	}
+
+	public boolean isOk(){
+		return  getCode()==0;
 	}
 
 	@Override

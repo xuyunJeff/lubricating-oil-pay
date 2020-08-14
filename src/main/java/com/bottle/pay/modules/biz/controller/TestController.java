@@ -13,9 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by zhy on 2020/8/13.
- */
+
 @Slf4j
 @RestController
 @RequestMapping("/test")
@@ -31,8 +29,8 @@ public class TestController {
     @RequestMapping("/bank/add")
     public void addBank(){
         BlockBankCardEntity entity = new BlockBankCardEntity();
-        entity.setAgentId(1L);
-        entity.setAgentName("we");
+        entity.setOrgId(1L);
+        entity.setOrgName("we");
         entity.setBankAccountName("wefq");
         entity.setBankCardNo("ewqe");
         entity.setBankName("qwe");

@@ -1,5 +1,7 @@
 package com.bottle.pay.common.support.interceptor;
 
+import com.bottle.pay.common.constant.IPConstant;
+import com.bottle.pay.common.support.redis.RedisCacheManager;
 import io.jsonwebtoken.JwtException;
 import com.bottle.pay.common.annotation.RestAnon;
 import com.bottle.pay.common.constant.RestApiConstant;
@@ -11,12 +13,16 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
+import java.util.List;
 
 /**
  * rest api拦截器
@@ -28,6 +34,8 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
     private static final Logger log = LoggerFactory.getLogger(RestApiInterceptor.class);
 
     private SysUserService userService = (SysUserService) SpringContextUtils.getBean("sysUserService");
+
+    private RedisCacheManager redisCacheManager = (RedisCacheManager)SpringContextUtils.getBean(RedisCacheManager.class);
 
     private JwtUtils jwtUtils = SpringContextUtils.getBean("jwtUtils", JwtUtils.class);
 
@@ -108,8 +116,13 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
             WebUtils.write(response, JSONUtils.beanToJson(RestApiConstant.TokenErrorEnum.USER_DISABLE.getResp()));
             return false;
         }
-
-        return true;
+        Long orgId = ShiroUtils.getUserEntity().getOrgId();
+        String key = IPConstant.getIpWhiteListCacheKey(sysUserEntity.getUserId(), IPConstant.MerchantIPEnum.ADMIN.getCode());
+        List<Object> ipList = redisCacheManager.lGet(key,0,-1);
+        //IP 白名单
+        //TODO 商户服务器IP
+        String ipAddr = WebUtils.getIpAddr();
+        return ipList.stream().anyMatch(ip->ip.equals(ipAddr));
     }
 
     /**

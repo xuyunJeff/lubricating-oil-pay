@@ -1,7 +1,10 @@
 package com.bottle.pay.modules.biz.controller;
 
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
+import com.bottle.pay.common.constant.IPConstant;
+import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import com.bottle.pay.modules.biz.service.IpLimitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,28 +14,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bottle.pay.common.annotation.SysLog;
 import com.bottle.pay.modules.sys.controller.AbstractController;
-import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
 
-/**
- * 
- * @author Zhy
- */
 @RestController
 @RequestMapping("/merchant/ip")
 public class IpLimitController extends AbstractController {
 	
 	@Autowired
 	private IpLimitService ipLimitService;
+
+	@Autowired
+	private RedisCacheManager redisCacheManager;
 	
 	/**
-	 * 列表
-	 * @param params
+	 * 列表 商户查询自己登陆ip 黑/白名单
+	 * @param ipLimit
 	 * @return
 	 */
 	@RequestMapping("/list")
-	public Page<IpLimitEntity> list(@RequestBody Map<String, Object> params) {
-		return ipLimitService.listEntity(params);
+	public List<IpLimitEntity> list(@RequestBody IpLimitEntity ipLimit) {
+		//TODO 商户服务器IP白名单
+		return ipLimitService.select(ipLimit);
 	}
 		
 	/**
@@ -43,18 +45,17 @@ public class IpLimitController extends AbstractController {
 	@SysLog("新增")
 	@RequestMapping("/save")
 	public R save(@RequestBody IpLimitEntity ipLimit) {
-		return ipLimitService.saveEntity(ipLimit);
+		ipLimit.setOrgId(super.getUser().getOrgId());
+		ipLimit.setOrgName(super.getUser().getOrgName());
+		R  r = ipLimitService.saveEntity(ipLimit);
+		if(r.isOk()){
+			String ipList = ipLimit.getIpList();
+			String key = IPConstant.getIpWhiteListCacheKey(super.getUser().getUserId(),ipLimit.getType());
+			redisCacheManager.lSet(key,Arrays.asList(ipList.split("#")));
+		}
+		return r;
 	}
-	
-	/**
-	 * 根据id查询详情
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping("/info")
-	public R getById(@RequestBody Long id) {
-		return ipLimitService.getEntityById(id);
-	}
+
 	
 	/**
 	 * 修改
@@ -64,18 +65,12 @@ public class IpLimitController extends AbstractController {
 	@SysLog("修改")
 	@RequestMapping("/update")
 	public R update(@RequestBody IpLimitEntity ipLimit) {
-		return ipLimitService.updateEntity(ipLimit);
-	}
-	
-	/**
-	 * 删除
-	 * @param id
-	 * @return
-	 */
-	@SysLog("删除")
-	@RequestMapping("/remove")
-	public R batchRemove(@RequestBody Long[] id) {
-		return ipLimitService.batchRemove(id);
+		R r = ipLimitService.updateEntity(ipLimit);
+		if(r.isOk()){
+			String key = IPConstant.getIpWhiteListCacheKey(super.getUser().getUserId(),ipLimit.getType());
+			redisCacheManager.lSet(key,Arrays.asList(ipLimit.getIpList().split("#")));
+		}
+		return r;
 	}
 	
 }
