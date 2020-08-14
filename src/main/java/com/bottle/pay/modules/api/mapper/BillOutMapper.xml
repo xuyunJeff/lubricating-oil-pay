@@ -145,4 +145,17 @@
 	<select id="sumByBusinessId" resultType="java.math.BigDecimal">
 		select sum(price) price from bill_out where business_id= #{businessId} and bill_status = 1 ;
 	</select>
+	<update id="updateBusinessByBillId">
+		UPDATE bill_out
+		<set>
+			<if test="businessName != null">`business_name` = #{businessName}, </if>
+			<if test="businessId != null">`business_id` = #{businessId}, </if>
+			<if test="billStatus != null">`bill_status` = #{billStatus}, </if>
+			<if test="billType != null">`bill_type` = #{billType}, </if>
+			<if test="position != null">`position` = #{position}</if>
+		</set>
+		WHERE
+		bill_id = #{billId}
+	</update>
+
 </mapper>

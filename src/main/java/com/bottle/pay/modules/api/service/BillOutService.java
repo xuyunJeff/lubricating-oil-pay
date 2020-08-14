@@ -54,18 +54,41 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     @Async
     public BillOutEntity billsOutBusiness(BillOutEntity entity) {
         Map<OnlineBusinessEntity, BigDecimal> businessOnline = null;
-        BigDecimal free = null;
+        OnlineBusinessEntity onlineBusinessEntity ;
+        BigDecimal free ;
         do {
             businessOnline = getBusinessFreeBalance(entity);
             free = businessOnline.values().stream().findFirst().get();
+            onlineBusinessEntity = businessOnline.keySet().stream().findFirst().get();
         } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
-        // 第三步派单给出款员事务，付款银行卡默认为当前开启的银行卡
-
+        // 第三步派单给出款员(事务)，付款银行卡默认为当前开启的银行卡
+        entity =  updateBillOutToBusiness(entity,onlineBusinessEntity);
         // 第四步增加出款员代付中余额，扣除可用余额
-
-        return null;
+        incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(),entity.getPrice());
+        return entity;
     }
 
+    @Transactional
+    public BillOutEntity  updateBillOutToBusiness(BillOutEntity entity,OnlineBusinessEntity onlineBusinessEntity) {
+        entity.setPosition(BillConstant.BillPostionEnum.Business.getCode());
+        entity.setBusinessName(onlineBusinessEntity.getBusinessName());
+        entity.setBusinessId(onlineBusinessEntity.getBusinessId());
+        // TODO 获取在线出款员的开启的银行卡 @mighty
+        entity.setBusinessBankAccountName("@mighty");
+        entity.setBusinessBankCardNo("8888888888888888888");
+        entity.setBusinessBankName("中国人民银行");
+        int i = mapper.updateBusinessByBillId(entity);
+        if (i == 0) {
+            log.error("订单保存错误 {}", entity.toString());
+            throw new RRException("订单保存错误");
+        }
+        return entity;
+    }
+    /**
+     * 获取在线出款员的空余余额和对应的在线出款员数据
+     * @param entity
+     * @return
+     */
     public Map<OnlineBusinessEntity, BigDecimal> getBusinessFreeBalance(BillOutEntity entity) {
         // 第一步获取在线的出款员
         OnlineBusinessEntity businessOnline = onlineBusinessService.getNextBusiness(entity.getOrgId());
@@ -77,6 +100,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     }
 
     /**
+     *
+     * 计算在线出款员的空余余额
      * @param businessTotalBalance
      * @param businessOnline
      * @return
@@ -87,7 +112,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     }
 
     /**
-     * 增加代付中余额，扣除商户可用余额
+     * 增加商户代付中余额，扣除商户可用余额
      *
      * @param merchantId
      * @param amount
@@ -102,12 +127,13 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     /**
      * Redis 出款员代付中余额变动，返回变动后余额
      *
+     * 传入金额后，增加redis中的出款员余额
      * @param businessId
      * @param amount     最小1，分为单位
      */
-    public synchronized BigDecimal incrBusinessBillOutBalance(Long businessId, BigDecimal amount) {
+    public synchronized BigDecimal incrBusinessBillOutBalanceRedis(Long businessId, BigDecimal amount) {
         amount = amount.multiply(BigDecimal.valueOf(100));
-        String redisKey = BillConstant.BillRedisKey.billOutBalance(businessId.toString());
+        String redisKey = BillConstant.BillRedisKey.billOutBusinessBalance(businessId.toString());
         BigDecimal balanceBefore = getBusinessBillOutBalance(businessId);
         BigDecimal balanceAfter = BigDecimal.valueOf(redisCacheManager.incr(redisKey, Double.valueOf(amount.toString())));
         log.info("代付余额变动，变动前余额：" + balanceBefore + "分,变动后余额：" + balanceAfter + "分,变动金额：" + amount + "分");
@@ -121,7 +147,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @return
      */
     public BigDecimal getBusinessBillOutBalance(Long businessId) {
-        String redisKey = BillConstant.BillRedisKey.billOutBalance(businessId.toString());
+        String redisKey = BillConstant.BillRedisKey.billOutBusinessBalance(businessId.toString());
         Object balance = redisCacheManager.get(redisKey);
         if (ObjectUtils.isEmpty(balance)) {
             BigDecimal businessPaying = mapper.sumByBusinessId(businessId);
@@ -131,6 +157,22 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         return new BigDecimal(String.valueOf(balance));
     }
 
+    /**
+     *
+     * 生成订单并保存到机构
+     *
+     * @param merchantName
+     * @param merchantId
+     * @param thirdBillId
+     * @param ip
+     * @param agentId
+     * @param agentName
+     * @param price
+     * @param bankCardNo
+     * @param bankName
+     * @param bankAccountName
+     * @return
+     */
     public BillOutEntity saveNewBillOut(String merchantName, Long merchantId, String thirdBillId, String ip, Long agentId, String agentName, BigDecimal price, String bankCardNo, String bankName, String bankAccountName) {
         BillOutEntity entity = new BillOutEntity();
         entity.setMerchantName(merchantName);
@@ -159,6 +201,13 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         return entity;
     }
 
+    /**
+     * 判断该订单是自动还是手动：大额？
+     *
+     * @param price
+     * @param merchantId
+     * @return
+     */
     private BillConstant.BillTypeEnum setBillType(BigDecimal price, Long merchantId) {
         BalanceEntity balance = new BalanceEntity();
         balance.setUserId(merchantId);

@@ -12,4 +12,6 @@ import java.math.BigDecimal;
 public interface BillOutMapper extends BottleBaseMapper<BillOutEntity> {
 
     public BigDecimal sumByBusinessId(Long businessId);
+
+    public int updateBusinessByBillId(BillOutEntity entity);
 }

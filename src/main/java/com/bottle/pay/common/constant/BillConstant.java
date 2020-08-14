@@ -6,15 +6,15 @@ public class BillConstant {
 
     public static final String BILL_OUT_ID = "bill:out";
     // 代付中余额
-    public static final String BILL_OUT_BALANCE = "bill:out:balance";
+    public static final String BILL_OUT_BUSINESS_BALANCE = "bill:out:balance";
 
     public interface BillRedisKey {
-        public static String billOutBalance(String merchantId) {
-            return BILL_OUT_BALANCE+":"+ merchantId;
+        public static String billOutBusinessBalance(String businessId) {
+            return BILL_OUT_BUSINESS_BALANCE +":"+ businessId;
         }
 
         public static String billOutId(String merchantId,String today) {
-            return BILL_OUT_BALANCE+":"+today+":"+ merchantId;
+            return BILL_OUT_ID+":"+today+":"+ merchantId;
         }
     }
 

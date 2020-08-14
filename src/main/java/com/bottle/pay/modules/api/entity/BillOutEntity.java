@@ -95,6 +95,21 @@ public class BillOutEntity extends BottleBaseEntity {
 	 */
 	private Integer position;
 
+	/**
+	 * 出款员的当前开启卡号
+	 */
+	private String businessBankCardNo;
+
+	/**
+	 * 出款员的当前开启银行名称
+	 */
+	private String businessBankName;
+
+	/**
+	 * 出款员的当前开启银行卡用户名
+	 */
+	private String businessBankAccountName;
+
 
 
     /**
