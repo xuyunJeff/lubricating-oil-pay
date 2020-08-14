@@ -56,7 +56,7 @@ public class BankCardEntity extends BottleBaseEntity {
 	/**
 	 * 0 禁用 1 启用
 	 */
-	private Integer enable;
+	private Boolean enable;
 	
 	/**
 	 * 
