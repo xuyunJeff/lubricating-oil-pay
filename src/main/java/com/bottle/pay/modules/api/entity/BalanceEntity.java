@@ -74,7 +74,7 @@ public class BalanceEntity extends BottleBaseEntity {
                               ", createTime='" + createTime + '\'' +
                               ", lastUpdate='" + lastUpdate + '\'' +
                               ", orgId='" + orgId + '\'' +
-                              ", agentName='" + orgName + '\'' +
+                              ", orgName='" + orgName + '\'' +
                               ", roleId='" + roleId + '\'' +
                               ", roleName='" + roleName + '\'' +
                               ", billOutLimit='" + billOutLimit + '\'' +

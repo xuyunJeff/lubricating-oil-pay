@@ -6,7 +6,7 @@ import java.util.List;
 import com.bottle.pay.common.constant.IPConstant;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.common.utils.CommonUtils;
-import com.bottle.pay.modules.api.service.BalanceService;
+import com.bottle.pay.modules.api.service.MerchantService;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.biz.view.MerchantView;
@@ -30,7 +30,7 @@ public class MerchantController extends AbstractController {
 	private RedisCacheManager redisCacheManager;
 
 	@Autowired
-	private BalanceService balanceService;
+	private MerchantService merchantService;
 	
 	/**
 	 * 列表 商户查询自己登陆ip 黑/白名单
@@ -41,7 +41,7 @@ public class MerchantController extends AbstractController {
 	 * @return
 	 */
 	@RequestMapping("/ip/list")
-	public List<IpLimitEntity> list(@RequestBody IpLimitEntity ipLimit) {
+	public List<IpLimitEntity> list(IpLimitEntity ipLimit) {
 		return ipLimitService.select(ipLimit);
 	}
 		
@@ -83,13 +83,13 @@ public class MerchantController extends AbstractController {
 
 
 	/**
-	 * 获取商户信息
+	 * 商户自己查看商户信息商户信息
 	 * @return
 	 */
 	@RequestMapping("/info")
 	public R getMerchantInfo(){
-		MerchantView view = balanceService.getMerchantBalance(super.getUserId());
+		MerchantView view = merchantService.getMerchantBalance(super.getUserId());
 		return CommonUtils.msg(view);
 	}
-	
+
 }

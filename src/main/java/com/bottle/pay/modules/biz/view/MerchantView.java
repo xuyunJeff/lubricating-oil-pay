@@ -7,7 +7,6 @@ import java.util.List;
 
 @Data
 public class MerchantView {
-
     /**
      * 机构ID
      */
@@ -42,6 +41,11 @@ public class MerchantView {
      * 邮箱
      */
     private String email;
+
+    /**
+     * 自动出款上线额度，超出额度要手动派单
+     */
+    private BigDecimal billOutLimit;
     /**
      * 可用余额
      */

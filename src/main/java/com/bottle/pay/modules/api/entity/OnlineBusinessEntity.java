@@ -25,12 +25,12 @@ public class OnlineBusinessEntity extends BottleBaseEntity {
 	/**
 	 * 代理商id
 	 */
-	private Long agentId;
+	private Long orgId;
 	
 	/**
 	 * 代理商姓名
 	 */
-	private String agentName;
+	private String orgName;
 	
 	/**
 	 * 付款专员姓名

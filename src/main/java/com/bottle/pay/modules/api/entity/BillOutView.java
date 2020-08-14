@@ -13,8 +13,8 @@ public class BillOutView {
     private String merchantName;
     private Long merchantId;
     private String orderNo;
-    private  Integer agentId;
-    private  String agentName;
+    private  Long orgId;
+    private  String orgName;
     private   BigDecimal price;
     private   String bankCardNo;
     private   String bankName;
@@ -26,8 +26,8 @@ public class BillOutView {
                 "merchantName='" + merchantName + '\'' +
                 ", merchantId=" + merchantId +
                 ", orderNo='" + orderNo + '\'' +
-                ", agentId=" + agentId +
-                ", agentName='" + agentName + '\'' +
+                ", orgId=" + orgId +
+                ", orgName='" + orgName + '\'' +
                 ", price=" + price +
                 ", bankCardNo='" + bankCardNo + '\'' +
                 ", bankName='" + bankName + '\'' +

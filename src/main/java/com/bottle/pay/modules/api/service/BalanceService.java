@@ -1,19 +1,21 @@
 package com.bottle.pay.modules.api.service;
 
+import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.modules.api.dao.BalanceMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
-import com.bottle.pay.modules.biz.view.MerchantView;
+import com.bottle.pay.modules.sys.dao.SysRoleMapper;
 import com.bottle.pay.modules.sys.dao.SysUserMapper;
+import com.bottle.pay.modules.sys.entity.SysRoleEntity;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 
@@ -23,8 +25,13 @@ import java.math.BigDecimal;
  @Slf4j
 public class BalanceService  extends BottleBaseService<BalanceMapper,BalanceEntity> {
 
-     @Autowired
-     private SysUserMapper sysUserMapper;
+  @Value("${merchant.billOutLimit.daily:50000}")
+   private BigDecimal dailyOutLimit;
+  @Autowired
+  private SysRoleMapper sysRoleMapper;
+
+  @Autowired
+  private SysUserMapper sysUserMapper;
 
  /**
   * 此处必须事务才能生效
@@ -45,27 +52,39 @@ public class BalanceService  extends BottleBaseService<BalanceMapper,BalanceEnti
    return balanceAfter;
   }
 
- /**
-  * 根据userId 查询余额
-  * @param userId
-  * @return
-  */
-  private BalanceEntity getBalanceByUserId(Long userId){
-   BalanceEntity query = new BalanceEntity();
-   query.setUserId(userId);
-   return mapper.getObject(query);
-  }
 
-  public MerchantView getMerchantBalance(Long userId){
+    /**
+     * 创建商户余额账户
+     * @return
+     */
+  public BalanceEntity createMerchantBalanceAccount(Long userId){
       SysUserEntity userEntity = sysUserMapper.getObjectById(userId);
-      Assert.notNull(userEntity,userId+"商户不存在");
-      BalanceEntity entity = getBalanceByUserId(userId);
-      Assert.notNull(entity,userId+"商户不存在");
-      MerchantView view = new MerchantView();
-      BeanUtils.copyProperties(entity,view);
-      BeanUtils.copyProperties(userEntity,view);
-      //TODO 产品类型 后端密钥  密码是加密后的？
-      return  view;
+      if(userEntity == null ){
+         log.warn("userId:{} 在 user表里没有找到",userId);
+         throw new RRException("创建商户余额账户失败");
+      }
+      long roleId = userEntity.getRoleIdList().get(0);
+      SysRoleEntity sysRoleEntity = sysRoleMapper.getObjectById(roleId);
+      if(sysRoleEntity == null){
+        log.warn("userId:{}对应角色roleId:{}在角色表里没有找到",userId,roleId);
+        throw new RRException("创建商户余额账户失败");
+      }
+      Date date = new Date();
+      BalanceEntity entity = new BalanceEntity();
+      entity.setUserName(userEntity.getUsername());
+      entity.setUserId(userEntity.getUserId());
+      entity.setBalance(BigDecimal.ZERO);
+      entity.setBalanceFrozen(BigDecimal.ZERO);
+      entity.setBalancePaying(BigDecimal.ZERO);
+      entity.setRoleId(roleId);
+      entity.setRoleName(sysRoleEntity.getRoleName());
+      entity.setBillOutLimit(dailyOutLimit);
+      entity.setCreateTime(date);
+      entity.setLastUpdate(date);
+      entity.setOrgId(userEntity.getOrgId());
+      entity.setOrgName(userEntity.getOrgName());
+      mapper.save(entity);
+      return entity;
   }
 
 }

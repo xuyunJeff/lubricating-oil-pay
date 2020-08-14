@@ -10,7 +10,7 @@
 			`bank_card_no`, 
 			`bank_name`, 
 			`bank_account_name`, 
-			`org_id`,
+			`org_id`, 
 			`org_name`
 		FROM
 			block_bank_card
@@ -24,7 +24,7 @@
 			`bank_card_no`, 
 			`bank_name`, 
 			`bank_account_name`, 
-			`org_id`,
+			`org_id`, 
 			`org_name`
 		)
 		VALUES (
@@ -32,7 +32,7 @@
 			#{bankCardNo}, 
 			#{bankName}, 
 			#{bankAccountName}, 
-			#{orgId},
+			#{orgId}, 
 			#{orgName}
 		)
 	</insert>
@@ -44,7 +44,7 @@
 			`bank_card_no`, 
 			`bank_name`, 
 			`bank_account_name`, 
-			`org_id`,
+			`org_id`, 
 			`org_name`
 		FROM
 			block_bank_card

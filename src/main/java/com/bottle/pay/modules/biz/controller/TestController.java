@@ -35,7 +35,7 @@ public class TestController {
         entity.setBankCardNo("ewqe");
         entity.setBankName("qwe");
         entity.setCreateTime(new Date());
-        blockBankCardService.saveBlockBankCard(entity);
+        blockBankCardService.saveEntity(entity);
     }
 
     @RequestMapping("/bank/list")
@@ -43,7 +43,7 @@ public class TestController {
         Map m = new HashMap();
         m.put("pageNumber",1);
         m.put("pageSize","1");
-       return blockBankCardService.listBlockBankCard(m);
+       return blockBankCardService.listEntity(m);
     }
 
     @RequestMapping("/redis/set")

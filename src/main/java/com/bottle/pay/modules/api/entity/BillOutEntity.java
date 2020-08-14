@@ -120,8 +120,8 @@ public class BillOutEntity extends BottleBaseEntity {
                ", bankName='" + bankName + '\'' +
                ", bankAccountName='" + bankAccountName + '\'' +
                ", billType='" + billType + '\'' +
-               ", agentId='" + orgId + '\'' +
-               ", agentName='" + orgName + '\'' +
+               ", orgId='" + orgId + '\'' +
+               ", orgName='" + orgName + '\'' +
 				", position='" + position + '\'' +
                '}';
     }
