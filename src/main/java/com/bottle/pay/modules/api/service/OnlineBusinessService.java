@@ -21,5 +21,8 @@ import com.bottle.pay.modules.api.dao.OnlineBusinessMapper;
  @Slf4j
 public class OnlineBusinessService  extends BottleBaseService<OnlineBusinessMapper,OnlineBusinessEntity> {
 
-	
+
+ public OnlineBusinessEntity getNextBusiness(Long orgId) {
+  return null;
+ }
 }

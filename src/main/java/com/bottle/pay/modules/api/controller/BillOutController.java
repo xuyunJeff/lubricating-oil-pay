@@ -88,7 +88,7 @@ public class BillOutController extends AbstractController {
 		String ip =request.getRemoteAddr();
 		// 第一步保存订单,派单给机构
 		BillOutEntity bill =billOutService.billsOutAgent(billOutView,ip,userEntity);
-		// TODO 判断银行卡是否在黑名单内
+		// TODO 判断银行卡是否在黑名单内 @mighty
 		if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())){
 			// 自动派单给出款员
 		}

@@ -9,6 +9,7 @@ import com.bottle.pay.modules.api.dao.BillOutMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
 import com.bottle.pay.modules.api.entity.BillOutEntity;
 import com.bottle.pay.modules.api.entity.BillOutView;
+import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,10 @@ public class BillOutService  extends BottleBaseService<BillOutMapper,BillOutEnti
     private RedisCacheManager redisCacheManager;
 
     @Autowired
-    BalanceService balanceService;
+    private BalanceService balanceService;
+
+    @Autowired
+    private OnlineBusinessService onlineBusinessService;
 
 
     @Transactional
@@ -44,8 +48,9 @@ public class BillOutService  extends BottleBaseService<BillOutMapper,BillOutEnti
         return bill;
     }
 
-    public BillOutEntity billsOutBusiness(){
+    public BillOutEntity billsOutBusiness(BillOutEntity entity){
         // 第一步获取在线的出款员
+        OnlineBusinessEntity  businessOnline=  onlineBusinessService.getNextBusiness(entity.getOrgId());
         // 第二步判断出款员余额是否够出款
         // 第三步派单给出款员事务，付款银行卡默认为当前开启的银行卡
         // 第四步增加出款员代付中余额，扣除可用余额
