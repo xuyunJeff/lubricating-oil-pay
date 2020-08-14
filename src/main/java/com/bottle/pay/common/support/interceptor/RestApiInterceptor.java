@@ -116,11 +116,9 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
             WebUtils.write(response, JSONUtils.beanToJson(RestApiConstant.TokenErrorEnum.USER_DISABLE.getResp()));
             return false;
         }
-        Long orgId = ShiroUtils.getUserEntity().getOrgId();
         String key = IPConstant.getIpWhiteListCacheKey(sysUserEntity.getUserId(), IPConstant.MerchantIPEnum.ADMIN.getCode());
         List<Object> ipList = redisCacheManager.lGet(key,0,-1);
         //IP 白名单
-        //TODO 商户服务器IP
         String ipAddr = WebUtils.getIpAddr();
         return ipList.stream().anyMatch(ip->ip.equals(ipAddr));
     }
