@@ -91,8 +91,8 @@ public class BillOutController extends AbstractController {
 		// TODO 判断银行卡是否在黑名单内 @mighty
 		if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())){
 			// 自动派单给出款员
+			billOutService.billsOutBusiness(bill);
 		}
-
-		return R.ok();
+		return R.ok().put("price",bill.getPrice()).put("orderNo",bill.getThirdBillId()).put("billOutId",bill.getBillId());
 	}
 }
