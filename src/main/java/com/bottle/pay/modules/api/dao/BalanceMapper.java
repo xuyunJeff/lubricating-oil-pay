@@ -19,5 +19,7 @@ public interface BalanceMapper extends BottleBaseMapper<BalanceEntity> {
    public BalanceEntity selectForUpdate(BalanceEntity e);
 
     public int billoutBalanceMerchantChange(@Param("amount") BigDecimal amount,@Param("id") Long id);
+
+
 	
 }

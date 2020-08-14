@@ -4368,9 +4368,11 @@ CREATE TABLE `sys_role` (
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('1', '1', '超级管理员', 'admin', '【系统内置】', '2', '2017-08-12 00:43:52', '2017-09-05 14:02:04');
-INSERT INTO `sys_role` VALUES ('2', '1', '出款员', 'customer service', null, '1', '2020-08-09 20:17:18', '2020-08-09 20:36:07');
-INSERT INTO `sys_role` VALUES ('3', '1', '商户', 'merchant', null, '1', '2020-08-09 20:34:35', null);
+INSERT INTO `sys_role` VALUES  ('1', '1', '超级管理员', 'admin', '【系统内置】', '2', '2017-08-12 00:43:52', '2017-09-05 14:02:04');
+INSERT INTO `sys_role` VALUES  ('2', '1', '出款员', 'customer service', null, '1', '2020-08-09 20:17:18', '2020-08-09 20:36:07');
+INSERT INTO `sys_role`  VALUES ('3', '1', '代付商户', 'bill out merchant', NULL, '1', '2020-08-09 20:34:35', '2020-08-14 17:26:18');
+INSERT INTO `sys_role` VALUES ('4', '1', '机构管理员', 'organization', NULL, '1', '2020-08-14 17:12:01', '2020-08-14 17:12:46');
+INSERT INTO `sys_role`  VALUES ('5', '1', '代收商户', 'bill in merchant', NULL, '1', '2020-08-14 17:26:09', NULL);
 
 -- ----------------------------
 -- Table structure for sys_role_menu

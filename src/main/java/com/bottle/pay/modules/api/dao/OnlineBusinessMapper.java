@@ -3,6 +3,7 @@ package com.bottle.pay.modules.api.dao;
 import com.bottle.pay.common.mapper.BottleBaseMapper;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 
@@ -10,5 +11,9 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface OnlineBusinessMapper extends BottleBaseMapper<OnlineBusinessEntity> {
+
+   public OnlineBusinessEntity  nextOnlineBusiness(@Param("orgId") Long orgId ,@Param("position") Integer position);
+
+    public OnlineBusinessEntity  firstOnlineBusiness(@Param("orgId") Long orgId);
 	
 }

@@ -72,4 +72,33 @@
 		</foreach>
 	</delete>
 
+	<select id="nextOnlineBusiness" resultType="com.bottle.pay.modules.api.entity.OnlineBusinessEntity">
+		SELECT
+			   `id`,
+			   `agent_id`,
+			   `agent_name`,
+			   `business_name`,
+			   `business_id`,
+			   `position`
+		FROM
+			 online_business
+		WHERE
+				org_id = #{orgId} and position > #{position} limit 1
+	</select>
+	<select id="firstOnlineBusiness" resultType="com.bottle.pay.modules.api.entity.OnlineBusinessEntity">
+		SELECT
+			   `id`,
+			   `agent_id`,
+			   `agent_name`,
+			   `business_name`,
+			   `business_id`,
+			   `position`
+		FROM
+			 online_business
+		WHERE
+				org_id = #{orgId}
+		order by position asc
+		limit 1
+	</select>
+
 </mapper>
