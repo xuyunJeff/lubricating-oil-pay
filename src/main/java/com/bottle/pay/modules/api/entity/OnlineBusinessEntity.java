@@ -18,21 +18,6 @@ import lombok.NoArgsConstructor;
 public class OnlineBusinessEntity extends BottleBaseEntity {
 	
 	/**
-	 * 
-	 */
-	private Long id;
-	
-	/**
-	 * 代理商id
-	 */
-	private Long orgId;
-	
-	/**
-	 * 代理商姓名
-	 */
-	private String orgName;
-	
-	/**
 	 * 付款专员姓名
 	 */
 	private String businessName;

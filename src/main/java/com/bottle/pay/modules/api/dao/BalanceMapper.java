@@ -16,10 +16,9 @@ import java.math.BigDecimal;
 @Mapper
 public interface BalanceMapper extends BottleBaseMapper<BalanceEntity> {
 
-   public BalanceEntity selectForUpdate(BalanceEntity e);
+   BalanceEntity selectForUpdate(BalanceEntity e);
 
-    public int billoutBalanceMerchantChange(@Param("amount") BigDecimal amount,@Param("id") Long id);
+   int billoutBalanceMerchantChange(@Param("amount") BigDecimal amount,@Param("id") Long id);
 
-
-	
+   int updateBalance(BalanceEntity entity);
 }

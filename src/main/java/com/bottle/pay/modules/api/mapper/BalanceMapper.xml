@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bottle.pay.modules.api.dao.BalanceMapper">
+
+
 	
 	<select id="listForPage" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
 		SELECT
@@ -81,10 +83,10 @@
 	 	<set>
 			<if test="userName != null">`user_name` = #{userName}, </if>
 			<if test="userId != null">`user_id` = #{userId}, </if>
-			<if test="balance != null">`balance` = #{balance}, </if>
-			<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>
-			<if test="balancePaying != null">`balance_paying` = #{balancePaying}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<!--<if test="balance != null">`balance` = #{balance}, </if>-->
+			<!--<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>-->
+			<!--<if test="balancePaying != null">`balance_paying` = #{balancePaying}, </if>-->
+			<!--<if test="createTime != null">`create_time` = #{createTime}, </if>-->
 			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
 			<if test="orgId != null">`org_id` = #{orgId}, </if>
 			<if test="orgName != null">`org_name` = #{orgName}, </if>
@@ -95,6 +97,19 @@
 		WHERE
 			id = #{id}
 	</update>
+
+    <update id="updateBalance" parameterType="com.bottle.pay.modules.api.entity.BalanceEntity">
+        update balance
+        <set>
+            <if test="balance != null">balance= balance + #{balance}, </if>
+            <if test="balanceFrozen != null">balance_frozen = balance_frozen + #{balanceFrozen}, </if>
+            <if test="balancePaying != null">balance_paying = balance_paying + #{balancePaying}, </if>
+            last_update = #{lastUpdate}
+        </set>
+        WHERE
+        id = #{id}
+        <if test="userId != null"> and `user_id` = #{userId}</if>
+    </update>
 	
 	<delete id="batchRemove">
 		DELETE
