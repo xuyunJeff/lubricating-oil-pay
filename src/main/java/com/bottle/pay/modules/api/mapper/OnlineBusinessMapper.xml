@@ -17,22 +17,22 @@
 			id DESC
 	</select>
 	
-	<insert id="save">
-		INSERT INTO online_business (
-			`org_id`,
-			`org_name`,
-			`business_name`, 
-			`business_id`, 
-			`position`
-		)
-		VALUES (
-			#{orgId},
-			#{orgName},
-			#{businessName}, 
-			#{businessId}, 
-			#{position}
-		)
-	</insert>
+	<!--<insert id="save">-->
+		<!--INSERT INTO online_business (-->
+			<!--`org_id`,-->
+			<!--`org_name`,-->
+			<!--`business_name`, -->
+			<!--`business_id`, -->
+			<!--`position`-->
+		<!--)-->
+		<!--VALUES (-->
+			<!--#{orgId},-->
+			<!--#{orgName},-->
+			<!--#{businessName}, -->
+			<!--#{businessId}, -->
+			<!--#{position}-->
+		<!--)-->
+	<!--</insert>-->
 	
 	<select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.OnlineBusinessEntity">
 		SELECT
@@ -100,5 +100,24 @@
 		order by position asc
 		limit 1
 	</select>
+
+	<insert id="online">
+		INSERT  INTO online_business
+		(org_id,org_name,business_name,business_id,position)
+		VALUES
+		(
+		#{orgId},
+		#{orgName},
+		#{businessName},
+		#{businessId},
+		(SELECT IFNULL(max(position),0) FROM online_business t)+1
+		)
+	</insert>
+
+    <delete id="offline">
+        DELETE FROM
+        online_business
+        WHERE business_id = #{businessId
+    </delete>
 
 </mapper>

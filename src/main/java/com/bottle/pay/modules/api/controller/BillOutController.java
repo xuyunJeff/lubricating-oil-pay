@@ -1,12 +1,16 @@
 package com.bottle.pay.modules.api.controller;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.constant.SystemConstant;
+import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.entity.BillOutView;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
+import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
+import com.bottle.pay.modules.biz.service.BlockBankCardService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +34,10 @@ public class BillOutController extends AbstractController {
 
 	@Autowired
 	private OnlineBusinessService onlineBusinessService;
+
+	@Autowired
+	private BlockBankCardService blockBankCardService;
+
 	/**
 	 * 列表
 	 * @param params
@@ -87,10 +95,14 @@ public class BillOutController extends AbstractController {
 	@PostMapping("/push/order")
 	public R pushOrder(@RequestBody BillOutView billOutView, HttpServletRequest request){
 		SysUserEntity userEntity =	getUser();
+		//FIXME 使用系统的  WebUtils.getIpAddr()
 		String ip =request.getRemoteAddr();
 		// 第一步保存订单,派单给机构
 		BillOutEntity bill =billOutService.billsOutAgent(billOutView,ip,userEntity);
-		// TODO 判断银行卡是否在黑名单内 @mighty
+		// FIXME 判断银行卡是否在黑名单内 @mighty
+		if(existBlockCard(billOutView.getBankCardNo(),billOutView.getOrgId())){
+			return R.error("银行卡已被拉黑");
+		}
 		if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())){
 			// 自动派单给出款员
 			billOutService.billsOutBusiness(bill);
@@ -143,5 +155,22 @@ public class BillOutController extends AbstractController {
 		if(! bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode()))  return R.error("订单无需作废");
 		billOutService.billsOutPaidFailed(bill);
 		return R.ok("订单作废，会员银行卡名："+ bill.getBankAccountName());
+	}
+
+	/**
+	 * 判断是否存在银行卡黑名单
+	 * @param bankCardNo
+	 * @param orgId
+	 * @return
+	 */
+	private boolean existBlockCard(String bankCardNo, Long orgId) {
+		BlockBankCardEntity query = new BlockBankCardEntity();
+		query.setOrgId(orgId);
+		query.setBankCardNo(bankCardNo);
+		Optional optional = Optional.of(blockBankCardService.selectOne(query));
+		if(optional.isPresent()){
+			return true;
+		}
+		return false;
 	}
 }

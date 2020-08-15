@@ -15,5 +15,8 @@ public interface OnlineBusinessMapper extends BottleBaseMapper<OnlineBusinessEnt
    public OnlineBusinessEntity  nextOnlineBusiness(@Param("orgId") Long orgId ,@Param("position") Integer position);
 
     public OnlineBusinessEntity  firstOnlineBusiness(@Param("orgId") Long orgId);
-	
+
+    int online(OnlineBusinessEntity entity);
+
+    int offline(Long userId);
 }

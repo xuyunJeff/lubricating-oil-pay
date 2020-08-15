@@ -10,6 +10,7 @@ import com.bottle.pay.modules.api.entity.BalanceEntity;
 import com.bottle.pay.modules.api.entity.BillOutEntity;
 import com.bottle.pay.modules.api.entity.BillOutView;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
+import com.bottle.pay.modules.biz.service.BankCardService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
 
     @Autowired
     private OnlineBusinessService onlineBusinessService;
-
+    @Autowired
+    private BankCardService bankCardService;
     /**
      * 派单给机构
      * @param billOutView
@@ -277,7 +279,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         balance.setUserId(merchantId);
         balance = balanceService.selectOne(balance);
         if (balance == null) {
-            // TODO 创建balance账户 @Mighty
+            // FIXME 根据业务在适当的地方添加分布式锁
+            balanceService.createBalanceAccount(merchantId);
         }
         BigDecimal billOutLimit = balance.getBillOutLimit();
         if (price.compareTo(billOutLimit) == -1) {
@@ -285,6 +288,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         }
         return BillConstant.BillTypeEnum.HighPrice;
     }
+
 
 
     /**
