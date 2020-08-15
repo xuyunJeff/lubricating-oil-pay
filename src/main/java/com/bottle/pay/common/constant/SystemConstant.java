@@ -1,5 +1,7 @@
 package com.bottle.pay.common.constant;
 
+import lombok.AllArgsConstructor;
+
 /**
  * 系统级静态变量
  * @author zcl<yczclcn@163.com>
@@ -10,7 +12,24 @@ public class SystemConstant {
 	 * 超级管理员ID
 	 */
 	public static final long SUPER_ADMIN = 1;
-	
+
+	@AllArgsConstructor
+	public enum  RoleEnum {
+		CustomerService(2L,"出款员"), BillOutMerchant(3L,"代付商户"), Organization(4L,"机构管理员"),BillInMerchant(5L,"代收商户");
+
+		private final Long code;
+		private final String msg;
+
+		public Long getCode() {
+			return code;
+		}
+
+		public String getMsg() {
+			return msg;
+		}
+
+	}
+
 	/**
 	 * 数据标识
 	 */

@@ -38,7 +38,13 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     @Autowired
     private OnlineBusinessService onlineBusinessService;
 
-
+    /**
+     * 派单给机构
+     * @param billOutView
+     * @param ip
+     * @param userEntity
+     * @return
+     */
     @Transactional
     public BillOutEntity billsOutAgent(BillOutView billOutView, String ip, SysUserEntity userEntity) {
         //第一步保存订单
@@ -51,9 +57,14 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         return bill;
     }
 
+    /**
+     * 自动派单给出款员
+     * @param entity
+     * @return
+     */
     @Async
     public BillOutEntity billsOutBusiness(BillOutEntity entity) {
-        Map<OnlineBusinessEntity, BigDecimal> businessOnline = null;
+        Map<OnlineBusinessEntity, BigDecimal> businessOnline ;
         OnlineBusinessEntity onlineBusinessEntity ;
         BigDecimal free ;
         do {
@@ -65,6 +76,59 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         entity =  updateBillOutToBusiness(entity,onlineBusinessEntity);
         // 第四步增加出款员代付中余额，扣除可用余额
         incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(),entity.getPrice());
+        return entity;
+    }
+
+    /**
+     * 人工派单接口
+     * @param entity
+     * @return
+     */
+    public BillOutEntity billsOutBusinessByHuman(BillOutEntity entity,OnlineBusinessEntity onlineBusinessEntity){
+        entity =  updateBillOutToBusiness(entity,onlineBusinessEntity);
+        incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(),entity.getPrice());
+        return entity;
+    }
+
+    /**
+     * 订单退回到机构
+     * @param entity
+     * @return
+     */
+    @Transactional
+    public BillOutEntity billsOutBusinessGoBack(BillOutEntity entity){
+        incrBusinessBillOutBalanceRedis(entity.getBusinessId(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        entity.setPosition(BillConstant.BillPostionEnum.Agent.getCode());
+        entity.setBillType(BillConstant.BillTypeEnum.GoBackAgent.getCode());
+        int i = mapper.updateByBillOutId(entity);
+        if (i == 0) {
+            log.error("订单保存错误 {}", entity.toString());
+            throw new RRException("订单保存错误");
+        }
+        return entity;
+    }
+
+    /**
+     *  出款成功确认订单
+     * @param entity
+     * @return
+     */
+    public BillOutEntity billsOutPaidSuccess(BillOutEntity entity){
+        entity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
+        int i = mapper.updateByBillOutId(entity);
+        if (i == 0) {
+            log.error("订单保存错误 {}", entity.toString());
+            throw new RRException("订单保存错误");
+        }
+        return entity;
+    }
+
+    /**
+     *  出款失败作废订单
+     * @param entity
+     * @return
+     */
+    public BillOutEntity billsOutPaidFailed(BillOutEntity entity){
         return entity;
     }
 

@@ -186,6 +186,10 @@ public class SysUserEntity implements Serializable {
 		return roleIdList;
 	}
 
+	public Long getRoleId() {
+		return roleIdList.get(0);
+	}
+
 	public void setRoleIdList(List<Long> roleIdList) {
 		this.roleIdList = roleIdList;
 	}

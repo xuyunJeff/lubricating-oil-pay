@@ -15,11 +15,15 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Table(name = "bill_out")
 public class BillOutEntity extends BottleBaseEntity {
-	
 
-	
+	/**
+	 *
+	 * @param billId 订单号：商户id+时间戳 + 5位自增
+	 */
+	public BillOutEntity(String billId) {
+		this.billId = billId;
+	}
 
-	
 	/**
 	 * 商户名
 	 */
@@ -31,7 +35,7 @@ public class BillOutEntity extends BottleBaseEntity {
 	private Long merchantId;
 	
 	/**
-	 * 订单号：商户id+时间戳 + 4位自增
+	 * 订单号：商户id+时间戳 + 5位自增
 	 */
 	private String billId;
 	

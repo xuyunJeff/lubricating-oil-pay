@@ -130,6 +130,17 @@
 		WHERE
 			id = #{id}
 	</update>
+
+	<update id="updateByBillOutId">
+		UPDATE bill_out
+		<set>
+			`last_update` = now(),
+			`bill_type` = #{billType},
+			`position` = #{position}
+		</set>
+		WHERE
+		`bill_id` = #{billId}
+	</update>
 	
 	<delete id="batchRemove">
 		DELETE

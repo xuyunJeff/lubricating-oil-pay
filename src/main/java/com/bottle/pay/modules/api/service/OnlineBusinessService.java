@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author ZhouChenglin
  */
@@ -37,6 +39,17 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
             return firstOnlineBusiness;
         }
         throw new RRException("无在线出款员，请联系管理员");
+    }
+
+    public OnlineBusinessEntity getOnlineBusiness(Long businessId,Long orgId){
+        OnlineBusinessEntity entity = new OnlineBusinessEntity();
+        entity.setBusinessId(businessId);
+        entity.setOrgId(orgId);
+        List<OnlineBusinessEntity> onlineBusinessEntityList = mapper.select(entity);
+        if(!onlineBusinessEntityList.isEmpty()){
+           return onlineBusinessEntityList.get(0);
+        }
+        return null;
     }
 
 }
