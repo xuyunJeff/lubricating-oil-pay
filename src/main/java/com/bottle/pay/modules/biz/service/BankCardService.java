@@ -63,6 +63,21 @@ public class BankCardService  extends BottleBaseService<BankCardMapper,BankCardE
          return mapper.select(query);
      }
 
+
+    /**
+     * 获取专员当前启用的银行卡
+     * @param userId
+     * @return
+     */
+    public BankCardEntity getCardOpenedListByBusinessId(Long userId){
+        BankCardEntity query = new BankCardEntity();
+        query.setBusinessId(userId);
+        List<BankCardEntity> bankCardEntities= mapper.select(query);
+        Optional<BankCardEntity> cardEnable = bankCardEntities.stream().filter(it-> it.getEnable() == Boolean.TRUE).findFirst();
+        if(cardEnable.isPresent()) return cardEnable.get();
+        return null;
+    }
+
     /**
      * 启用指定银行卡，则禁用其他银行卡
      * @param userId

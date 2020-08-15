@@ -39,7 +39,7 @@ public class BalanceService  extends BottleBaseService<BalanceMapper,BalanceEnti
   private SysUserMapper sysUserMapper;
 
  /**
-  * 此处必须事务才能生效
+  * 此处必须事务才能生效,扣除商户可用余额,增加商户代付中
   * @param amount
   * @param userId
   * @return
@@ -57,6 +57,19 @@ public class BalanceService  extends BottleBaseService<BalanceMapper,BalanceEnti
    return balanceAfter;
   }
 
+
+    @Transactional
+    public BalanceEntity billOutMerchantChangePayingBalance(BigDecimal amount , Long userId) {
+        BalanceEntity balance = new BalanceEntity();
+        balance.setUserId(userId);
+        synchronized (this){
+            balance = mapper.selectForUpdate(balance);
+            mapper.billOutMerchantChangePayingBalance(amount,balance.getId());
+        }
+        BalanceEntity balanceAfter= mapper.selectOne(balance);
+        log.info("商户余额变动, userId :"+userId+"，amount:"+amount+"beforeBalance:" + balance.getBalance() +"afterBalance:"+balanceAfter.getBalance());
+        return balanceAfter;
+    }
 
     /**
      * 创建余额账户

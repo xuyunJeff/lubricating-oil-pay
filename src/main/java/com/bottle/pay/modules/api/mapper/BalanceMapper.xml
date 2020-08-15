@@ -154,4 +154,12 @@
 		id = #{id}
 	</update>
 
+	<update id="billOutMerchantChangePayingBalance">
+		UPDATE balance
+		<set>
+			`balance_paying` = balance_paying + #{amount}
+		</set>
+		WHERE
+		id = #{id}
+	</update>
 </mapper>

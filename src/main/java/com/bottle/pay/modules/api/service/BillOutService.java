@@ -10,7 +10,9 @@ import com.bottle.pay.modules.api.entity.BalanceEntity;
 import com.bottle.pay.modules.api.entity.BillOutEntity;
 import com.bottle.pay.modules.api.entity.BillOutView;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
+import com.bottle.pay.modules.biz.entity.BankCardEntity;
 import com.bottle.pay.modules.biz.service.BankCardService;
+import com.bottle.pay.modules.external.service.BillOutNotifySercice;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,9 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     private OnlineBusinessService onlineBusinessService;
     @Autowired
     private BankCardService bankCardService;
+
+    @Autowired
+    BillOutNotifySercice billOutNotifySercice;
     /**
      * 派单给机构
      * @param billOutView
@@ -66,7 +71,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Async
     public BillOutEntity billsOutBusiness(BillOutEntity entity) {
-        Map<OnlineBusinessEntity, BigDecimal> businessOnline ;
+        Map<OnlineBusinessEntity, BigDecimal> businessOnline = null;
         OnlineBusinessEntity onlineBusinessEntity ;
         BigDecimal free ;
         do {
@@ -115,13 +120,17 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @param entity
      * @return
      */
+    @Transactional
     public BillOutEntity billsOutPaidSuccess(BillOutEntity entity){
-        entity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
-        int i = mapper.updateByBillOutId(entity);
-        if (i == 0) {
-            log.error("订单保存错误 {}", entity.toString());
-            throw new RRException("订单保存错误");
-        }
+        // 扣除出款员代付中
+        incrBusinessBillOutBalanceRedis(entity.getBusinessId(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        // 扣除商户代付中
+        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)),entity.getBusinessId());
+        // TODO 回调商户
+        billOutNotifySercice.billsOutPaidSuccessNotify(entity);
+        BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
+        successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
+        mapper.updateBillOutByBillId(successEntity );
         return entity;
     }
 
@@ -130,20 +139,36 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @param entity
      * @return
      */
+    @Transactional
     public BillOutEntity billsOutPaidFailed(BillOutEntity entity){
+        // 扣除出款员代付中
+        incrBusinessBillOutBalanceRedis(entity.getBusinessId(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        // 扣除商户代付中,增加可用余额
+        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)),entity.getBusinessId());
+        // TODO 回调商户
+        billOutNotifySercice.billsOutPaidFailedNotify(entity);
+        BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());
+        failedEntity.setBillStatus(BillConstant.BillStatusEnum.Failed.getCode());
+        mapper.updateBillOutByBillId(failedEntity);
         return entity;
     }
+
+
 
     @Transactional
     public BillOutEntity  updateBillOutToBusiness(BillOutEntity entity,OnlineBusinessEntity onlineBusinessEntity) {
         entity.setPosition(BillConstant.BillPostionEnum.Business.getCode());
         entity.setBusinessName(onlineBusinessEntity.getBusinessName());
         entity.setBusinessId(onlineBusinessEntity.getBusinessId());
-        // TODO 获取在线出款员的开启的银行卡 @mighty
-        entity.setBusinessBankAccountName("@mighty");
-        entity.setBusinessBankCardNo("8888888888888888888");
-        entity.setBusinessBankName("中国人民银行");
-        int i = mapper.updateBusinessByBillId(entity);
+        BankCardEntity card =bankCardService.getCardOpenedListByBusinessId(onlineBusinessEntity.getBusinessId());
+        if(card == null ) {
+            log.error("在线出款员无开启的银行卡" + onlineBusinessEntity.toString());
+            throw new RRException("在线出款员无开启的银行卡");
+        }
+        entity.setBusinessBankAccountName(card.getBankAccountName());
+        entity.setBusinessBankCardNo(card.getBankCardNo());
+        entity.setBusinessBankName(card.getBankName());
+        int i = mapper.updateBillOutByBillId(entity);
         if (i == 0) {
             log.error("订单保存错误 {}", entity.toString());
             throw new RRException("订单保存错误");
@@ -159,8 +184,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 第一步获取在线的出款员
         OnlineBusinessEntity businessOnline = onlineBusinessService.getNextBusiness(entity.getOrgId());
         // 第二步判断出款员余额是否够出款
-        // TODO 获取出款员银行卡的所有可以余额之和 @mighty
-        BigDecimal businessTotalBalance = BigDecimal.valueOf(10000);
+        BigDecimal businessTotalBalance = bankCardService.getAllCardsBalanceWithoutFrozen(entity.getBusinessId());
         BigDecimal businessFreeBalance = getBusinessFreeBalance(businessTotalBalance, businessOnline);
         return Collections.singletonMap(businessOnline, businessFreeBalance);
     }
@@ -290,7 +314,6 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     }
 
 
-
     /**
      * 生成代付id
      * 订单号：商户id+ yyyyMMDD + 自增
@@ -306,5 +329,4 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         DecimalFormat df = new DecimalFormat("00000");//五位序列号
         return merchantId + today + df.format(incrId);
     }
-
 }

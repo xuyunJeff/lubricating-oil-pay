@@ -5,16 +5,18 @@ import com.bottle.pay.modules.api.service.BillOutService;
 import com.bottle.pay.modules.external.service.BillOutNotifySercice;
 import org.springframework.stereotype.Service;
 
-@Service("TestBillOutNotifySercice")
-public class TestBillOutNotifySerciceImpl extends BillOutNotifySercice {
+@Service("DefaultBillOutNotifySercice")
+public class DefaultBillOutNotifySerciceImpl extends BillOutNotifySercice {
+
+
 
     @Override
     public BillOutEntity billsOutPaidSuccessNotify(BillOutEntity entity) {
-        return null;
+        return entity;
     }
 
     @Override
     public BillOutEntity billsOutPaidFailedNotify(BillOutEntity entity) {
-        return null;
+        return entity;
     }
 }
