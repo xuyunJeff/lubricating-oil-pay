@@ -39,6 +39,7 @@ public class BillOutController extends AbstractController {
 
 	/**
 	 * 列表
+	 * TODO 查询时要判断角色还有机构 @rmi
 	 * @param params
 	 * @return
 	 */
@@ -121,13 +122,13 @@ public class BillOutController extends AbstractController {
 	 * @return
 	 */
 	private boolean existBlockCard(String bankCardNo, Long orgId) {
+		// TODO @mighty  SELECT id,create_time,last_update,org_id,org_name,bank_card_no,bank_name,bank_account_name  FROM block_bank_card  WHERE  org_id = ? AND bank_card_no = ?
+		//### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'last_update' in 'field list'
+		//; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'last_update' in 'field list'
 		BlockBankCardEntity query = new BlockBankCardEntity();
 		query.setOrgId(orgId);
 		query.setBankCardNo(bankCardNo);
-		Optional optional = Optional.of(blockBankCardService.selectOne(query));
-		if(optional.isPresent()){
-			return true;
-		}
-		return false;
+		BlockBankCardEntity card =blockBankCardService.selectOne(query);
+		return null != card;
 	}
 }

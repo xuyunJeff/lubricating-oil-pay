@@ -10,4 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface BlockBankCardMapper extends BottleBaseMapper<BlockBankCardEntity> {
 
+    @Override
+  public   BlockBankCardEntity selectOne(BlockBankCardEntity e);
 }

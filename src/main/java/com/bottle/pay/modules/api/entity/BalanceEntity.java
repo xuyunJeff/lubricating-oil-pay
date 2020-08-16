@@ -19,7 +19,11 @@ import java.math.BigDecimal;
 @ToString
 public class BalanceEntity extends BottleBaseEntity {
 
-	
+	public BalanceEntity(Long userId) {
+		this.userId = userId;
+	}
+
+
 	/**
 	 * 用户名
 	 */
@@ -62,7 +66,7 @@ public class BalanceEntity extends BottleBaseEntity {
 	private BigDecimal billOutLimit;
 
 
-    @Override
+	@Override
     public String toString() {
         return "BalanceEntity{" +
                               "id='" + id + '\'' +

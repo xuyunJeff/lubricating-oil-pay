@@ -16,7 +16,8 @@ import java.util.Date;
 public abstract class BottleBaseEntity implements Serializable {
 
     protected BottleBaseEntity(){
-        this.lastUpdate = new Date();
+        // TODO 对公共组件查询时有问题，我先注释了。我们还是在set时new Date() 吧 @mighty
+//        this.lastUpdate = new Date();
     }
 
     protected static final long serialVersionUID = 1L;

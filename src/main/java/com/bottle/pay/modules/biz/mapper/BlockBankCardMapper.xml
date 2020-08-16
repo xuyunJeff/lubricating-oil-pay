@@ -77,4 +77,26 @@
 		</foreach>
 	</delete>
 
+	<select id="selectOne"  resultType="com.bottle.pay.modules.biz.entity.BlockBankCardEntity">
+		SELECT
+			   `id`,
+			   `create_time`,
+			   `bank_card_no`,
+			   `bank_name`,
+			   `bank_account_name`,
+			   `org_id`,
+			   `org_name`
+		FROM
+			 block_bank_card
+		<where>
+			1=1
+			<if test="createTime != null"> and `create_time` = #{createTime} </if>
+			<if test="bankCardNo != null"> and `bank_card_no` = #{bankCardNo} </if>
+			<if test="bankName != null"> and `bank_name` = #{bankName}</if>
+			<if test="bankAccountName != null"> and `bank_account_name` = #{bankAccountName} </if>
+			<if test="orgId != null"> and `org_id` = #{orgId} </if>
+			<if test="orgName != null"> and `org_name` = #{orgName}</if>
+		</where>
+	</select>
+
 </mapper>

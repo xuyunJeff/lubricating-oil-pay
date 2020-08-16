@@ -85,6 +85,8 @@ public abstract class BottleBaseService<M extends BottleBaseMapper,E extends Bot
         return list.get(0);
     }
 
+
+
     /**
      * 获取系统当前登陆用户
      * @return

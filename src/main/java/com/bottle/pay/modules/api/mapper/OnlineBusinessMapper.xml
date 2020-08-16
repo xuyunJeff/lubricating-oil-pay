@@ -88,8 +88,8 @@
 	<select id="firstOnlineBusiness" resultType="com.bottle.pay.modules.api.entity.OnlineBusinessEntity">
 		SELECT
 			   `id`,
-			   `agent_id`,
-			   `agent_name`,
+			   `org_id`,
+			   `org_name`,
 			   `business_name`,
 			   `business_id`,
 			   `position`
@@ -117,7 +117,7 @@
     <delete id="offline">
         DELETE FROM
         online_business
-        WHERE business_id = #{businessId
+        WHERE business_id = #{businessId}
     </delete>
 
 </mapper>

@@ -211,7 +211,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     @Transactional
     public BalanceEntity billsOutBalanceChangeMerchant(Long merchantId, BigDecimal amount) {
         // step 1: 扣商户可用余额，增加商户代付中余额
-        return balanceService.billOutMerchantBalance(amount.multiply(new BigDecimal(-1)), merchantId);
+        return balanceService.billOutMerchantBalance(amount, merchantId);
     }
 
 
@@ -302,9 +302,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @return
      */
     private BillConstant.BillTypeEnum setBillType(BigDecimal price, Long merchantId) {
-        BalanceEntity balance = new BalanceEntity();
-        balance.setUserId(merchantId);
-        balance = balanceService.selectOne(balance);
+        BalanceEntity balance = balanceService.selectOne(new BalanceEntity(merchantId));
         if (balance == null) {
             // FIXME 根据业务在适当的地方添加分布式锁
             balanceService.createBalanceAccount(merchantId);
