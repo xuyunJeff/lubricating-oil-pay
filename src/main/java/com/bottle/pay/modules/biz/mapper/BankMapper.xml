@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bottle.pay.modules.biz.dao.BankMapper">
+	
+	<select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.BankEntity">
+		SELECT
+			`id`, 
+			`bankName`, 
+			`bankCode`, 
+			`bankLog`, 
+			`wDEnable`
+		FROM
+			bank
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO bank (
+			`bankName`, 
+			`bankCode`, 
+			`bankLog`, 
+			`wDEnable`
+		)
+		VALUES (
+			#{bankName},
+			#{bankCode},
+			#{bankLog},
+			#{wdenable}
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.BankEntity">
+		SELECT
+			`id`, 
+			`bankName`, 
+			`bankCode`, 
+			`bankLog`, 
+			`wDEnable`
+		FROM
+			bank
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE bank
+	 	<set>
+			<if test="bankName != null">`bankName` = #{bankName}, </if>
+			<if test="bankCode != null">`bankCode` = #{bankCode}, </if>
+			<if test="bankLog != null">`bankLog` = #{bankLog}, </if>
+			<if test="wdenable != null">`wDEnable` = #{wdenable}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			bank
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

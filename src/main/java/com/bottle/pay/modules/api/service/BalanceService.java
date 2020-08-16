@@ -19,10 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * 
- * @author ZhouChenglin<yczclcn@163.com>
- */
  @Service("balanceService")
  @Slf4j
 public class BalanceService  extends BottleBaseService<BalanceMapper,BalanceEntity> {

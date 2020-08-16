@@ -2,9 +2,8 @@ package com.bottle.pay.modules.biz.controller;
 
 import java.util.Map;
 
-import com.bottle.pay.common.entity.Page;
-import com.bottle.pay.modules.biz.entity.BillInEntity;
-import com.bottle.pay.modules.biz.service.BillInService;
+import com.bottle.pay.modules.biz.entity.BalanceProcurementEntity;
+import com.bottle.pay.modules.biz.service.BalanceProcurementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,19 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bottle.pay.common.annotation.SysLog;
 import com.bottle.pay.modules.sys.controller.AbstractController;
+import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- *
+ * @author ZhouChenglin<yczclcn@163.com>
  */
 @RestController
-@RequestMapping("/merchant/charge")
+@RequestMapping("//balance/procurement")
 @Slf4j
-public class BillInController extends AbstractController {
+public class BalanceProcurementController extends AbstractController {
 
     @Autowired
-    private BillInService billInService;
+    private BalanceProcurementService balanceProcurementService;
 
     /**
      * 列表
@@ -33,20 +33,20 @@ public class BillInController extends AbstractController {
      * @return
      */
     @RequestMapping("/list")
-    public Page<BillInEntity> list(Map<String, Object> params) {
-        return billInService.listEntity(params);
+    public Page<BalanceProcurementEntity> list(@RequestBody Map<String, Object> params) {
+        return balanceProcurementService.listEntity(params);
     }
 
     /**
      * 新增
      *
-     * @param billIn
+     * @param balanceProcurement
      * @return
      */
     @SysLog("新增")
     @RequestMapping("/save")
-    public R save(@RequestBody BillInEntity billIn) {
-        return billInService.saveEntity(billIn);
+    public R save(@RequestBody BalanceProcurementEntity balanceProcurement) {
+        return balanceProcurementService.saveEntity(balanceProcurement);
     }
 
     /**
@@ -56,20 +56,20 @@ public class BillInController extends AbstractController {
      * @return
      */
     @RequestMapping("/info")
-    public R getById(Long id) {
-        return billInService.getEntityById(id);
+    public R getById(@RequestBody Long id) {
+        return balanceProcurementService.getEntityById(id);
     }
 
     /**
      * 修改
      *
-     * @param billIn
+     * @param balanceProcurement
      * @return
      */
     @SysLog("修改")
     @RequestMapping("/update")
-    public R update(@RequestBody BillInEntity billIn) {
-        return billInService.updateEntity(billIn);
+    public R update(@RequestBody BalanceProcurementEntity balanceProcurement) {
+        return balanceProcurementService.updateEntity(balanceProcurement);
     }
 
     /**
@@ -81,7 +81,7 @@ public class BillInController extends AbstractController {
     @SysLog("删除")
     @RequestMapping("/remove")
     public R batchRemove(@RequestBody Long[] id) {
-        return billInService.batchRemove(id);
+        return balanceProcurementService.batchRemove(id);
     }
 
 }

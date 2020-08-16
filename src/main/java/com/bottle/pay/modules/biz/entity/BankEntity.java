@@ -12,29 +12,34 @@ import lombok.NoArgsConstructor;
 
 
 /**
- * 银行卡黑名单
+ * 银行列表
  */
-
 @Data
 @AllArgsConstructor
-@Table(name = "block_bank_card")
+@Table(name = "bank")
 @ToString
 @NoArgsConstructor
-public class BlockBankCardEntity extends BottleBaseEntity {
+public class BankEntity extends BottleBaseEntity {
 
     /**
-     * 付款会员的卡号
-     */
-    private String bankCardNo;
-
-    /**
-     * 银行名称
+     *
      */
     private String bankName;
 
     /**
-     * 付款用户名
+     *
      */
-    private String bankAccountName;
+    private String bankCode;
+
+    /**
+     *
+     */
+    private String bankLog;
+
+    /**
+     * 是否支持取款(1,是，0否)
+     */
+    private Boolean wdenable;
+
 
 }

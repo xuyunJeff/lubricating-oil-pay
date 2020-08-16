@@ -4,7 +4,6 @@ import com.bottle.pay.common.entity.BottleBaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
 import javax.persistence.Table;
 
 import lombok.ToString;
@@ -14,15 +13,14 @@ import java.math.BigDecimal;
 
 
 /**
- * 商户充值订单
+ * 商户冻结详情
  */
 @Data
 @AllArgsConstructor
-@Table(name = "bill_in")
+@Table(name = "frozen_detail")
 @ToString
 @NoArgsConstructor
-public class BillInEntity extends BottleBaseEntity {
-
+public class FrozenDetailEntity extends BottleBaseEntity {
 
     /**
      * 商户名
@@ -35,39 +33,14 @@ public class BillInEntity extends BottleBaseEntity {
     private Long merchantId;
 
     /**
-     * 订单号：商户id+时间戳 + 4位自增
+     * 冻结余额
      */
-    private String billId;
+    private BigDecimal balanceFrozen;
 
     /**
-     * 第三方订单号
+     * 解冻余额
      */
-    private String thirdBillId;
-
-    /**
-     * 第三方订单派发服务器ip
-     */
-    private String ip;
-
-    /**
-     * 付款专员姓名
-     */
-    private String businessName;
-
-    /**
-     * 付款专员ID
-     */
-    private Integer businessId;
-
-    /**
-     * 订单状态：  1未支付 2 成功 3 失败
-     */
-    private Integer billStatus;
-
-    /**
-     * 账单金额
-     */
-    private BigDecimal price;
+    private BigDecimal balanceUnfrozen;
 
     /**
      * 付款会员的卡号
@@ -86,9 +59,14 @@ public class BillInEntity extends BottleBaseEntity {
 
 
     /**
-     *
+     * 付款专员姓名
      */
-    private String comment;
+    private String businessName;
+
+    /**
+     * 付款专员ID
+     */
+    private Long businessId;
 
 
 }

@@ -1,11 +1,16 @@
 package com.bottle.pay.common.service;
 
+import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.BottleBaseEntity;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.Query;
 import com.bottle.pay.common.entity.R;
+import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.mapper.BottleBaseMapper;
 import com.bottle.pay.common.utils.CommonUtils;
+import com.bottle.pay.common.utils.ShiroUtils;
+import com.bottle.pay.modules.sys.dao.SysUserMapper;
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -18,6 +23,10 @@ public abstract class BottleBaseService<M extends BottleBaseMapper,E extends Bot
 
     @Autowired
     protected M mapper;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
+
 
     /**
      * 分页查询
@@ -74,6 +83,51 @@ public abstract class BottleBaseService<M extends BottleBaseMapper,E extends Bot
         List<E> list= mapper.select(e);
         if(list.isEmpty()) return null ;
         return list.get(0);
+    }
+
+    /**
+     * 获取系统当前登陆用户
+     * @return
+     */
+    protected SysUserEntity getCurrentUser(){
+        return ShiroUtils.getUserEntity();
+    }
+
+    /**
+     * 判断是否是机构管理员
+     * @return
+     */
+    protected boolean isOrgAdmin(){
+        SysUserEntity userEntity = getCurrentUser();
+        if(SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId())){
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 判断是否是指定机构管理员机构管理员
+     * @return
+     */
+    protected boolean isOrgAdmin(Long orgId){
+        SysUserEntity userEntity = getCurrentUser();
+        if(userEntity.getOrgId().equals(orgId)){
+            if(SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 查询指定用户
+     * @param userId
+     * @return
+     */
+    protected SysUserEntity getUserById(Long userId){
+        if(userId == null || userId== 0L){
+            throw new RRException("查询user时，userId不能为空");
+        }
+        return sysUserMapper.getObjectById(userId);
     }
 
 }

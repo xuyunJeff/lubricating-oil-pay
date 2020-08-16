@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 
  * @author ZhouChenglin<yczclcn@163.com>
  */
- @Service("blockBankCardService")
- @Slf4j
-public class BlockBankCardService  extends BottleBaseService<BlockBankCardMapper,BlockBankCardEntity> {
+@Service("blockBankCardService")
+@Slf4j
+public class BlockBankCardService extends BottleBaseService<BlockBankCardMapper, BlockBankCardEntity> {
 
-	
 }

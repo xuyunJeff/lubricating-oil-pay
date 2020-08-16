@@ -162,4 +162,24 @@
 		WHERE
 		id = #{id}
 	</update>
+
+    <update id="frozenMerchant">
+        UPDATE balance
+        <set>
+            `balance` = balance - #{amount},
+            `balance_frozen` = balance_frozen + #{amount}
+        </set>
+        WHERE
+        user_id = #{merchantId}
+    </update>
+
+    <update id="unFrozenMerchant">
+        UPDATE balance
+        <set>
+            `balance` = balance + #{amount},
+            `balance_frozen` = balance_frozen - #{amount}
+        </set>
+        WHERE
+        user_id = #{merchantId}
+    </update>
 </mapper>

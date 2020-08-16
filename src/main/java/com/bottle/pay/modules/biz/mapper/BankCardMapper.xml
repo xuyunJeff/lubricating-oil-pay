@@ -112,4 +112,25 @@
 		</foreach>
 	</delete>
 
+	<select id="batchSelect" resultType="com.bottle.pay.modules.biz.entity.BankCardEntity">
+		SELECT *
+		FROM
+		bank_card
+		WHERE
+		id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+
+
+    <update id="updateCardStatus">
+        UPDATE bank_card
+        SET
+        `card_status` = #{cardStatus},`last_update` = #{lastUpdate}
+        WHERE
+        `business_id` = #{businessId}
+        AND `bank_card_no` = #{bankCardNo}
+    </update>
+
 </mapper>

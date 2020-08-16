@@ -27,7 +27,7 @@ public class TestController {
     private BlockBankCardService blockBankCardService;
 
     @RequestMapping("/bank/add")
-    public void addBank(){
+    public void addBank() {
         BlockBankCardEntity entity = new BlockBankCardEntity();
         entity.setOrgId(1L);
         entity.setOrgName("we");
@@ -39,16 +39,16 @@ public class TestController {
     }
 
     @RequestMapping("/bank/list")
-    public Page listBank(){
+    public Page listBank() {
         Map m = new HashMap();
-        m.put("pageNumber",1);
-        m.put("pageSize","1");
-       return blockBankCardService.listEntity(m);
+        m.put("pageNumber", 1);
+        m.put("pageSize", "1");
+        return blockBankCardService.listEntity(m);
     }
 
     @RequestMapping("/redis/set")
-    public String setRedis(String key,String value){
-        stringRedisTemplate.opsForValue().set(key,value);
+    public String setRedis(String key, String value) {
+        stringRedisTemplate.opsForValue().set(key, value);
         return stringRedisTemplate.opsForValue().get(key);
     }
 }

@@ -15,6 +15,9 @@ import java.util.Date;
 @Data
 public abstract class BottleBaseEntity implements Serializable {
 
+    protected BottleBaseEntity(){
+        this.lastUpdate = new Date();
+    }
 
     protected static final long serialVersionUID = 1L;
 
