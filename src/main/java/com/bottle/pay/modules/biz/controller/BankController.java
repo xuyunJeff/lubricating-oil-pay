@@ -3,8 +3,8 @@ package com.bottle.pay.modules.biz.controller;
 import java.util.Map;
 
 import com.bottle.pay.common.entity.Page;
-import com.bottle.pay.modules.biz.entity.BillInEntity;
-import com.bottle.pay.modules.biz.service.BillInService;
+import com.bottle.pay.modules.biz.entity.BankEntity;
+import com.bottle.pay.modules.biz.service.BankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,15 +16,15 @@ import com.bottle.pay.common.entity.R;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- *
+ * @author ZhouChenglin<yczclcn@163.com>
  */
 @RestController
-@RequestMapping("/merchant/charge")
+@RequestMapping("/sys/bank")
 @Slf4j
-public class BillInController extends AbstractController {
+public class BankController extends AbstractController {
 
     @Autowired
-    private BillInService billInService;
+    private BankService bankService;
 
     /**
      * 列表
@@ -33,20 +33,20 @@ public class BillInController extends AbstractController {
      * @return
      */
     @RequestMapping("/list")
-    public Page<BillInEntity> list(Map<String, Object> params) {
-        return billInService.listEntity(params);
+    public Page<BankEntity> list(@RequestBody Map<String, Object> params) {
+        return bankService.listEntity(params);
     }
 
     /**
      * 新增
      *
-     * @param billIn
+     * @param bank
      * @return
      */
     @SysLog("新增")
     @RequestMapping("/save")
-    public R save(@RequestBody BillInEntity billIn) {
-        return billInService.saveEntity(billIn);
+    public R save(@RequestBody BankEntity bank) {
+        return bankService.saveEntity(bank);
     }
 
     /**
@@ -57,19 +57,19 @@ public class BillInController extends AbstractController {
      */
     @RequestMapping("/info")
     public R getById(Long id) {
-        return billInService.getEntityById(id);
+        return bankService.getEntityById(id);
     }
 
     /**
      * 修改
      *
-     * @param billIn
+     * @param bank
      * @return
      */
     @SysLog("修改")
     @RequestMapping("/update")
-    public R update(@RequestBody BillInEntity billIn) {
-        return billInService.updateEntity(billIn);
+    public R update(@RequestBody BankEntity bank) {
+        return bankService.updateEntity(bank);
     }
 
     /**
@@ -81,7 +81,7 @@ public class BillInController extends AbstractController {
     @SysLog("删除")
     @RequestMapping("/remove")
     public R batchRemove(@RequestBody Long[] id) {
-        return billInService.batchRemove(id);
+        return bankService.batchRemove(id);
     }
 
 }

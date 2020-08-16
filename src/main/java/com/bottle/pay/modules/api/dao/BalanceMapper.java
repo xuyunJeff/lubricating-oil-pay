@@ -23,4 +23,21 @@ public interface BalanceMapper extends BottleBaseMapper<BalanceEntity> {
    int updateBalance(BalanceEntity entity);
 
    int billOutMerchantChangePayingBalance(@Param("amount") BigDecimal amount,@Param("id") Long id);
+
+   /**
+    * 冻结商户余额
+    * @param merchantId
+    * @param money
+    * @return
+    */
+   int frozenMerchant(@Param("merchantId") Long merchantId,@Param("amount")BigDecimal money);
+
+
+    /**
+     * 解冻商户余额
+     * @param merchantId
+     * @param money
+     * @return
+     */
+   int unFrozenMerchant(@Param("merchantId") Long merchantId,@Param("amount")BigDecimal money);
 }

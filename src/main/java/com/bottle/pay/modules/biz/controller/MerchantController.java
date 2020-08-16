@@ -22,74 +22,78 @@ import com.bottle.pay.common.entity.R;
 @RestController
 @RequestMapping("/merchant")
 public class MerchantController extends AbstractController {
-	
-	@Autowired
-	private IpLimitService ipLimitService;
 
-	@Autowired
-	private RedisCacheManager redisCacheManager;
+    @Autowired
+    private IpLimitService ipLimitService;
 
-	@Autowired
-	private MerchantService merchantService;
-	
-	/**
-	 * 列表 商户查询自己登陆ip 黑/白名单
-	 * 一般最多只有两条记录
-	 * 			一条是商户后台IP白名单
-	 * 			另一条是商户服务器调用我们派单接口是的IP白名单
-	 * @param ipLimit
-	 * @return
-	 */
-	@RequestMapping("/ip/list")
-	public List<IpLimitEntity> list(IpLimitEntity ipLimit) {
-		return ipLimitService.select(ipLimit);
-	}
-		
-	/**
-	 * 新增
-	 * @param ipLimit
-	 * @return
-	 */
-	@SysLog("新增")
-	@RequestMapping("/ip/save")
-	public R save(@RequestBody IpLimitEntity ipLimit) {
-		ipLimit.setOrgId(super.getUser().getOrgId());
-		ipLimit.setOrgName(super.getUser().getOrgName());
-		R  r = ipLimitService.saveEntity(ipLimit);
-		if(r.isOk()){
-			String ipList = ipLimit.getIpList();
-			String key = IPConstant.getIpWhiteListCacheKey(super.getUser().getUserId(),ipLimit.getType());
-			redisCacheManager.lSet(key,Arrays.asList(ipList.split("#")));
-		}
-		return r;
-	}
+    @Autowired
+    private RedisCacheManager redisCacheManager;
 
-	
-	/**
-	 * 修改
-	 * @param ipLimit
-	 * @return
-	 */
-	@SysLog("修改")
-	@RequestMapping("/ip/update")
-	public R update(@RequestBody IpLimitEntity ipLimit) {
-		R r = ipLimitService.updateEntity(ipLimit);
-		if(r.isOk()){
-			String key = IPConstant.getIpWhiteListCacheKey(super.getUser().getUserId(),ipLimit.getType());
-			redisCacheManager.lSet(key,Arrays.asList(ipLimit.getIpList().split("#")));
-		}
-		return r;
-	}
+    @Autowired
+    private MerchantService merchantService;
+
+    /**
+     * 列表 商户查询自己登陆ip 黑/白名单
+     * 一般最多只有两条记录
+     * 一条是商户后台IP白名单
+     * 另一条是商户服务器调用我们派单接口是的IP白名单
+     *
+     * @param ipLimit
+     * @return
+     */
+    @RequestMapping("/ip/list")
+    public List<IpLimitEntity> list(IpLimitEntity ipLimit) {
+        return ipLimitService.select(ipLimit);
+    }
+
+    /**
+     * 新增
+     *
+     * @param ipLimit
+     * @return
+     */
+    @SysLog("新增")
+    @RequestMapping("/ip/save")
+    public R save(@RequestBody IpLimitEntity ipLimit) {
+        ipLimit.setOrgId(super.getUser().getOrgId());
+        ipLimit.setOrgName(super.getUser().getOrgName());
+        R r = ipLimitService.saveEntity(ipLimit);
+        if (r.isOk()) {
+            String ipList = ipLimit.getIpList();
+            String key = IPConstant.getIpWhiteListCacheKey(super.getUser().getUserId(), ipLimit.getType());
+            redisCacheManager.lSet(key, Arrays.asList(ipList.split("#")));
+        }
+        return r;
+    }
 
 
-	/**
-	 * 商户自己查看商户信息商户信息
-	 * @return
-	 */
-	@RequestMapping("/info")
-	public R getMerchantInfo(){
-		MerchantView view = merchantService.getMerchantBalance(super.getUserId());
-		return CommonUtils.msg(view);
-	}
+    /**
+     * 修改
+     *
+     * @param ipLimit
+     * @return
+     */
+    @SysLog("修改")
+    @RequestMapping("/ip/update")
+    public R update(@RequestBody IpLimitEntity ipLimit) {
+        R r = ipLimitService.updateEntity(ipLimit);
+        if (r.isOk()) {
+            String key = IPConstant.getIpWhiteListCacheKey(super.getUser().getUserId(), ipLimit.getType());
+            redisCacheManager.lSet(key, Arrays.asList(ipLimit.getIpList().split("#")));
+        }
+        return r;
+    }
+
+
+    /**
+     * 商户自己查看商户信息商户信息
+     *
+     * @return
+     */
+    @RequestMapping("/info")
+    public R getMerchantInfo() {
+        MerchantView view = merchantService.getMerchantBalance(super.getUserId());
+        return CommonUtils.msg(view);
+    }
 
 }
