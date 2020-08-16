@@ -278,7 +278,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         entity.setBillStatus(BillConstant.BillStatusEnum.UnPay.getCode());
         entity.setNotice(BillConstant.BillNoticeEnum.NotNotice.getCode());
         entity.setPrice(price);
-        entity.setBankAccountName(bankCardNo);
+        entity.setBankCardNo(bankCardNo);
         entity.setBankName(bankName);
         entity.setBankAccountName(bankAccountName);
         entity.setBillType(setBillType(price, merchantId).getCode());
