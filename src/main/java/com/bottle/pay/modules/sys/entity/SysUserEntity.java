@@ -187,6 +187,7 @@ public class SysUserEntity implements Serializable {
 	}
 
 	public Long getRoleId() {
+		if(null == roleIdList) return null;
 		return roleIdList.get(0);
 	}
 

@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
-@RequestMapping("/apiV1/BillOut")
+@RequestMapping("/apiV1/billOut")
 public class BillOutController extends AbstractController {
 	
 	@Autowired
