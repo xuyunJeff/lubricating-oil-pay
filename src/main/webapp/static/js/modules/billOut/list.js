@@ -32,11 +32,15 @@ function getGrid() {
             {field : "thirdBillId", title : "第三方订单号", width : "100px"},
             {field : "ip", title : "第三方订单派发服务器ip", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px"},
-            {field : "businessId", title : "付款专员ID", width : "100px"},
+            {field : "businessId", title : "付款专员ID", width : "100px",visible:false},
             //：  1未支付 2 成功 3 失败
-            {field : "billStatus", title : "订单状态", width : "100px"},
+            {field : "billStatus", title : "订单状态", width : "100px",formatter:function (index,row) {
+                     if(row.billStatus == 1) {return  "未支付"}
+                     if(row.billStatus ==2) {return "成功"}
+                     if(row.billStatus ==3) {return "失败"}
+                }},
             //：1未通知 2 已通知 3 失败
-            {field : "notice", title : "回调", width : "100px"},
+            {field : "notice", title : "通知", width : "100px"},
             {field : "price", title : "账单金额", width : "100px"},
             {field : "bankCardNo", title : "付款会员的卡号", width : "100px"},
             {field : "bankName", title : "银行名称", width : "100px"},

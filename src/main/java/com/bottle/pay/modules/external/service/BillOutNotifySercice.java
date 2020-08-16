@@ -9,13 +9,11 @@ import org.springframework.web.client.RestTemplate;
 /**
  * 出款成功回调接口
  */
-@Service
+
 public class BillOutNotifySercice {
 
-    @Autowired
     BillOutService billOutService;
 
-    @Autowired
     RestTemplate restTemplate;
 
     /**
