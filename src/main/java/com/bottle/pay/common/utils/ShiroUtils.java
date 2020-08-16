@@ -33,7 +33,7 @@ public class ShiroUtils {
 	 * @return
 	 */
 	public static SysUserEntity getUserEntity() {
-		return (SysUserEntity)SecurityUtils.getSubject().getPrincipal();
+		return GsonUtil.fromJson(GsonUtil.GsonString(SecurityUtils.getSubject().getPrincipal()),SysUserEntity.class);
 	}
 
 	/**

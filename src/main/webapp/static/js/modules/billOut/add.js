@@ -14,7 +14,7 @@ var vm = new Vue({
 		        return false;
 		    }
 		    $.SaveForm({
-		    	url: '../../apiV1/billOut/save?_' + $.now(),
+		    	url: '../../apiV1/billOut//push/order?_' + $.now(),
 		    	param: vm.billOut,
 		    	success: function(data) {
 		    		$.currentIframe().vm.load();

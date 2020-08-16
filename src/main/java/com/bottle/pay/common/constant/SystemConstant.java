@@ -13,6 +13,12 @@ public class SystemConstant {
 	 */
 	public static final long SUPER_ADMIN = 1;
 
+	public static final String USER_LOGIN_REDI_KEY ="login";
+
+	public static String getUserLoginRedisKey(String username){
+		return USER_LOGIN_REDI_KEY+":"+username;
+	}
+
 	@AllArgsConstructor
 	public enum  RoleEnum {
 		CustomerService(2L,"出款员"), BillOutMerchant(3L,"代付商户"), Organization(4L,"机构管理员"),BillInMerchant(5L,"代收商户");

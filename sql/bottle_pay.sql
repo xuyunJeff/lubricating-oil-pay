@@ -4562,7 +4562,8 @@ CREATE TABLE `sys_user` (
   `user_id_create` bigint(255) DEFAULT NULL COMMENT '创建用户id',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  KEY `uniq_username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='系统用户';
 
 -- ----------------------------

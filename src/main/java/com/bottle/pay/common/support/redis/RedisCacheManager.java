@@ -1,5 +1,6 @@
 package com.bottle.pay.common.support.redis;
 
+import com.bottle.pay.common.utils.GsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -122,6 +123,14 @@ public class RedisCacheManager {
     public Object get(String key) {
         return key == null ? null : redisTemplate.opsForValue().get(key);
     }
+
+    public<T> T getBean(String key,Class<T> t){
+        if(key == null){
+            return null;
+        }
+       Object value = redisTemplate.opsForValue().get(key);
+        return value == null ? null : GsonUtil.fromJson(value.toString(),t);
+    }
     /**
      * 普通缓存放入
      *
@@ -132,6 +141,17 @@ public class RedisCacheManager {
      * @return true成功 false失败
      */
     public boolean set(String key, Object value) {
+        try {
+            redisTemplate.opsForValue().set(key, GsonUtil.GsonString(value));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public boolean set(String key, String value) {
         try {
             redisTemplate.opsForValue().set(key, value);
             return true;
@@ -153,7 +173,7 @@ public class RedisCacheManager {
      *            时间(秒) time要大于0 如果time小于等于0 将设置无限期
      * @return true成功 false 失败
      */
-    public boolean set(String key, Object value, long time) {
+    public boolean set(String key, String value, long time) {
         try {
             if (time > 0) {
                 redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
@@ -166,6 +186,21 @@ public class RedisCacheManager {
             return false;
         }
     }
+
+    public boolean set(String key, Object value, long time) {
+        try {
+            if (time > 0) {
+                redisTemplate.opsForValue().set(key, GsonUtil.GsonString(value), time, TimeUnit.SECONDS);
+            } else {
+                set(key, value);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     /**
      * 递增

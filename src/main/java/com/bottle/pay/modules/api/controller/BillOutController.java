@@ -46,49 +46,7 @@ public class BillOutController extends AbstractController {
 	public Page<BillOutEntity> list(@RequestBody Map<String, Object> params) {
 		return billOutService.listEntity(params);
 	}
-		
-	/**
-	 * 新增
-	 * @param billOut
-	 * @return
-	 */
-	@SysLog("新增")
-	@RequestMapping("/save")
-	public R save(@RequestBody BillOutEntity billOut) {
-		return billOutService.saveEntity(billOut);
-	}
-	
-	/**
-	 * 根据id查询详情
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping("/info")
-	public R getById(@RequestBody Long id) {
-		return billOutService.getEntityById(id);
-	}
-	
-	/**
-	 * 修改
-	 * @param billOut
-	 * @return
-	 */
-	@SysLog("修改")
-	@RequestMapping("/update")
-	public R update(@RequestBody BillOutEntity billOut) {
-		return billOutService.updateEntity(billOut);
-	}
-	
-	/**
-	 * 删除
-	 * @param id
-	 * @return
-	 */
-	@SysLog("删除")
-	@RequestMapping("/remove")
-	public R batchRemove(@RequestBody Long[] id) {
-		return billOutService.batchRemove(id);
-	}
+
 
 	@SysLog("后端派单")
 	@PostMapping("/push/order")
@@ -99,7 +57,7 @@ public class BillOutController extends AbstractController {
 		// 第一步保存订单,派单给机构
 		BillOutEntity bill =billOutService.billsOutAgent(billOutView,ip,userEntity);
 		// FIXME 判断银行卡是否在黑名单内 @mighty
-		if(existBlockCard(billOutView.getBankCardNo(),billOutView.getOrgId())){
+		if(existBlockCard(billOutView.getBankCardNo(),userEntity.getOrgId())){
 			return R.error("银行卡已被拉黑");
 		}
 		if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())){
@@ -110,7 +68,7 @@ public class BillOutController extends AbstractController {
 	}
 
 	@SysLog("人工派单接口")
-	@GetMapping("/arrange/bill/human")
+	@GetMapping("/appoint/human")
 	public R arrangeBillsOutBusinessByHuman(Long businessId,String billId ){
 		SysUserEntity userEntity =	getUser();
 		if(!SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId())) return R.error("必须的机构管理员才能派单");

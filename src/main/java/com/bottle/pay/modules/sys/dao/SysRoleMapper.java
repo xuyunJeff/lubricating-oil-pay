@@ -19,5 +19,6 @@ public interface SysRoleMapper extends BaseMapper<SysRoleEntity> {
 	 * @return
 	 */
 	List<String> listUserRoles(Long userId);
-	
+
+	List<Long> listUserRoleIds(Long userId);
 }

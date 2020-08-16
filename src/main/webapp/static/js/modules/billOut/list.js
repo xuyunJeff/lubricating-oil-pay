@@ -69,7 +69,7 @@ function getGrid() {
             {field : "bankName", title : "银行名称", width : "100px",formatter:function (index,row) {
                 return row.bankName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
-            {field : "bankAccountName", title : "付款用户名", width : "100px",formatter:function (index,row) {
+            {field : "bankAccountName", title : "银行卡用户名", width : "100px",formatter:function (index,row) {
                     return row.bankAccountName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankAccountName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             //1 手动 2 自动 3 大额 4 订单退回机构
@@ -103,8 +103,8 @@ var vm = new Vue({
 			dialogOpen({
 				title: '新增',
 				url: 'modules/billOut/add.html?_' + $.now(),
-				width: '420px',
-				height: '350px',
+				width: '800px',
+				height: '420px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
 				},
@@ -154,6 +154,9 @@ var vm = new Vue({
             console.log(oInput.value)
             document.execCommand("Copy",false);
             oInput.remove()
+        },
+        auto: function () {
+            
         }
 	}
 })

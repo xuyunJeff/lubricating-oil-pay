@@ -44,11 +44,14 @@
 			password,
 			email,
 			mobile,
-			status
+			sys_user.status status,
+			sys_user.org_id as orgId,
+			sys_org.name as orgName
 		FROM
 			sys_user
+		left join sys_org  on sys_user.org_id = sys_org.org_id
 		WHERE
-			username = #{username}
+				sys_user.username = #{username}
 	</select>
 	
 	<select id="listAllMenuId" resultType="long">

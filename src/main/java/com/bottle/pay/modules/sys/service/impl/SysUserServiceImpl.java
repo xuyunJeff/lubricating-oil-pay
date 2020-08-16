@@ -1,10 +1,12 @@
 package com.bottle.pay.modules.sys.service.impl;
 
+import com.bottle.pay.common.utils.JSONUtils ;
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.Query;
 import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.support.properties.JwtProperties;
+import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.common.utils.CommonUtils;
 import com.bottle.pay.common.utils.MD5Utils;
 import com.bottle.pay.modules.sys.dao.*;
@@ -42,6 +44,8 @@ public class SysUserServiceImpl implements SysUserService {
 	@Autowired
 	private JwtProperties jwtProperties;
 
+	@Autowired
+	private RedisCacheManager redisCacheManager;
 	/**
 	 * 分页查询用户列表
 	 * @param params
@@ -62,7 +66,16 @@ public class SysUserServiceImpl implements SysUserService {
 	 */
 	@Override
 	public SysUserEntity getByUserName(String username) {
-		return sysUserMapper.getByUserName(username);
+		String redisKey =SystemConstant.getUserLoginRedisKey(username);
+		SysUserEntity userEntity=redisCacheManager.getBean(redisKey,SysUserEntity.class);
+		if(null != userEntity) {
+			return  userEntity;
+		}
+		SysUserEntity user = sysUserMapper.getByUserName(username);
+		List<Long> roles=sysRoleMapper.listUserRoleIds(user.getUserId());
+		user.setRoleIdList(roles);
+		redisCacheManager.set(redisKey, JSONUtils.beanToJson(user),jwtProperties.getExpiration()* 1000);
+		return user;
 	}
 
 	/**
@@ -117,6 +130,8 @@ public class SysUserServiceImpl implements SysUserService {
 		query.put("userId", userId);
 		query.put("roleIdList", user.getRoleIdList());
 		sysUserRoleMapper.save(query);
+		String redisKey =SystemConstant.getUserLoginRedisKey(user.getUsername());
+		redisCacheManager.del(redisKey);
 		return CommonUtils.msg(count);
 	}
 

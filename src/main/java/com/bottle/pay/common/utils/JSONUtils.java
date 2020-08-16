@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JSONUtils {
 
-	private final static ObjectMapper objectMapper = new ObjectMapper();
+	public final static ObjectMapper objectMapper = new ObjectMapper();
 
     private JSONUtils() {
 
@@ -44,6 +44,9 @@ public class JSONUtils {
 		}
         return null;
     }
+
+
+
 
     /**
      * json转对象

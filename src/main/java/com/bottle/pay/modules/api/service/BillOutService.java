@@ -23,6 +23,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
@@ -265,6 +266,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     public BillOutEntity saveNewBillOut(String merchantName, Long merchantId, String thirdBillId, String ip, Long agentId, String agentName, BigDecimal price, String bankCardNo, String bankName, String bankAccountName) {
         BillOutEntity entity = new BillOutEntity();
+        entity.setCreateTime(new Date());
         entity.setMerchantName(merchantName);
         entity.setMerchantId(merchantId);
         entity.setBillId(generateBillOutBillId(String.valueOf(merchantId)));
@@ -283,6 +285,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         entity.setOrgId(agentId);
         entity.setOrgName(agentName);
         entity.setPosition(BillConstant.BillPostionEnum.Agent.getCode());
+        entity.setLastUpdate(new Date());
         int i = mapper.insert(entity);
         if (i == 0) {
             log.error("订单保存错误 {}", entity.toString());
