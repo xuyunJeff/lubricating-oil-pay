@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BlockBankCardService extends BottleBaseService<BlockBankCardMapper, BlockBankCardEntity> {
     @Override
-   public BlockBankCardEntity selectOne(BlockBankCardEntity e){
-      return   mapper.selectOne(e);
+    public BlockBankCardEntity selectOne(BlockBankCardEntity e) {
+        return mapper.selectOne(e);
     }
 }

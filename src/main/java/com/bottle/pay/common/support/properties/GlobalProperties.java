@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * 系统全局配置
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Component
@@ -17,20 +18,29 @@ public class GlobalProperties {
 
     static final String PREFIX = "global";
 
-    /** 文件上传目录 **/
+    /**
+     * 文件上传目录
+     **/
     private String uploadLocation;
 
-    /** 文件上传目录访问路径 **/
+    /**
+     * 文件上传目录访问路径
+     **/
     private String uploadMapping;
 
-    /** 是否开启redis会话管理器 **/
+    /**
+     * 是否开启redis会话管理器
+     **/
     private boolean redisSessionDao;
 
-    /** 是否开启验证码 **/
+    /**
+     * 是否开启验证码
+     **/
     private boolean kaptchaEnable;
 
     /**
      * beetl全局变量
+     *
      * @return
      */
     public Map<String, Object> getBeetlGlobalVars() {
@@ -41,6 +51,7 @@ public class GlobalProperties {
 
     /**
      * WebConfig注册上传路径
+     *
      * @return
      */
     public String getRegisterUploadLocation() {
@@ -52,6 +63,7 @@ public class GlobalProperties {
 
     /**
      * WebConfig注册访问路径
+     *
      * @return
      */
     public String getRegisterUploadMapping() {

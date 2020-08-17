@@ -15,6 +15,7 @@ import java.io.IOException;
 
 /**
  * 验证码请求
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Controller
@@ -25,6 +26,7 @@ public class SysKaptchaController {
 
     /**
      * 验证码
+     *
      * @param response
      * @throws IOException
      */

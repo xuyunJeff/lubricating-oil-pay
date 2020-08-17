@@ -23,15 +23,16 @@ import com.bottle.pay.common.entity.Page;
 
 /**
  * PaginationResultSetHandlerInterceptor
+ *
  * @author zcl<yczclcn@163.com>
  */
-@Intercepts({ @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = { Statement.class }) })
+@Intercepts({@Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})})
 public class PaginationResultSetHandlerInterceptor implements Interceptor {
 
     private static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
     private static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
-    private static final ReflectorFactory  DEFAULT_REFLECTOR_FACTORY = new DefaultReflectorFactory();
-    
+    private static final ReflectorFactory DEFAULT_REFLECTOR_FACTORY = new DefaultReflectorFactory();
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         DefaultResultSetHandler resultSetHandler = (DefaultResultSetHandler) invocation.getTarget();

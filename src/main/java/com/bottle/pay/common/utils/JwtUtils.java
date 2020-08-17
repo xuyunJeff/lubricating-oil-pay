@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * jwt工具类
+ *
  * @author zhouchenglin[yczclcn@163.com]
  */
 @Component
@@ -22,6 +23,7 @@ public class JwtUtils {
 
     /**
      * 获取用户名
+     *
      * @param token
      * @return
      */
@@ -31,6 +33,7 @@ public class JwtUtils {
 
     /**
      * 创建时间
+     *
      * @param token
      * @return
      */
@@ -40,6 +43,7 @@ public class JwtUtils {
 
     /**
      * 过期时间
+     *
      * @param token
      * @return
      */
@@ -49,6 +53,7 @@ public class JwtUtils {
 
     /**
      * token接收者
+     *
      * @param token
      * @return
      */
@@ -58,6 +63,7 @@ public class JwtUtils {
 
     /**
      * 获取md5混淆的key
+     *
      * @param token
      * @return
      */
@@ -67,6 +73,7 @@ public class JwtUtils {
 
     /**
      * 获取私有的claims
+     *
      * @param token
      * @param key
      * @return
@@ -77,6 +84,7 @@ public class JwtUtils {
 
     /**
      * 获取payload
+     *
      * @param token
      * @return
      */
@@ -89,6 +97,7 @@ public class JwtUtils {
 
     /**
      * 解析token是否正确
+     *
      * @param token
      * @throws JwtException
      */
@@ -98,6 +107,7 @@ public class JwtUtils {
 
     /**
      * 验证token是否过期
+     *
      * @param token
      * @return
      */
@@ -112,6 +122,7 @@ public class JwtUtils {
 
     /**
      * 生成token，用户名
+     *
      * @param username
      * @return
      */
@@ -123,9 +134,10 @@ public class JwtUtils {
 
     /**
      * 生成token
+     *
      * @param claims
      * @param username 用户名
-     * @param userId 用户id
+     * @param userId   用户id
      * @return
      */
     public String generateToken(Map<String, Object> claims, String username, String userId) {
@@ -143,6 +155,7 @@ public class JwtUtils {
 
     /**
      * 密钥base64数组
+     *
      * @return
      */
     private byte[] getSecretByteArr() {

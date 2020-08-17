@@ -11,55 +11,59 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 异常处理器
+ *
  * @author zcl<yczclcn@163.com>
  */
 @RestControllerAdvice
 public class RRExceptionHandler {
-	
-	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * 自定义异常
-	 */
-	@ExceptionHandler(RRException.class)
-	public R handleRRException(RRException e){
-		R r = new R();
-		r.put("code", e.getCode());
-		r.put("msg", e.getMessage());
-		return r;
-	}
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-	/**
-	 * 新增异常
-	 * @param e
-	 * @return
-	 */
-	@ExceptionHandler(DuplicateKeyException.class)
-	public R handleDuplicateKeyException(DuplicateKeyException e){
-		logger.error(e.getMessage(), e);
-		return R.error("数据库中已存在该记录");
-	}
+    /**
+     * 自定义异常
+     */
+    @ExceptionHandler(RRException.class)
+    public R handleRRException(RRException e) {
+        R r = new R();
+        r.put("code", e.getCode());
+        r.put("msg", e.getMessage());
+        return r;
+    }
 
-	/**
-	 * 无权限异常
-	 * @param e
-	 * @return
-	 */
-	@ExceptionHandler({UnauthorizedException.class, AuthorizationException.class})
-	public R handleAuthorizationException(AuthorizationException e){
-		logger.error(e.getMessage(), e);
-		return R.error("没有权限，请联系管理员授权");
-	}
+    /**
+     * 新增异常
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(DuplicateKeyException.class)
+    public R handleDuplicateKeyException(DuplicateKeyException e) {
+        logger.error(e.getMessage(), e);
+        return R.error("数据库中已存在该记录");
+    }
 
-	/**
-	 * 通用异常
-	 * @param e
-	 * @return
-	 */
-	@ExceptionHandler(Exception.class)
-	public R handleException(Exception e){
-		logger.error(e.getMessage(), e);
-		return R.error();
-	}
-	
+    /**
+     * 无权限异常
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler({UnauthorizedException.class, AuthorizationException.class})
+    public R handleAuthorizationException(AuthorizationException e) {
+        logger.error(e.getMessage(), e);
+        return R.error("没有权限，请联系管理员授权");
+    }
+
+    /**
+     * 通用异常
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(Exception.class)
+    public R handleException(Exception e) {
+        logger.error(e.getMessage(), e);
+        return R.error();
+    }
+
 }

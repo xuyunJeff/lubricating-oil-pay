@@ -16,210 +16,210 @@ import com.bottle.pay.common.utils.CommonUtils;
  */
 public class SysAreaEntity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 区域id
-	 */
-	private Long areaId;
-	
-	/**
-	 * 区域代码
-	 */
-	private String areaCode;
-	
-	/**
-	 * 父级代码，省级为0
-	 */
-	private String parentCode;
-	
-	/**
-	 * 父级名称
-	 */
-	private String parentName;
-	
-	/**
-	 * 区域名称
-	 */
-	private String name;
-	
-	/**
-	 * 层级，1：省级，2：地市，3：区县
-	 */
-	private Integer layer;
-	
-	/**
-	 * 排序
-	 */
-	private Integer orderNum;
-	
-	/**
-	 * 状态，1：显示，0：隐藏
-	 */
-	private Integer status;
-	
-	/**
-	 * 备注
-	 */
-	private String remark;
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
-	
-	/**
-	 * 修改时间
-	 */
-	private Timestamp gmtModified;
-	
-	/**
-	 * ztree属性
-	 */
-	private Boolean open;
-	
-	private Boolean isParent;
-	
-	private Integer size;
-	
-	private List<?> list;
+    /**
+     * 区域id
+     */
+    private Long areaId;
 
-	public SysAreaEntity() {
-		super();
-	}
+    /**
+     * 区域代码
+     */
+    private String areaCode;
 
-	public Long getAreaId() {
-		return areaId;
-	}
+    /**
+     * 父级代码，省级为0
+     */
+    private String parentCode;
 
-	public void setAreaId(Long areaId) {
-		this.areaId = areaId;
-	}
+    /**
+     * 父级名称
+     */
+    private String parentName;
 
-	public String getAreaCode() {
-		return areaCode;
-	}
+    /**
+     * 区域名称
+     */
+    private String name;
 
-	public void setAreaCode(String areaCode) {
-		this.areaCode = areaCode;
-	}
+    /**
+     * 层级，1：省级，2：地市，3：区县
+     */
+    private Integer layer;
 
-	public String getParentCode() {
-		return parentCode;
-	}
+    /**
+     * 排序
+     */
+    private Integer orderNum;
 
-	public void setParentCode(String parentCode) {
-		this.parentCode = parentCode;
-	}
+    /**
+     * 状态，1：显示，0：隐藏
+     */
+    private Integer status;
 
-	public String getParentName() {
-		return parentName;
-	}
+    /**
+     * 备注
+     */
+    private String remark;
 
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
 
-	public String getName() {
-		return name;
-	}
+    /**
+     * 修改时间
+     */
+    private Timestamp gmtModified;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * ztree属性
+     */
+    private Boolean open;
 
-	public Integer getLayer() {
-		return layer;
-	}
+    private Boolean isParent;
 
-	public void setLayer(Integer layer) {
-		this.layer = layer;
-	}
+    private Integer size;
 
-	public Integer getOrderNum() {
-		return orderNum;
-	}
+    private List<?> list;
 
-	public void setOrderNum(Integer orderNum) {
-		this.orderNum = orderNum;
-	}
+    public SysAreaEntity() {
+        super();
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public Long getAreaId() {
+        return areaId;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setAreaId(Long areaId) {
+        this.areaId = areaId;
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public String getAreaCode() {
+        return areaCode;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public String getParentCode() {
+        return parentCode;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public void setParentCode(String parentCode) {
+        this.parentCode = parentCode;
+    }
 
-	public Timestamp getGmtModified() {
-		return gmtModified;
-	}
+    public String getParentName() {
+        return parentName;
+    }
 
-	public void setGmtModified(Timestamp gmtModified) {
-		this.gmtModified = gmtModified;
-	}
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
-	public Boolean getOpen() {
-		return open;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setOpen(Boolean open) {
-		this.open = open;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Boolean getIsParent() {
-		return isParent;
-	}
+    public Integer getLayer() {
+        return layer;
+    }
 
-	public void setIsParent(Boolean isParent) {
-		this.isParent = isParent;
-	}
+    public void setLayer(Integer layer) {
+        this.layer = layer;
+    }
 
-	public Integer getSize() {
-		return size;
-	}
+    public Integer getOrderNum() {
+        return orderNum;
+    }
 
-	public void setSize(Integer size) {
-		this.size = size;
-	}
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
 
-	public List<?> getList() {
-		return list;
-	}
+    public Integer getStatus() {
+        return status;
+    }
 
-	public void setList(List<?> list) {
-		this.list = list;
-	}
-	
-	public void checkParent() {
-		if(CommonUtils.isIntThanZero(this.size)) {
-			this.isParent = true;
-		} else {
-			this.isParent = false;
-		}
-	}
-	
-	public void checkParentName() {
-		if(this.parentCode.equals("0")) {
-			this.parentName = "省级区域";
-		}
-	}
-	
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Timestamp getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Timestamp gmtModified) {
+        this.gmtModified = gmtModified;
+    }
+
+    public Boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
+    }
+
+    public Boolean getIsParent() {
+        return isParent;
+    }
+
+    public void setIsParent(Boolean isParent) {
+        this.isParent = isParent;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
+
+    public List<?> getList() {
+        return list;
+    }
+
+    public void setList(List<?> list) {
+        this.list = list;
+    }
+
+    public void checkParent() {
+        if (CommonUtils.isIntThanZero(this.size)) {
+            this.isParent = true;
+        } else {
+            this.isParent = false;
+        }
+    }
+
+    public void checkParentName() {
+        if (this.parentCode.equals("0")) {
+            this.parentName = "省级区域";
+        }
+    }
+
 }

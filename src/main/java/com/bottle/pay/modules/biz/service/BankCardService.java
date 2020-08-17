@@ -207,9 +207,9 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
                 entity.setCreateTime(new Date());
                 entity.setLastUpdate(entity.getCreateTime());
                 num = mapper.save(entity);
-                log.info("userId:{}绑定银行卡:{},结果:{}", entity.getBusinessId(), entity.getBankCardNo(),num>0);
+                log.info("userId:{}绑定银行卡:{},结果:{}", entity.getBusinessId(), entity.getBankCardNo(), num > 0);
                 if (num > 0 && entity.getBalance().compareTo(BigDecimal.ZERO) > 0) {
-                    log.info("userId:{}绑定银行卡成功开始更新对应余额:{}",entity.getBusinessId(),entity.getBalance());
+                    log.info("userId:{}绑定银行卡成功开始更新对应余额:{}", entity.getBusinessId(), entity.getBalance());
                     BalanceEntity update = new BalanceEntity();
                     update.setUserId(entity.getBusinessId());
                     update.setId(balanceEntity.getId());
@@ -225,7 +225,7 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
                         frozen = entity.getBalance();
                     }
                     boolean count = balanceService.updateBalance(balanceEntity.getId(), balanceEntity.getUserId(), balance, frozen, null);
-                    log.info("userId:{}绑定银行卡成功更新对应余额:{}结果:{}",entity.getBusinessId(),entity.getBalance(),count);
+                    log.info("userId:{}绑定银行卡成功更新对应余额:{}结果:{}", entity.getBusinessId(), entity.getBalance(), count);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -289,10 +289,11 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
 
     /**
      * 批量删除银行卡
+     *
      * @param ids
      * @return
      */
-    public R removeBankCard(Long[] ids){
+    public R removeBankCard(Long[] ids) {
         /**
          * 机构管理员 和 本人权限
          * 银行卡状态  可用
@@ -300,35 +301,35 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
          * 银行卡没有启用
          */
         List<BankCardEntity> cardList = mapper.batchSelect(ids);
-        if(cardList == null || cardList.isEmpty()){
+        if (cardList == null || cardList.isEmpty()) {
             return CommonUtils.msg("删除失败-未找到银行卡");
         }
-        cardList = cardList.stream().filter(c->c.getCardStatus()==1
-                && c.getBalance().compareTo(BigDecimal.ZERO)==0
+        cardList = cardList.stream().filter(c -> c.getCardStatus() == 1
+                && c.getBalance().compareTo(BigDecimal.ZERO) == 0
                 && !c.getEnable()
         ).collect(Collectors.toList());
-        if(cardList.isEmpty()){
-            log.warn("userId:{},ip:{}删除失败-非冻结没有启用且余额为0才能删除",ShiroUtils.getUserId(), WebUtils.getIpAddr());
+        if (cardList.isEmpty()) {
+            log.warn("userId:{},ip:{}删除失败-非冻结没有启用且余额为0才能删除", ShiroUtils.getUserId(), WebUtils.getIpAddr());
             return CommonUtils.msg("删除失败-非冻结没有启用且余额为0才能删除");
         }
         List<Long> idList = null;
         //判断是机构管理员
         Long roleId = ShiroUtils.getUserEntity().getRoleId();
-        if(super.isOrgAdmin()){
+        if (super.isOrgAdmin()) {
             //银行卡是当前机构的
             idList = cardList.stream()
-                    .filter(cd->cd.getOrgId().equals(ShiroUtils.getUserEntity().getOrgId()))
-                    .map(cd->cd.getId()).collect(Collectors.toList());
-        }else {
+                    .filter(cd -> cd.getOrgId().equals(ShiroUtils.getUserEntity().getOrgId()))
+                    .map(cd -> cd.getId()).collect(Collectors.toList());
+        } else {
             //拿到当前用户所有银行卡
             idList = cardList.stream()
-                    .filter(cd->cd.getBusinessId().equals(ShiroUtils.getUserId()))
-                    .map(cd->cd.getId()).collect(Collectors.toList());
+                    .filter(cd -> cd.getBusinessId().equals(ShiroUtils.getUserId()))
+                    .map(cd -> cd.getId()).collect(Collectors.toList());
         }
         int num = 0;
-        if(idList != null && !idList.isEmpty()){
+        if (idList != null && !idList.isEmpty()) {
             log.info("用户:{},角色:{},机构:{} 删除银行卡:{}",
-                    ShiroUtils.getUserId(),ShiroUtils.getUserEntity().getRoleId(),ShiroUtils.getUserEntity().getOrgId(),idList);
+                    ShiroUtils.getUserId(), ShiroUtils.getUserEntity().getRoleId(), ShiroUtils.getUserEntity().getOrgId(), idList);
             Long[] dd = idList.stream().toArray(Long[]::new);
             num = mapper.batchRemove(dd);
         }
@@ -337,30 +338,33 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
 
     /**
      * 余额调度是 增加当前余额
+     *
      * @return
      */
-    public boolean addBalance(Long userId,String bankCard,BigDecimal balance){
+    public boolean addBalance(Long userId, String bankCard, BigDecimal balance) {
         BankCardEntity bankCardEntity = new BankCardEntity();
         bankCardEntity.setBusinessId(userId);
         bankCardEntity.setBankCardNo(bankCard);
         bankCardEntity.setBalance(balance);
         bankCardEntity.setLastUpdate(new Date());
-        boolean result = mapper.addBalance(bankCardEntity)>0;
-        log.info("专员:{},银行卡:{},增加的金额:{},结果:{}",userId,balance,balance,result);
+        boolean result = mapper.addBalance(bankCardEntity) > 0;
+        log.info("专员:{},银行卡:{},增加的金额:{},结果:{}", userId, balance, balance, result);
         return result;
     }
+
     /**
      * 余额调度是 增加当前余额
+     *
      * @return
      */
-    public boolean minusBalance(Long userId,String bankCard,BigDecimal balance){
+    public boolean minusBalance(Long userId, String bankCard, BigDecimal balance) {
         BankCardEntity bankCardEntity = new BankCardEntity();
         bankCardEntity.setBusinessId(userId);
         bankCardEntity.setBankCardNo(bankCard);
         bankCardEntity.setBalance(balance);
         bankCardEntity.setLastUpdate(new Date());
-        boolean result = mapper.minusBalance(bankCardEntity)>0;
-        log.info("专员:{},银行卡:{},增加的金额:{},结果:{}",userId,balance,balance,result);
+        boolean result = mapper.minusBalance(bankCardEntity) > 0;
+        log.info("专员:{},银行卡:{},增加的金额:{},结果:{}", userId, balance, balance, result);
         return result;
     }
 }

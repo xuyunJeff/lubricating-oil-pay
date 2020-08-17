@@ -4,6 +4,7 @@ import org.apache.ibatis.session.Configuration;
 
 /**
  * 数据库方言工厂,产生方言对象
+ *
  * @author zhouchenglin[yczclcn@163.com]
  */
 public class DialectFactory {

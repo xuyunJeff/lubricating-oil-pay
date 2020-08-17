@@ -10,83 +10,83 @@ package com.bottle.pay.modules.sys.entity;
  */
 public class GeneratorParamEntity {
 
-	private String[] tables;
-	
-	/**
-	 * 系统模块，用户管理 shiro
-	 */
-	private String module;
-	
-	/**
-	 * 功能编码，用户管理 user
-	 */
-	private String functionCode;
-	
-	/**
-	 * 后台请求地址，用户管理 sys/user
-	 */
-	private String requestMapping;
-	
-	/**
-	 * 页面路径，用户管理 base/user
-	 */
-	private String viewPath;
-	
-	/**
-	 * 生成类型，1：生成包结构，2：只生成源代码
-	 */
-	private String type;
+    private String[] tables;
 
-	public GeneratorParamEntity() {
-		super();
-	}
+    /**
+     * 系统模块，用户管理 shiro
+     */
+    private String module;
 
-	public String[] getTables() {
-		return tables;
-	}
+    /**
+     * 功能编码，用户管理 user
+     */
+    private String functionCode;
 
-	public void setTables(String[] tables) {
-		this.tables = tables;
-	}
+    /**
+     * 后台请求地址，用户管理 sys/user
+     */
+    private String requestMapping;
 
-	public String getModule() {
-		return module;
-	}
+    /**
+     * 页面路径，用户管理 base/user
+     */
+    private String viewPath;
 
-	public void setModule(String module) {
-		this.module = module;
-	}
+    /**
+     * 生成类型，1：生成包结构，2：只生成源代码
+     */
+    private String type;
 
-	public String getFunctionCode() {
-		return functionCode;
-	}
+    public GeneratorParamEntity() {
+        super();
+    }
 
-	public void setFunctionCode(String functionCode) {
-		this.functionCode = functionCode;
-	}
+    public String[] getTables() {
+        return tables;
+    }
 
-	public String getRequestMapping() {
-		return requestMapping;
-	}
+    public void setTables(String[] tables) {
+        this.tables = tables;
+    }
 
-	public void setRequestMapping(String requestMapping) {
-		this.requestMapping = requestMapping;
-	}
+    public String getModule() {
+        return module;
+    }
 
-	public String getViewPath() {
-		return viewPath;
-	}
+    public void setModule(String module) {
+        this.module = module;
+    }
 
-	public void setViewPath(String viewPath) {
-		this.viewPath = viewPath;
-	}
+    public String getFunctionCode() {
+        return functionCode;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setFunctionCode(String functionCode) {
+        this.functionCode = functionCode;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
-	
+    public String getRequestMapping() {
+        return requestMapping;
+    }
+
+    public void setRequestMapping(String requestMapping) {
+        this.requestMapping = requestMapping;
+    }
+
+    public String getViewPath() {
+        return viewPath;
+    }
+
+    public void setViewPath(String viewPath) {
+        this.viewPath = viewPath;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
 }

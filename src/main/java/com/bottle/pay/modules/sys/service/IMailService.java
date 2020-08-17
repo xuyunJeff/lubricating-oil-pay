@@ -20,12 +20,12 @@ import java.io.File;
 public class IMailService {
 
     @Value("${spring.mail.username}")
-    private  String from;
+    private String from;
 
     @Autowired
     JavaMailSender javaMailSender;
 
-    public void sendAttachmentMail(String to ,String subject,String content,String filePath)throws MessagingException {
+    public void sendAttachmentMail(String to, String subject, String content, String filePath) throws MessagingException {
 //        MimeMessage mimeMessage=javaMailSender.createMimeMessage();
 //        MimeMessageHelper mimeMessageHelper=new MimeMessageHelper(mimeMessage,true);
 //        mimeMessageHelper.setFrom(from);
@@ -38,7 +38,7 @@ public class IMailService {
 //        javaMailSender.send(mimeMessage);
 
 
-        SimpleMailMessage simpleMailMessage=new SimpleMailMessage();
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom(from);
         simpleMailMessage.setTo(to);
         simpleMailMessage.setSubject(subject);

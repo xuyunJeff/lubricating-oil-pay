@@ -2,6 +2,7 @@ package com.bottle.pay.modules.sys.generator;
 
 /**
  * 代码生成器常量
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class GenConstant {

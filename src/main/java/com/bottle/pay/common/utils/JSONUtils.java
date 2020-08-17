@@ -15,11 +15,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * json工具类(jackjson)
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class JSONUtils {
 
-	public final static ObjectMapper objectMapper = new ObjectMapper();
+    public final static ObjectMapper objectMapper = new ObjectMapper();
 
     private JSONUtils() {
 
@@ -31,25 +32,25 @@ public class JSONUtils {
 
     /**
      * object转化json
+     *
      * @param obj
      * @return
      * @throws Exception
      */
     public static String beanToJson(Object obj) {
         try {
-			return objectMapper.writeValueAsString(obj);
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            return objectMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
 
 
-
-
     /**
      * json转对象
+     *
      * @param jsonStr
      * @param clazz
      * @return
@@ -57,28 +58,29 @@ public class JSONUtils {
      */
     public static <T> T jsonToBean(String jsonStr, Class<T> clazz) {
         try {
-			return objectMapper.readValue(jsonStr, clazz);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+            return objectMapper.readValue(jsonStr, clazz);
+        } catch (JsonParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         return null;
     }
 
     /**
      * json转map
+     *
      * @param jsonStr
      * @return
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-	public static <T> Map<String, Object> jsonToMap(String jsonStr)
+    public static <T> Map<String, Object> jsonToMap(String jsonStr)
             throws Exception {
         return objectMapper.readValue(jsonStr, Map.class);
     }
@@ -124,8 +126,8 @@ public class JSONUtils {
      * map转化对象
      */
     @SuppressWarnings("rawtypes")
-	public static <T> T mapToBean(Map map, Class<T> clazz) {
+    public static <T> T mapToBean(Map map, Class<T> clazz) {
         return objectMapper.convertValue(map, clazz);
     }
-	
+
 }

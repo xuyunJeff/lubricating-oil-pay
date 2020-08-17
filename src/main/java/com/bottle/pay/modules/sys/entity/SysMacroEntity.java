@@ -14,176 +14,176 @@ import java.util.List;
  */
 public class SysMacroEntity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 字典id
-	 */
-	private Long macroId;
-	
-	/**
-	 * 类型id
-	 */
-	private Long typeId;
-	
-	/**
-	 * 类型名称
-	 */
-	private String typeName;
-	
-	/**
-	 * 字典码
-	 */
-	private String name;
-	
-	/**
-	 * 字典值
-	 */
-	private String value;
-	
-	/**
-	 * 状态(1:显示, 0:隐藏)
-	 */
-	private Integer status;
-	
-	/**
-	 * 类型(1:参数, 0:目录)
-	 */
-	private Integer type;
-	
-	/**
-	 * 排序
-	 */
-	private Integer orderNum;
-	
-	/**
-	 * 备注
-	 */
-	private String remark;
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
-	
-	/**
-	 * 修改时间
-	 */
-	private Timestamp gmtModified;
-	
-	/**
-	 * ztree属性
-	 */
-	private Boolean open;
-	
-	private List<?> list;
+    /**
+     * 字典id
+     */
+    private Long macroId;
 
-	public SysMacroEntity() {
-		super();
-	}
+    /**
+     * 类型id
+     */
+    private Long typeId;
 
-	public Long getMacroId() {
-		return macroId;
-	}
+    /**
+     * 类型名称
+     */
+    private String typeName;
 
-	public void setMacroId(Long macroId) {
-		this.macroId = macroId;
-	}
+    /**
+     * 字典码
+     */
+    private String name;
 
-	public Long getTypeId() {
-		return typeId;
-	}
+    /**
+     * 字典值
+     */
+    private String value;
 
-	public void setTypeId(Long typeId) {
-		this.typeId = typeId;
-	}
+    /**
+     * 状态(1:显示, 0:隐藏)
+     */
+    private Integer status;
 
-	public String getTypeName() {
-		return typeName;
-	}
+    /**
+     * 类型(1:参数, 0:目录)
+     */
+    private Integer type;
 
-	public void setTypeName(String typeName) {
-		this.typeName = typeName;
-	}
+    /**
+     * 排序
+     */
+    private Integer orderNum;
 
-	public String getName() {
-		return name;
-	}
+    /**
+     * 备注
+     */
+    private String remark;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
 
-	public String getValue() {
-		return value;
-	}
+    /**
+     * 修改时间
+     */
+    private Timestamp gmtModified;
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    /**
+     * ztree属性
+     */
+    private Boolean open;
 
-	public Integer getStatus() {
-		return status;
-	}
+    private List<?> list;
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public SysMacroEntity() {
+        super();
+    }
 
-	public Integer getType() {
-		return type;
-	}
+    public Long getMacroId() {
+        return macroId;
+    }
 
-	public void setType(Integer type) {
-		this.type = type;
-	}
+    public void setMacroId(Long macroId) {
+        this.macroId = macroId;
+    }
 
-	public Integer getOrderNum() {
-		return orderNum;
-	}
+    public Long getTypeId() {
+        return typeId;
+    }
 
-	public void setOrderNum(Integer orderNum) {
-		this.orderNum = orderNum;
-	}
+    public void setTypeId(Long typeId) {
+        this.typeId = typeId;
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public String getTypeName() {
+        return typeName;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Timestamp getGmtModified() {
-		return gmtModified;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setGmtModified(Timestamp gmtModified) {
-		this.gmtModified = gmtModified;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 
-	public Boolean getOpen() {
-		return open;
-	}
+    public Integer getStatus() {
+        return status;
+    }
 
-	public void setOpen(Boolean open) {
-		this.open = open;
-	}
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
-	public List<?> getList() {
-		return list;
-	}
+    public Integer getType() {
+        return type;
+    }
 
-	public void setList(List<?> list) {
-		this.list = list;
-	}
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Timestamp getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Timestamp gmtModified) {
+        this.gmtModified = gmtModified;
+    }
+
+    public Boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
+    }
+
+    public List<?> getList() {
+        return list;
+    }
+
+    public void setList(List<?> list) {
+        this.list = list;
+    }
 
 }

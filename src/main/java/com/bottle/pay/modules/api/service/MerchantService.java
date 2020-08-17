@@ -21,10 +21,11 @@ public class MerchantService {
 
     /**
      * 根据userId 查询余额
+     *
      * @param userId
      * @return
      */
-    private BalanceEntity getBalanceByUserId(Long userId){
+    private BalanceEntity getBalanceByUserId(Long userId) {
         BalanceEntity query = new BalanceEntity();
         query.setUserId(userId);
         return balanceMapper.getObject(query);
@@ -32,18 +33,19 @@ public class MerchantService {
 
     /**
      * 查询商户账户相关信息
+     *
      * @param userId
      * @return
      */
-    public MerchantView getMerchantBalance(Long userId){
+    public MerchantView getMerchantBalance(Long userId) {
         SysUserEntity userEntity = sysUserMapper.getObjectById(userId);
-        Assert.notNull(userEntity,userId+"商户不存在");
+        Assert.notNull(userEntity, userId + "商户不存在");
         BalanceEntity balance = getBalanceByUserId(userId);
-        Assert.notNull(balance,userId+"商户不存在");
+        Assert.notNull(balance, userId + "商户不存在");
         MerchantView view = new MerchantView();
         view.setBizType(balance.getRoleName());
-        BeanUtils.copyProperties(balance,view);
-        BeanUtils.copyProperties(userEntity,view);
-        return  view;
+        BeanUtils.copyProperties(balance, view);
+        BeanUtils.copyProperties(userEntity, view);
+        return view;
     }
 }

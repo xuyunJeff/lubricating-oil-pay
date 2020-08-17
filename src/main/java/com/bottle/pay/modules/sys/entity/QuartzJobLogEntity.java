@@ -13,127 +13,127 @@ import java.sql.Timestamp;
  */
 public class QuartzJobLogEntity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 记录id
-	 */
-	private Long logId;
-	
-	/**
-	 * 任务id
-	 */
-	private Long jobId;
-	
-	/**
-	 * spring bean 名称
-	 */
-	private String beanName;
-	
-	/**
-	 * 方法名
-	 */
-	private String methodName;
-	
-	/**
-	 * 参数
-	 */
-	private String params;
-	
-	/**
-	 * 状态，0：失败，1：成功
-	 */
-	private Integer status;
-	
-	/**
-	 * 错误信息
-	 */
-	private String error;
-	
-	/**
-	 * 耗时（ms）
-	 */
-	private Integer times;
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
+    private static final long serialVersionUID = 1L;
 
-	public QuartzJobLogEntity() {
-		super();
-	}
+    /**
+     * 记录id
+     */
+    private Long logId;
 
-	public Long getLogId() {
-		return logId;
-	}
+    /**
+     * 任务id
+     */
+    private Long jobId;
 
-	public void setLogId(Long logId) {
-		this.logId = logId;
-	}
+    /**
+     * spring bean 名称
+     */
+    private String beanName;
 
-	public Long getJobId() {
-		return jobId;
-	}
+    /**
+     * 方法名
+     */
+    private String methodName;
 
-	public void setJobId(Long jobId) {
-		this.jobId = jobId;
-	}
+    /**
+     * 参数
+     */
+    private String params;
 
-	public String getBeanName() {
-		return beanName;
-	}
+    /**
+     * 状态，0：失败，1：成功
+     */
+    private Integer status;
 
-	public void setBeanName(String beanName) {
-		this.beanName = beanName;
-	}
+    /**
+     * 错误信息
+     */
+    private String error;
 
-	public String getMethodName() {
-		return methodName;
-	}
+    /**
+     * 耗时（ms）
+     */
+    private Integer times;
 
-	public void setMethodName(String methodName) {
-		this.methodName = methodName;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
 
-	public String getParams() {
-		return params;
-	}
+    public QuartzJobLogEntity() {
+        super();
+    }
 
-	public void setParams(String params) {
-		this.params = params;
-	}
+    public Long getLogId() {
+        return logId;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public void setLogId(Long logId) {
+        this.logId = logId;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public Long getJobId() {
+        return jobId;
+    }
 
-	public String getError() {
-		return error;
-	}
+    public void setJobId(Long jobId) {
+        this.jobId = jobId;
+    }
 
-	public void setError(String error) {
-		this.error = error;
-	}
+    public String getBeanName() {
+        return beanName;
+    }
 
-	public Integer getTimes() {
-		return times;
-	}
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
+    }
 
-	public void setTimes(Integer times) {
-		this.times = times;
-	}
+    public String getMethodName() {
+        return methodName;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public void setMethodName(String methodName) {
+        this.methodName = methodName;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public Integer getTimes() {
+        return times;
+    }
+
+    public void setTimes(Integer times) {
+        this.times = times;
+    }
+
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
 
 }

@@ -2,125 +2,125 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bottle.pay.modules.biz.dao.FrozenDetailMapper">
-	
-	<select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.FrozenDetailEntity">
-		SELECT
-			`id`, 
-			`merchant_name`, 
-			`merchant_id`, 
-			`balance_frozen`, 
-			`balance_unfrozen`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`, 
-			`org_name`, 
-			`business_name`, 
-			`business_id`
-		FROM
-			frozen_detail
-		ORDER BY
-			id DESC
-	</select>
-	
-	<insert id="save">
-		INSERT INTO frozen_detail (
-			`merchant_name`, 
-			`merchant_id`, 
-			`balance_frozen`, 
-			`balance_unfrozen`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`, 
-			`org_name`, 
-			`business_name`, 
-			`business_id`
-		)
-		VALUES (
-			#{merchantName}, 
-			#{merchantId}, 
-			#{balanceFrozen}, 
-			#{balanceUnfrozen}, 
-			#{bankCardNo}, 
-			#{bankName}, 
-			#{bankAccountName}, 
-			#{createTime}, 
-			#{lastUpdate}, 
-			#{orgId}, 
-			#{orgName}, 
-			#{businessName}, 
-			#{businessId}
-		)
-	</insert>
-	
-	<select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.FrozenDetailEntity">
-		SELECT
-			`id`, 
-			`merchant_name`, 
-			`merchant_id`, 
-			`balance_frozen`, 
-			`balance_unfrozen`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`, 
-			`org_name`, 
-			`business_name`, 
-			`business_id`
-		FROM
-			frozen_detail
-		WHERE
-			id = #{id}
-	</select>
-	
-	<update id="update">
-		UPDATE frozen_detail
-	 	<set>
-			<if test="merchantName != null">`merchant_name` = #{merchantName}, </if>
-			<if test="merchantId != null">`merchant_id` = #{merchantId}, </if>
-			<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>
-			<if test="balanceUnfrozen != null">`balance_unfrozen` = #{balanceUnfrozen}, </if>
-			<if test="bankCardNo != null">`bank_card_no` = #{bankCardNo}, </if>
-			<if test="bankName != null">`bank_name` = #{bankName}, </if>
-			<if test="bankAccountName != null">`bank_account_name` = #{bankAccountName}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
-			<if test="orgId != null">`org_id` = #{orgId}, </if>
-			<if test="orgName != null">`org_name` = #{orgName}, </if>
-			<if test="businessName != null">`business_name` = #{businessName}, </if>
-			<if test="businessId != null">`business_id` = #{businessId}</if>
-		</set>
-		WHERE
-			id = #{id}
-	</update>
-	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			frozen_detail
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
-	<update id="unFrozenMoney">
-		UPDATE frozen_detail
-		<set>
-			<!--<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>-->
-			<if test="balanceUnfrozen != null">`balance_unfrozen` = balance_unfrozen + #{balanceUnfrozen}, </if>
-			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
-		</set>
-		WHERE
-		id = #{id}
-	</update>
+    <select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.FrozenDetailEntity">
+        SELECT
+        `id`,
+        `merchant_name`,
+        `merchant_id`,
+        `balance_frozen`,
+        `balance_unfrozen`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `org_name`,
+        `business_name`,
+        `business_id`
+        FROM
+        frozen_detail
+        ORDER BY
+        id DESC
+    </select>
+
+    <insert id="save">
+        INSERT INTO frozen_detail (
+        `merchant_name`,
+        `merchant_id`,
+        `balance_frozen`,
+        `balance_unfrozen`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `org_name`,
+        `business_name`,
+        `business_id`
+        )
+        VALUES (
+        #{merchantName},
+        #{merchantId},
+        #{balanceFrozen},
+        #{balanceUnfrozen},
+        #{bankCardNo},
+        #{bankName},
+        #{bankAccountName},
+        #{createTime},
+        #{lastUpdate},
+        #{orgId},
+        #{orgName},
+        #{businessName},
+        #{businessId}
+        )
+    </insert>
+
+    <select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.FrozenDetailEntity">
+        SELECT
+        `id`,
+        `merchant_name`,
+        `merchant_id`,
+        `balance_frozen`,
+        `balance_unfrozen`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `org_name`,
+        `business_name`,
+        `business_id`
+        FROM
+        frozen_detail
+        WHERE
+        id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE frozen_detail
+        <set>
+            <if test="merchantName != null">`merchant_name` = #{merchantName},</if>
+            <if test="merchantId != null">`merchant_id` = #{merchantId},</if>
+            <if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen},</if>
+            <if test="balanceUnfrozen != null">`balance_unfrozen` = #{balanceUnfrozen},</if>
+            <if test="bankCardNo != null">`bank_card_no` = #{bankCardNo},</if>
+            <if test="bankName != null">`bank_name` = #{bankName},</if>
+            <if test="bankAccountName != null">`bank_account_name` = #{bankAccountName},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="lastUpdate != null">`last_update` = #{lastUpdate},</if>
+            <if test="orgId != null">`org_id` = #{orgId},</if>
+            <if test="orgName != null">`org_name` = #{orgName},</if>
+            <if test="businessName != null">`business_name` = #{businessName},</if>
+            <if test="businessId != null">`business_id` = #{businessId}</if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="batchRemove">
+        DELETE
+        FROM
+        frozen_detail
+        WHERE
+        id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="unFrozenMoney">
+        UPDATE frozen_detail
+        <set>
+            <!--<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>-->
+            <if test="balanceUnfrozen != null">`balance_unfrozen` = balance_unfrozen + #{balanceUnfrozen},</if>
+            <if test="lastUpdate != null">`last_update` = #{lastUpdate},</if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
 
 </mapper>

@@ -19,70 +19,70 @@ import java.math.BigDecimal;
 @ToString
 public class BalanceEntity extends BottleBaseEntity {
 
-	public BalanceEntity(Long userId) {
-		this.userId = userId;
-	}
+    public BalanceEntity(Long userId) {
+        this.userId = userId;
+    }
 
 
-	/**
-	 * 用户名
-	 */
-	private String userName;
-	
-	/**
-	 * 用户ID
-	 */
-	private Long userId;
-	
-	/**
-	 * 可用余额
-	 */
-	private BigDecimal balance;
-	
-	/**
-	 * 冻结余额
-	 */
-	private BigDecimal balanceFrozen;
-	
-	/**
-	 * 
-	 */
-	private BigDecimal balancePaying;
+    /**
+     * 用户名
+     */
+    private String userName;
 
-	
-	/**
-	 * 角色id
-	 */
-	private Long roleId;
-	
-	/**
-	 * 角色名称
-	 */
-	private String roleName;
-	
-	/**
-	 * 自动出款上线额度，超出额度要手动派单
-	 */
-	private BigDecimal billOutLimit;
+    /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
+     * 可用余额
+     */
+    private BigDecimal balance;
+
+    /**
+     * 冻结余额
+     */
+    private BigDecimal balanceFrozen;
+
+    /**
+     *
+     */
+    private BigDecimal balancePaying;
 
 
-	@Override
+    /**
+     * 角色id
+     */
+    private Long roleId;
+
+    /**
+     * 角色名称
+     */
+    private String roleName;
+
+    /**
+     * 自动出款上线额度，超出额度要手动派单
+     */
+    private BigDecimal billOutLimit;
+
+
+    @Override
     public String toString() {
         return "BalanceEntity{" +
-                              "id='" + id + '\'' +
-                              ", userName='" + userName + '\'' +
-                              ", userId='" + userId + '\'' +
-                              ", balance='" + balance + '\'' +
-                              ", balanceFrozen='" + balanceFrozen + '\'' +
-                              ", balancePaying='" + balancePaying + '\'' +
-                              ", createTime='" + createTime + '\'' +
-                              ", lastUpdate='" + lastUpdate + '\'' +
-                              ", orgId='" + orgId + '\'' +
-                              ", orgName='" + orgName + '\'' +
-                              ", roleId='" + roleId + '\'' +
-                              ", roleName='" + roleName + '\'' +
-                              ", billOutLimit='" + billOutLimit + '\'' +
-                              '}';
+                "id='" + id + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userId='" + userId + '\'' +
+                ", balance='" + balance + '\'' +
+                ", balanceFrozen='" + balanceFrozen + '\'' +
+                ", balancePaying='" + balancePaying + '\'' +
+                ", createTime='" + createTime + '\'' +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                ", orgId='" + orgId + '\'' +
+                ", orgName='" + orgName + '\'' +
+                ", roleId='" + roleId + '\'' +
+                ", roleName='" + roleName + '\'' +
+                ", billOutLimit='" + billOutLimit + '\'' +
+                '}';
     }
 
 }

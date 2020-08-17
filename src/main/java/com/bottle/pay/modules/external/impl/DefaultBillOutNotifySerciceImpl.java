@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 public class DefaultBillOutNotifySerciceImpl extends BillOutNotifySercice {
 
 
-
     @Override
     public BillOutEntity billsOutPaidSuccessNotify(BillOutEntity entity) {
         return entity;

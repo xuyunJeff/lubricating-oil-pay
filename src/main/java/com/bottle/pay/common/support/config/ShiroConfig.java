@@ -26,6 +26,7 @@ import java.util.*;
 
 /**
  * shiro配置
+ *
  * @author zcl<yczclcn@163.com>
  */
 @DependsOn("springContextUtils")
@@ -34,6 +35,7 @@ public class ShiroConfig {
 
     /**
      * 安全管理器
+     *
      * @param sessionManager
      * @return
      */
@@ -47,10 +49,11 @@ public class ShiroConfig {
 
     /**
      * session管理器
+     *
      * @return
      */
     @Bean
-    public SessionManager sessionManager(GlobalProperties globalProperties){
+    public SessionManager sessionManager(GlobalProperties globalProperties) {
         DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
         sessionManager.setSessionValidationSchedulerEnabled(true);
         sessionManager.setSessionIdUrlRewritingEnabled(false);
@@ -68,16 +71,18 @@ public class ShiroConfig {
 
     /**
      * 用户realm
+     *
      * @return
      */
     @Bean
-    public UserRealm userRealm(){
+    public UserRealm userRealm() {
         return new UserRealm();
     }
 
     /**
      * shiro过滤器
      * /rest/**，请求采用token验证（com.bottle.pay.common.support.interceptor.RestApiInterceptor）
+     *
      * @param securityManager
      * @return
      */
@@ -105,6 +110,7 @@ public class ShiroConfig {
 
     /**
      * shiro生命周期处理器
+     *
      * @return
      */
     @Bean
@@ -114,6 +120,7 @@ public class ShiroConfig {
 
     /**
      * 使用cglib方式创建代理对象
+     *
      * @return
      */
     @Bean
@@ -125,6 +132,7 @@ public class ShiroConfig {
 
     /**
      * 启用注解
+     *
      * @param securityManager
      * @return
      */
@@ -137,6 +145,7 @@ public class ShiroConfig {
 
     /**
      * 设置
+     *
      * @return
      */
     public Map<String, String> setInitChainMap() {

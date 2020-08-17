@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 /**
  * 资源文件读取工具
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class PropertiesUtils {
@@ -38,6 +39,7 @@ public class PropertiesUtils {
 
     /**
      * 私有构造方法，创建单例
+     *
      * @param name
      */
     private PropertiesUtils(String name) {
@@ -65,6 +67,7 @@ public class PropertiesUtils {
 
     /**
      * 根据key读取value
+     *
      * @param key
      * @return
      */
@@ -79,6 +82,7 @@ public class PropertiesUtils {
 
     /**
      * 根据key读取value(整型)
+     *
      * @param key
      * @return
      */
@@ -93,6 +97,7 @@ public class PropertiesUtils {
 
     /**
      * 根据key读取value(布尔值)
+     *
      * @param key
      * @return
      */

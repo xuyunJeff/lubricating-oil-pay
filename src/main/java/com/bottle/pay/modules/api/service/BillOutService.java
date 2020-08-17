@@ -46,8 +46,10 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
 
     @Autowired
     BillOutNotifySercice billOutNotifySercice;
+
     /**
      * 派单给机构
+     *
      * @param billOutView
      * @param ip
      * @param userEntity
@@ -67,45 +69,48 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
 
     /**
      * 自动派单给出款员
+     *
      * @param entity
      * @return
      */
     @Async
     public BillOutEntity billsOutBusiness(BillOutEntity entity) {
         Map<OnlineBusinessEntity, BigDecimal> businessOnline = null;
-        OnlineBusinessEntity onlineBusinessEntity ;
-        BigDecimal free ;
+        OnlineBusinessEntity onlineBusinessEntity;
+        BigDecimal free;
         do {
             businessOnline = getBusinessFreeBalance(entity);
             free = businessOnline.values().stream().findFirst().get();
             onlineBusinessEntity = businessOnline.keySet().stream().findFirst().get();
         } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
         // 第三步派单给出款员(事务)，付款银行卡默认为当前开启的银行卡
-        entity =  updateBillOutToBusiness(entity,onlineBusinessEntity);
+        entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
         // 第四步增加出款员代付中余额，扣除可用余额
-        incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(),entity.getPrice());
+        incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(), entity.getPrice());
         return entity;
     }
 
     /**
      * 人工派单接口
+     *
      * @param entity
      * @return
      */
-    public BillOutEntity billsOutBusinessByHuman(BillOutEntity entity,OnlineBusinessEntity onlineBusinessEntity){
-        entity =  updateBillOutToBusiness(entity,onlineBusinessEntity);
-        incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(),entity.getPrice());
+    public BillOutEntity billsOutBusinessByHuman(BillOutEntity entity, OnlineBusinessEntity onlineBusinessEntity) {
+        entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
+        incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(), entity.getPrice());
         return entity;
     }
 
     /**
      * 订单退回到机构
+     *
      * @param entity
      * @return
      */
     @Transactional
-    public BillOutEntity billsOutBusinessGoBack(BillOutEntity entity){
-        incrBusinessBillOutBalanceRedis(entity.getBusinessId(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+    public BillOutEntity billsOutBusinessGoBack(BillOutEntity entity) {
+        incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         entity.setPosition(BillConstant.BillPostionEnum.Agent.getCode());
         entity.setBillType(BillConstant.BillTypeEnum.GoBackAgent.getCode());
         int i = mapper.updateByBillOutId(entity);
@@ -117,35 +122,37 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     }
 
     /**
-     *  出款成功确认订单
+     * 出款成功确认订单
+     *
      * @param entity
      * @return
      */
     @Transactional
-    public BillOutEntity billsOutPaidSuccess(BillOutEntity entity){
+    public BillOutEntity billsOutPaidSuccess(BillOutEntity entity) {
         // 扣除出款员代付中
-        incrBusinessBillOutBalanceRedis(entity.getBusinessId(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中
-        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)),entity.getBusinessId());
+        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getBusinessId());
         // TODO 回调商户
         billOutNotifySercice.billsOutPaidSuccessNotify(entity);
         BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
         successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
-        mapper.updateBillOutByBillId(successEntity );
+        mapper.updateBillOutByBillId(successEntity);
         return entity;
     }
 
     /**
-     *  出款失败作废订单
+     * 出款失败作废订单
+     *
      * @param entity
      * @return
      */
     @Transactional
-    public BillOutEntity billsOutPaidFailed(BillOutEntity entity){
+    public BillOutEntity billsOutPaidFailed(BillOutEntity entity) {
         // 扣除出款员代付中
-        incrBusinessBillOutBalanceRedis(entity.getBusinessId(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中,增加可用余额
-        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)),entity.getBusinessId());
+        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getBusinessId());
         // TODO 回调商户
         billOutNotifySercice.billsOutPaidFailedNotify(entity);
         BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());
@@ -155,14 +162,13 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     }
 
 
-
     @Transactional
-    public BillOutEntity  updateBillOutToBusiness(BillOutEntity entity,OnlineBusinessEntity onlineBusinessEntity) {
+    public BillOutEntity updateBillOutToBusiness(BillOutEntity entity, OnlineBusinessEntity onlineBusinessEntity) {
         entity.setPosition(BillConstant.BillPostionEnum.Business.getCode());
         entity.setBusinessName(onlineBusinessEntity.getBusinessName());
         entity.setBusinessId(onlineBusinessEntity.getBusinessId());
-        BankCardEntity card =bankCardService.getCardOpenedListByBusinessId(onlineBusinessEntity.getBusinessId());
-        if(card == null ) {
+        BankCardEntity card = bankCardService.getCardOpenedListByBusinessId(onlineBusinessEntity.getBusinessId());
+        if (card == null) {
             log.error("在线出款员无开启的银行卡" + onlineBusinessEntity.toString());
             throw new RRException("在线出款员无开启的银行卡");
         }
@@ -176,8 +182,10 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         }
         return entity;
     }
+
     /**
      * 获取在线出款员的空余余额和对应的在线出款员数据
+     *
      * @param entity
      * @return
      */
@@ -191,8 +199,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     }
 
     /**
-     *
      * 计算在线出款员的空余余额
+     *
      * @param businessTotalBalance
      * @param businessOnline
      * @return
@@ -217,8 +225,9 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
 
     /**
      * Redis 出款员代付中余额变动，返回变动后余额
-     *
+     * <p>
      * 传入金额后，增加redis中的出款员余额
+     *
      * @param businessId
      * @param amount     最小1，分为单位
      */
@@ -249,7 +258,6 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     }
 
     /**
-     *
      * 生成订单并保存到机构
      *
      * @param merchantName

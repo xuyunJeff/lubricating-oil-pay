@@ -18,19 +18,21 @@ public class BillOutNotifySercice {
 
     /**
      * 出款成功通知第三方
+     *
      * @param entity
      * @return
      */
-    public BillOutEntity billsOutPaidSuccessNotify(BillOutEntity entity){
+    public BillOutEntity billsOutPaidSuccessNotify(BillOutEntity entity) {
         return entity;
     }
 
     /**
      * 出款失败通知第三方
+     *
      * @param entity
      * @return
      */
-    public BillOutEntity billsOutPaidFailedNotify(BillOutEntity entity){
+    public BillOutEntity billsOutPaidFailedNotify(BillOutEntity entity) {
         return entity;
     }
 

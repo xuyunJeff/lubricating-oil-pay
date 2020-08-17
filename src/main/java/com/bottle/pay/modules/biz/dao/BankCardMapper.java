@@ -18,6 +18,7 @@ public interface BankCardMapper extends BottleBaseMapper<BankCardEntity> {
 
     /**
      * 根据专员Id 和 银行卡 更新状态 冻结 或者 可用
+     *
      * @param entity
      * @return
      */

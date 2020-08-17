@@ -13,10 +13,10 @@ public class BillOutView {
     private String merchantName;
     private Long merchantId;
     private String orderNo;
-    private   BigDecimal price;
-    private   String bankCardNo;
-    private   String bankName;
-    private  String bankAccountName;
+    private BigDecimal price;
+    private String bankCardNo;
+    private String bankName;
+    private String bankAccountName;
 
     @Override
     public String toString() {

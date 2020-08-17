@@ -19,43 +19,46 @@ import java.util.zip.ZipOutputStream;
 
 /**
  * 代码生成器
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Service("sysGeneratorService")
 public class SysGeneratorServiceImpl implements SysGeneratorService {
 
-	@Autowired
-	private SysGeneratorMapper sysGeneratorMapper;
+    @Autowired
+    private SysGeneratorMapper sysGeneratorMapper;
 
-	/**
-	 * 查询所有表格
-	 * @param params
-	 * @return
-	 */
-	@Override
-	public Page<TableEntity> listTable(Map<String, Object> params) {
-		Query query = new Query(params);
-		Page<TableEntity> page = new Page<>(query);
-		sysGeneratorMapper.listTable(page, query);
-		return page;
-	}
+    /**
+     * 查询所有表格
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    public Page<TableEntity> listTable(Map<String, Object> params) {
+        Query query = new Query(params);
+        Page<TableEntity> page = new Page<>(query);
+        sysGeneratorMapper.listTable(page, query);
+        return page;
+    }
 
-	/**
-	 * 生成代码
-	 * @param params
-	 * @return
-	 */
-	@Override
-	public byte[] generator(GeneratorParamEntity params) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		ZipOutputStream zip = new ZipOutputStream(out);
-		for(String table : params.getTables()) {
-			TableEntity tableEntity = sysGeneratorMapper.getTableByName(table);
-			List<ColumnEntity> columns = sysGeneratorMapper.listColumn(table);
-			GenUtils.generatorCode(tableEntity, columns, params, zip);
-		}
-		IOUtils.closeQuietly(zip);
-		return out.toByteArray();
-	}
+    /**
+     * 生成代码
+     *
+     * @param params
+     * @return
+     */
+    @Override
+    public byte[] generator(GeneratorParamEntity params) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ZipOutputStream zip = new ZipOutputStream(out);
+        for (String table : params.getTables()) {
+            TableEntity tableEntity = sysGeneratorMapper.getTableByName(table);
+            List<ColumnEntity> columns = sysGeneratorMapper.listColumn(table);
+            GenUtils.generatorCode(tableEntity, columns, params, zip);
+        }
+        IOUtils.closeQuietly(zip);
+        return out.toByteArray();
+    }
 
 }

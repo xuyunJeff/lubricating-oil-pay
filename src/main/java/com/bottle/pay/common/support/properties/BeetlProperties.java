@@ -9,6 +9,7 @@ import java.util.Properties;
 
 /**
  * beetl配置
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Configuration
@@ -16,48 +17,62 @@ import java.util.Properties;
 @PropertySource("classpath:META-INF/application-default.properties")
 public class BeetlProperties {
 
-    /** 属性前缀名 **/
+    /**
+     * 属性前缀名
+     **/
     static final String BEETLCONF_PREFIX = "beetl";
 
-    /** 定界开始符号 **/
+    /**
+     * 定界开始符号
+     **/
     private String delimiterStatementStart;
 
-    /** 定界结束符号 **/
+    /**
+     * 定界结束符号
+     **/
     private String delimiterStatementEnd;
 
-    /** 自定义标签文件root目录 **/
+    /**
+     * 自定义标签文件root目录
+     **/
     private String resourceTagRoot;
 
-    /** 自定义标签文件后缀 **/
+    /**
+     * 自定义标签文件后缀
+     **/
     private String resourceTagSuffix;
 
-    /** 是否检测文件变化，开发使用true合适，生产使用false **/
+    /**
+     * 是否检测文件变化，开发使用true合适，生产使用false
+     **/
     private String resourceAutoCheck;
 
-    /** 视图解析器的路径前缀 **/
+    /**
+     * 视图解析器的路径前缀
+     **/
     private String prefix;
 
-    public Properties getProperties(){
+    public Properties getProperties() {
         Properties properties = new Properties();
-        if(StringUtils.isNotEmpty(delimiterStatementStart)){
-            if(delimiterStatementStart.startsWith("\\")){
+        if (StringUtils.isNotEmpty(delimiterStatementStart)) {
+            if (delimiterStatementStart.startsWith("\\")) {
                 delimiterStatementStart = delimiterStatementStart.substring(1);
             }
-            properties.setProperty("DELIMITER_STATEMENT_START",delimiterStatementStart);
+            properties.setProperty("DELIMITER_STATEMENT_START", delimiterStatementStart);
         }
-        if(StringUtils.isNotEmpty(delimiterStatementEnd)){
-            properties.setProperty("DELIMITER_STATEMENT_END",delimiterStatementEnd);
-        }else{
-            properties.setProperty("DELIMITER_STATEMENT_END","null");
+        if (StringUtils.isNotEmpty(delimiterStatementEnd)) {
+            properties.setProperty("DELIMITER_STATEMENT_END", delimiterStatementEnd);
+        } else {
+            properties.setProperty("DELIMITER_STATEMENT_END", "null");
         }
-        if(StringUtils.isNotEmpty(resourceTagRoot)){
-            properties.setProperty("RESOURCE.tagRoot",resourceTagRoot);
+        if (StringUtils.isNotEmpty(resourceTagRoot)) {
+            properties.setProperty("RESOURCE.tagRoot", resourceTagRoot);
         }
-        if(StringUtils.isNotEmpty(resourceTagSuffix)){
-            properties.setProperty("RESOURCE.tagSuffix",resourceTagSuffix);
+        if (StringUtils.isNotEmpty(resourceTagSuffix)) {
+            properties.setProperty("RESOURCE.tagSuffix", resourceTagSuffix);
         }
-        if(StringUtils.isNotEmpty(resourceAutoCheck)){
-            properties.setProperty("RESOURCE.autoCheck",resourceAutoCheck);
+        if (StringUtils.isNotEmpty(resourceAutoCheck)) {
+            properties.setProperty("RESOURCE.autoCheck", resourceAutoCheck);
         }
         return properties;
     }

@@ -32,29 +32,28 @@ import org.springframework.web.client.RestTemplate;
 public class RestTemplateConfig {
 
     @Bean
-    public RestTemplate restTemplate(ClientHttpRequestFactory clientHttpRequestFactory){
+    public RestTemplate restTemplate(ClientHttpRequestFactory clientHttpRequestFactory) {
         //此处可设置特定的http状态返回值验证
-      return  new RestTemplate(clientHttpRequestFactory);
+        return new RestTemplate(clientHttpRequestFactory);
     }
 
     @Bean
-    public ClientHttpRequestFactory httpRequestFactory(HttpClient httpClient ){
+    public ClientHttpRequestFactory httpRequestFactory(HttpClient httpClient) {
         return new HttpComponentsClientHttpRequestFactory(httpClient);
     }
 
 
-
     @Bean
-    public CloseableHttpClient httpClient(){
-        Registry registry= RegistryBuilder.create().register("https", SSLConnectionSocketFactory.getSocketFactory())
-                .register("http",new PlainConnectionSocketFactory()).build();
-        PoolingHttpClientConnectionManager clientConnectionManager =new PoolingHttpClientConnectionManager(registry);
+    public CloseableHttpClient httpClient() {
+        Registry registry = RegistryBuilder.create().register("https", SSLConnectionSocketFactory.getSocketFactory())
+                .register("http", new PlainConnectionSocketFactory()).build();
+        PoolingHttpClientConnectionManager clientConnectionManager = new PoolingHttpClientConnectionManager(registry);
         clientConnectionManager.setMaxTotal(800);
         clientConnectionManager.setDefaultMaxPerRoute(800);
         clientConnectionManager.setValidateAfterInactivity(600000);
-        RequestConfig requestConfig= RequestConfig.custom().
+        RequestConfig requestConfig = RequestConfig.custom().
                 //服务器返回数据(response)的时间，超过该时间抛出read timeout
-                setSocketTimeout(30000)
+                        setSocketTimeout(30000)
                 // 连接超时
                 .setConnectTimeout(30000)
                 //连接不够用的等待时间，不宜过长，必须设置，比如连接不够用时，时间过长将是灾难性的
@@ -75,15 +74,15 @@ public class RestTemplateConfig {
                     }
                 }
             }
-          //  HttpHost target = (HttpHost) context.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
+            //  HttpHost target = (HttpHost) context.getAttribute(HttpClientContext.HTTP_TARGET_HOST);
             return 60 * 1000;
         };
         return HttpClients.custom()
-                             .setConnectionManager(clientConnectionManager)
-                             .setConnectionManagerShared(true)
-                             .setDefaultRequestConfig(requestConfig)
-                             .setKeepAliveStrategy(keepAliveStrategy)
-                             .build();
+                .setConnectionManager(clientConnectionManager)
+                .setConnectionManagerShared(true)
+                .setDefaultRequestConfig(requestConfig)
+                .setKeepAliveStrategy(keepAliveStrategy)
+                .build();
     }
 
 }

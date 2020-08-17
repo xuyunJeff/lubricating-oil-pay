@@ -11,6 +11,7 @@ import java.io.Serializable;
 
 /**
  * UserSessionManager
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class UserSessionManager extends DefaultWebSessionManager {
@@ -18,6 +19,7 @@ public class UserSessionManager extends DefaultWebSessionManager {
     /**
      * 获取session
      * 优化单次请求需要多次访问redis的问题
+     *
      * @param sessionKey
      * @return
      * @throws UnknownSessionException

@@ -13,177 +13,177 @@ import java.util.List;
  * @date 2017年8月9日 下午11:15:17
  */
 public class SysMenuEntity implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 菜单id
-	 */
-	private Long menuId;
-	
-	/**
-	 * 父级id，一级菜单为0
-	 */
-	private Long parentId;
-	
-	/**
-	 * 父级菜单名称
-	 */
-	private String parentName;
-	
-	/**
-	 * 菜单名称
-	 */
-	private String name;
-	
-	/**
-	 * 菜单url
-	 */
-	private String url;
-	
-	/**
-	 * 授权标识(多个用逗号分隔，如：user:list,user:create)
-	 */
-	private String perms;
-	
-	/**
-	 * 类型(0：目录   1：菜单   2：按钮)
-	 */
-	private Integer type;
-	
-	/**
-	 * 菜单图标
-	 */
-	private String icon;
-	
-	/**
-	 * 排序
-	 */
-	private Integer orderNum;
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
-	
-	/**
-	 * 修改时间
-	 */
-	private Timestamp gmtModified;
-	
-	/**
-	 * ztree属性
-	 */
-	private Boolean open;
-	
-	private List<?> list;
+    private static final long serialVersionUID = 1L;
 
-	public SysMenuEntity() {
-		super();
-	}
+    /**
+     * 菜单id
+     */
+    private Long menuId;
 
-	public Long getMenuId() {
-		return menuId;
-	}
+    /**
+     * 父级id，一级菜单为0
+     */
+    private Long parentId;
 
-	public void setMenuId(Long menuId) {
-		this.menuId = menuId;
-	}
+    /**
+     * 父级菜单名称
+     */
+    private String parentName;
 
-	public Long getParentId() {
-		return parentId;
-	}
+    /**
+     * 菜单名称
+     */
+    private String name;
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
+    /**
+     * 菜单url
+     */
+    private String url;
 
-	public String getParentName() {
-		return parentName;
-	}
+    /**
+     * 授权标识(多个用逗号分隔，如：user:list,user:create)
+     */
+    private String perms;
 
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
+    /**
+     * 类型(0：目录   1：菜单   2：按钮)
+     */
+    private Integer type;
 
-	public String getName() {
-		return name;
-	}
+    /**
+     * 菜单图标
+     */
+    private String icon;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * 排序
+     */
+    private Integer orderNum;
 
-	public String getUrl() {
-		return url;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    /**
+     * 修改时间
+     */
+    private Timestamp gmtModified;
 
-	public String getPerms() {
-		return perms;
-	}
+    /**
+     * ztree属性
+     */
+    private Boolean open;
 
-	public void setPerms(String perms) {
-		this.perms = perms;
-	}
+    private List<?> list;
 
-	public Integer getType() {
-		return type;
-	}
+    public SysMenuEntity() {
+        super();
+    }
 
-	public void setType(Integer type) {
-		this.type = type;
-	}
+    public Long getMenuId() {
+        return menuId;
+    }
 
-	public String getIcon() {
-		return icon;
-	}
+    public void setMenuId(Long menuId) {
+        this.menuId = menuId;
+    }
 
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
+    public Long getParentId() {
+        return parentId;
+    }
 
-	public Integer getOrderNum() {
-		return orderNum;
-	}
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
-	public void setOrderNum(Integer orderNum) {
-		this.orderNum = orderNum;
-	}
+    public String getParentName() {
+        return parentName;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public Timestamp getGmtModified() {
-		return gmtModified;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setGmtModified(Timestamp gmtModified) {
-		this.gmtModified = gmtModified;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public Boolean getOpen() {
-		return open;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
-	public void setOpen(Boolean open) {
-		this.open = open;
-	}
+    public String getPerms() {
+        return perms;
+    }
 
-	public List<?> getList() {
-		return list;
-	}
+    public void setPerms(String perms) {
+        this.perms = perms;
+    }
 
-	public void setList(List<?> list) {
-		this.list = list;
-	}
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Timestamp getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Timestamp gmtModified) {
+        this.gmtModified = gmtModified;
+    }
+
+    public Boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
+    }
+
+    public List<?> getList() {
+        return list;
+    }
+
+    public void setList(List<?> list) {
+        this.list = list;
+    }
 
 }

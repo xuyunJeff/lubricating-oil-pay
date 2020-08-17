@@ -14,10 +14,11 @@ import java.util.Map;
 public interface BalanceProcurementMapper extends BottleBaseMapper<BalanceProcurementEntity> {
     /**
      * 分页总条数
+     *
      * @param params
      * @return
      */
-    int selectCount(Map<String,Object> params);
+    int selectCount(Map<String, Object> params);
 
-    List<BalanceProcurementEntity> selectPage(Map<String,Object> params);
+    List<BalanceProcurementEntity> selectPage(Map<String, Object> params);
 }

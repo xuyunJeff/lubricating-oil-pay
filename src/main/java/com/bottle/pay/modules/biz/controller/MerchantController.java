@@ -1,6 +1,7 @@
 package com.bottle.pay.modules.biz.controller;
 
 import java.util.List;
+
 import com.bottle.pay.common.utils.CommonUtils;
 import com.bottle.pay.modules.api.service.MerchantService;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
@@ -22,15 +23,14 @@ public class MerchantController extends AbstractController {
     private IpLimitService ipLimitService;
 
 
-
     @Autowired
     private MerchantService merchantService;
 
     /**
      * 列表 商户查询自己登陆ip 黑/白名单
      * 一般最多只有两条记录:
-     *      一条是商户后台IP白名单
-     *      另一条是商户服务器调用我们派单接口是的IP白名单
+     * 一条是商户后台IP白名单
+     * 另一条是商户服务器调用我们派单接口是的IP白名单
      *
      * @param ipLimit
      * @return

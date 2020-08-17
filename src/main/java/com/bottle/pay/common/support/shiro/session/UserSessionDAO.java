@@ -16,6 +16,7 @@ import java.io.Serializable;
 
 /**
  * 基于redis的sessionDAO
+ *
  * @author zcl<yczclcn@163.com>
  */
 @DependsOn("springContextUtils")
@@ -33,13 +34,14 @@ public class UserSessionDAO extends EnterpriseCacheSessionDAO {
 
     /**
      * 更新session的最后一次访问时间
+     *
      * @param session
      */
     @Override
     protected void doUpdate(Session session) {
         try {
             // 如果会话过期/停止 没必要再更新了
-            if(session instanceof ValidatingSession && !((ValidatingSession)session).isValid()) {
+            if (session instanceof ValidatingSession && !((ValidatingSession) session).isValid()) {
                 return;
             }
         } catch (Exception e) {
@@ -65,6 +67,7 @@ public class UserSessionDAO extends EnterpriseCacheSessionDAO {
 
     /**
      * 删除session
+     *
      * @param session
      */
     @Override
@@ -81,6 +84,7 @@ public class UserSessionDAO extends EnterpriseCacheSessionDAO {
 
     /**
      * 创建session，保存到redis
+     *
      * @param session
      * @return
      */
@@ -100,6 +104,7 @@ public class UserSessionDAO extends EnterpriseCacheSessionDAO {
 
     /**
      * 如果Session中没有登陆信息就调用doReadSession方法从Redis中重读
+     *
      * @param sessionId
      * @return
      */
@@ -120,6 +125,7 @@ public class UserSessionDAO extends EnterpriseCacheSessionDAO {
 
     /**
      * 获取session
+     *
      * @param sessionId
      * @return
      */

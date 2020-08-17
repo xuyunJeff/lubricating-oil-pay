@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 public abstract class BottleBaseEntity implements Serializable {
 
-    protected BottleBaseEntity(){
+    protected BottleBaseEntity() {
         // TODO 对公共组件查询时有问题，我先注释了。我们还是在set时new Date() 吧 @mighty
 //        this.lastUpdate = new Date();
     }
@@ -27,7 +27,7 @@ public abstract class BottleBaseEntity implements Serializable {
     // @GeneratedValue中strategy表示使用数据库自带的主键生成策略.
     // @GeneratedValue中generator配置为"JDBC",在数据插入完毕之后,会自动将主键id填充到实体类中.类似普通mapper.xml中配置的selectKey标签
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "JDBC")
+    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "JDBC")
     public Long id;
 
     /**

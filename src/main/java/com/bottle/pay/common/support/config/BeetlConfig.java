@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * beetl配置
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Configuration("beetlConfiguration")
@@ -25,7 +26,7 @@ public class BeetlConfig {
     /**
      * beetl的配置
      */
-    @Bean(name="beetlConfig", initMethod = "init")
+    @Bean(name = "beetlConfig", initMethod = "init")
     public BeetlGroupUtilConfiguration beetlConfiguration() {
         BeetlGroupUtilConfiguration beetlGroupUtilConfiguration = new BeetlGroupUtilConfiguration();
         beetlGroupUtilConfiguration.setResourceLoader(new ClasspathResourceLoader(BeetlConfig.class.getClassLoader(), beetlProperties.getPrefix()));

@@ -2,6 +2,7 @@ package com.bottle.pay.common.support.orm.dialect;
 
 /**
  * MSSQL 数据库方言
+ *
  * @author zhouchenglin[yczclcn@163.com]
  */
 public class MSDialect extends Dialect {

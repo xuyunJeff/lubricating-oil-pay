@@ -4,20 +4,29 @@ import com.bottle.pay.common.entity.R;
 
 /**
  * rest模块常量
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class RestApiConstant {
 
-    /** 请求验证地址 **/
+    /**
+     * 请求验证地址
+     **/
     public static final String AUTH_REQUEST = "/rest/auth";
 
-    /** token有效期校验请求 **/
+    /**
+     * token有效期校验请求
+     **/
     public static final String AUTH_CHECK = "/rest/authStatus";
 
-    /** 授权标识 **/
+    /**
+     * 授权标识
+     **/
     public static final String AUTH_TOKEN = "token";
 
-    /** token过期时间：默认7天 **/
+    /**
+     * token过期时间：默认7天
+     **/
     public static Long TOKEN_EXPIRE = 604800000L;
 
     /**

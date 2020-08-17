@@ -28,18 +28,19 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
 
     /**
      * 商户 或者 机构管理员查看 ip列表
+     *
      * @param ipLimitEntity
      * @return
      */
-    public List<IpLimitEntity> ipList(IpLimitEntity ipLimitEntity){
-        if( ipLimitEntity.getOrgId() == null){
+    public List<IpLimitEntity> ipList(IpLimitEntity ipLimitEntity) {
+        if (ipLimitEntity.getOrgId() == null) {
             throw new RRException("机构ID不能为空");
         }
         SysUserEntity userEntity = super.getCurrentUser();
         boolean isMerchant = SystemConstant.RoleEnum.BillOutMerchant.getCode().equals(userEntity.getRoleId())
                 && ipLimitEntity.getOrgId().equals(userEntity.getOrgId());
 
-        if(super.isOrgAdmin(ipLimitEntity.getOrgId()) || isMerchant){
+        if (super.isOrgAdmin(ipLimitEntity.getOrgId()) || isMerchant) {
             return mapper.select(ipLimitEntity);
         }
         throw new RRException("不是机构管理或者不是当前商户");
@@ -47,15 +48,16 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
 
     /**
      * 商户添加IP百名单
+     *
      * @param ipLimit
      * @return
      */
-    public R addIP(IpLimitEntity ipLimit){
+    public R addIP(IpLimitEntity ipLimit) {
         SysUserEntity userEntity = super.getCurrentUser();
         boolean isMerchant = SystemConstant.RoleEnum.BillOutMerchant.getCode().equals(userEntity.getRoleId())
                 && ipLimit.getOrgId().equals(userEntity.getOrgId());
         int num = 0;
-        if(isMerchant){
+        if (isMerchant) {
             ipLimit.setOrgId(userEntity.getOrgId());
             ipLimit.setOrgName(userEntity.getOrgName());
             num = mapper.save(ipLimit);
@@ -67,14 +69,14 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
         return CommonUtils.msg(num);
     }
 
-    public R updateIp(IpLimitEntity ipLimit){
+    public R updateIp(IpLimitEntity ipLimit) {
         SysUserEntity userEntity = super.getCurrentUser();
         boolean isMerchant = SystemConstant.RoleEnum.BillOutMerchant.getCode().equals(userEntity.getRoleId())
                 && ipLimit.getOrgId().equals(userEntity.getOrgId());
         int num = 0;
-        if(isMerchant){
+        if (isMerchant) {
             num = mapper.update(ipLimit);
-            log.info("商户:{}修改Ip:{}",userEntity.getUserId(),ipLimit.getIpList());
+            log.info("商户:{}修改Ip:{}", userEntity.getUserId(), ipLimit.getIpList());
             String key = IPConstant.getIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
             redisCacheManager.lSet(key, Arrays.asList(ipLimit.getIpList().split("#")));
         }

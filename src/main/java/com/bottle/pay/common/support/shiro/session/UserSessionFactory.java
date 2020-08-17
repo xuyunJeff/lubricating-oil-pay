@@ -10,14 +10,15 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * session工厂
+ *
  * @author zcl<yczclcn@163.com>
  */
-public class UserSessionFactory implements SessionFactory{
+public class UserSessionFactory implements SessionFactory {
 
     @Override
     public Session createSession(SessionContext initData) {
         UserSession session = new UserSession();
-        HttpServletRequest request = (HttpServletRequest)initData.get(DefaultWebSessionContext.class.getName() + ".SERVLET_REQUEST");
+        HttpServletRequest request = (HttpServletRequest) initData.get(DefaultWebSessionContext.class.getName() + ".SERVLET_REQUEST");
         session.setHost(getIpAddress(request));
         return session;
     }

@@ -5,12 +5,14 @@ import java.util.regex.Pattern;
 
 /**
  * 数据库方言抽象类
+ *
  * @author zhouchenglin[yczclcn@163.com]
  */
 public abstract class Dialect {
 
     /**
      * 得到分页sql
+     *
      * @param sql
      * @param offset
      * @param limit
@@ -20,6 +22,7 @@ public abstract class Dialect {
 
     /**
      * 得到分页sql
+     *
      * @param sql
      * @return
      */
@@ -57,8 +60,7 @@ public abstract class Dialect {
     /**
      * 将SQL语句变成一条语句，并且每个单词的间隔都是1个空格
      *
-     * @param sql
-     *            SQL语句
+     * @param sql SQL语句
      * @return 如果sql是NULL返回空，否则返回转化后的SQL
      */
     protected String getLineSql(String sql) {
@@ -85,9 +87,8 @@ public abstract class Dialect {
     /**
      * 判断括号"()"是否匹配,并不会判断排列顺序是否正确
      *
-     * @param text
-     *            要判断的文本
-     * @return 如果匹配返回TRUE,否则返回FALSE
+     * @param text 要判断的文本
+     * @return 如果匹配返回TRUE, 否则返回FALSE
      */
     protected boolean isBracketCanPartnership(String text) {
         if (text == null || (getIndexOfCount(text, '(') != getIndexOfCount(text, ')'))) {
@@ -99,10 +100,8 @@ public abstract class Dialect {
     /**
      * 得到一个字符在另一个字符串中出现的次数
      *
-     * @param text
-     *            文本
-     * @param ch
-     *            字符
+     * @param text 文本
+     * @param ch   字符
      */
     protected int getIndexOfCount(String text, char ch) {
         int count = 0;

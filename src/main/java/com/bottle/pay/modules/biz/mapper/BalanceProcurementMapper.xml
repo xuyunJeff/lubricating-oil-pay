@@ -2,191 +2,191 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bottle.pay.modules.biz.dao.BalanceProcurementMapper">
-	
-	<select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
-		SELECT
-			`id`, 
-			`out_business_id`, 
-			`out_business_name`, 
-			`in_business_name`, 
-			`in_business_id`, 
-			`price`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`, 
-			`in_bank_card_no`, 
-			`in_bank_name`, 
-			`out_bank_card_no`, 
-			`out_bank_name`, 
-			`in_before_balance`, 
-			`out_before_balance`, 
-			`in_after_balance`, 
-			`out_after_balance`
-		FROM
-			balance_procurement
-		ORDER BY
-			id DESC
-	</select>
-	
-	<insert id="save">
-		INSERT INTO balance_procurement (
-			`out_business_id`, 
-			`out_business_name`, 
-			`in_business_name`, 
-			`in_business_id`, 
-			`price`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`, 
-			`in_bank_card_no`, 
-			`in_bank_name`, 
-			`out_bank_card_no`, 
-			`out_bank_name`, 
-			`in_before_balance`, 
-			`out_before_balance`, 
-			`in_after_balance`, 
-			`out_after_balance`
-		)
-		VALUES (
-			#{outBusinessId}, 
-			#{outBusinessName}, 
-			#{inBusinessName}, 
-			#{inBusinessId}, 
-			#{price}, 
-			#{createTime}, 
-			#{lastUpdate}, 
-			#{orgId}, 
-			#{inBankCardNo}, 
-			#{inBankName}, 
-			#{outBankCardNo}, 
-			#{outBankName}, 
-			#{inBeforeBalance}, 
-			#{outBeforeBalance}, 
-			#{inAfterBalance}, 
-			#{outAfterBalance}
-		)
-	</insert>
-	
-	<select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
-		SELECT
-			`id`, 
-			`out_business_id`, 
-			`out_business_name`, 
-			`in_business_name`, 
-			`in_business_id`, 
-			`price`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`, 
-			`in_bank_card_no`, 
-			`in_bank_name`, 
-			`out_bank_card_no`, 
-			`out_bank_name`, 
-			`in_before_balance`, 
-			`out_before_balance`, 
-			`in_after_balance`, 
-			`out_after_balance`
-		FROM
-			balance_procurement
-		WHERE
-			id = #{id}
-	</select>
-	
-	<update id="update">
-		UPDATE balance_procurement
-	 	<set>
-			<if test="outBusinessId != null">`out_business_id` = #{outBusinessId}, </if>
-			<if test="outBusinessName != null">`out_business_name` = #{outBusinessName}, </if>
-			<if test="inBusinessName != null">`in_business_name` = #{inBusinessName}, </if>
-			<if test="inBusinessId != null">`in_business_id` = #{inBusinessId}, </if>
-			<if test="price != null">`price` = #{price}, </if>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
-			<if test="orgId != null">`org_id` = #{orgId}, </if>
-			<if test="inBankCardNo != null">`in_bank_card_no` = #{inBankCardNo}, </if>
-			<if test="inBankName != null">`in_bank_name` = #{inBankName}, </if>
-			<if test="outBankCardNo != null">`out_bank_card_no` = #{outBankCardNo}, </if>
-			<if test="outBankName != null">`out_bank_name` = #{outBankName}, </if>
-			<if test="inBeforeBalance != null">`in_before_balance` = #{inBeforeBalance}, </if>
-			<if test="outBeforeBalance != null">`out_before_balance` = #{outBeforeBalance}, </if>
-			<if test="inAfterBalance != null">`in_after_balance` = #{inAfterBalance}, </if>
-			<if test="outAfterBalance != null">`out_after_balance` = #{outAfterBalance}</if>
-		</set>
-		WHERE
-			id = #{id}
-	</update>
-	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			balance_procurement
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
-	<select id="selectCount" resultType="java.lang.Integer">>
-		SELECT count(1)
-		FROM balance_procurement
-		WHERE
-		1=1
-		<if test="businessId != null">
-			(out_business_id = #{businessId}
-			or
-			in_business_id = #{businessId})
-		</if>
-		<if test="orgId != null">
-			org_id = #{orgId}
-		</if>
-		<if test="startTime != null">
-			create_time &gt; #{startTime}
-		</if>
-		<if test="endTime">
-			create_time &lt; #{endTime}
-		</if>
-	</select>
+    <select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
+        SELECT
+        `id`,
+        `out_business_id`,
+        `out_business_name`,
+        `in_business_name`,
+        `in_business_id`,
+        `price`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `in_bank_card_no`,
+        `in_bank_name`,
+        `out_bank_card_no`,
+        `out_bank_name`,
+        `in_before_balance`,
+        `out_before_balance`,
+        `in_after_balance`,
+        `out_after_balance`
+        FROM
+        balance_procurement
+        ORDER BY
+        id DESC
+    </select>
 
-	<select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
-		SELECT
-		`id`,
-		`out_business_id`,
-		`out_business_name`,
-		`in_business_name`,
-		`in_business_id`,
-		`price`,
-		`create_time`,
-		`last_update`,
-		`org_id`,
-		`in_bank_card_no`,
-		`in_bank_name`,
-		`out_bank_card_no`,
-		`out_bank_name`,
-		`in_before_balance`,
-		`out_before_balance`,
-		`in_after_balance`,
-		`out_after_balance`
-		FROM
-		balance_procurement
-		WHERE
-		1=1
-		<if test="businessId != null">
-			(out_business_id = #{businessId}
-			or
-			in_business_id = #{businessId})
-		</if>
-		<if test="orgId != null">
-			org_id = #{orgId}
-		</if>
-		<if test="startTime != null">
-			create_time &gt; #{startTime}
-		</if>
-		<if test="endTime">
-			create_time &lt; #{endTime}
-		</if>
-		ORDER BY
-		create_time DESC
-		limit #{offset},#{pageSize}
-	</select>
+    <insert id="save">
+        INSERT INTO balance_procurement (
+        `out_business_id`,
+        `out_business_name`,
+        `in_business_name`,
+        `in_business_id`,
+        `price`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `in_bank_card_no`,
+        `in_bank_name`,
+        `out_bank_card_no`,
+        `out_bank_name`,
+        `in_before_balance`,
+        `out_before_balance`,
+        `in_after_balance`,
+        `out_after_balance`
+        )
+        VALUES (
+        #{outBusinessId},
+        #{outBusinessName},
+        #{inBusinessName},
+        #{inBusinessId},
+        #{price},
+        #{createTime},
+        #{lastUpdate},
+        #{orgId},
+        #{inBankCardNo},
+        #{inBankName},
+        #{outBankCardNo},
+        #{outBankName},
+        #{inBeforeBalance},
+        #{outBeforeBalance},
+        #{inAfterBalance},
+        #{outAfterBalance}
+        )
+    </insert>
+
+    <select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
+        SELECT
+        `id`,
+        `out_business_id`,
+        `out_business_name`,
+        `in_business_name`,
+        `in_business_id`,
+        `price`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `in_bank_card_no`,
+        `in_bank_name`,
+        `out_bank_card_no`,
+        `out_bank_name`,
+        `in_before_balance`,
+        `out_before_balance`,
+        `in_after_balance`,
+        `out_after_balance`
+        FROM
+        balance_procurement
+        WHERE
+        id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE balance_procurement
+        <set>
+            <if test="outBusinessId != null">`out_business_id` = #{outBusinessId},</if>
+            <if test="outBusinessName != null">`out_business_name` = #{outBusinessName},</if>
+            <if test="inBusinessName != null">`in_business_name` = #{inBusinessName},</if>
+            <if test="inBusinessId != null">`in_business_id` = #{inBusinessId},</if>
+            <if test="price != null">`price` = #{price},</if>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="lastUpdate != null">`last_update` = #{lastUpdate},</if>
+            <if test="orgId != null">`org_id` = #{orgId},</if>
+            <if test="inBankCardNo != null">`in_bank_card_no` = #{inBankCardNo},</if>
+            <if test="inBankName != null">`in_bank_name` = #{inBankName},</if>
+            <if test="outBankCardNo != null">`out_bank_card_no` = #{outBankCardNo},</if>
+            <if test="outBankName != null">`out_bank_name` = #{outBankName},</if>
+            <if test="inBeforeBalance != null">`in_before_balance` = #{inBeforeBalance},</if>
+            <if test="outBeforeBalance != null">`out_before_balance` = #{outBeforeBalance},</if>
+            <if test="inAfterBalance != null">`in_after_balance` = #{inAfterBalance},</if>
+            <if test="outAfterBalance != null">`out_after_balance` = #{outAfterBalance}</if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="batchRemove">
+        DELETE
+        FROM
+        balance_procurement
+        WHERE
+        id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectCount" resultType="java.lang.Integer">>
+        SELECT count(1)
+        FROM balance_procurement
+        WHERE
+        1=1
+        <if test="businessId != null">
+            (out_business_id = #{businessId}
+            or
+            in_business_id = #{businessId})
+        </if>
+        <if test="orgId != null">
+            org_id = #{orgId}
+        </if>
+        <if test="startTime != null">
+            create_time &gt; #{startTime}
+        </if>
+        <if test="endTime">
+            create_time &lt; #{endTime}
+        </if>
+    </select>
+
+    <select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
+        SELECT
+        `id`,
+        `out_business_id`,
+        `out_business_name`,
+        `in_business_name`,
+        `in_business_id`,
+        `price`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `in_bank_card_no`,
+        `in_bank_name`,
+        `out_bank_card_no`,
+        `out_bank_name`,
+        `in_before_balance`,
+        `out_before_balance`,
+        `in_after_balance`,
+        `out_after_balance`
+        FROM
+        balance_procurement
+        WHERE
+        1=1
+        <if test="businessId != null">
+            (out_business_id = #{businessId}
+            or
+            in_business_id = #{businessId})
+        </if>
+        <if test="orgId != null">
+            org_id = #{orgId}
+        </if>
+        <if test="startTime != null">
+            create_time &gt; #{startTime}
+        </if>
+        <if test="endTime">
+            create_time &lt; #{endTime}
+        </if>
+        ORDER BY
+        create_time DESC
+        limit #{offset},#{pageSize}
+    </select>
 </mapper>

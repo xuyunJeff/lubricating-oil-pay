@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Set;
 
 /**
- *
  * 用户认证realm
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class UserRealm extends AuthorizingRealm {
@@ -24,6 +24,7 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 权限验证
+     *
      * @param principals
      * @return
      */
@@ -40,6 +41,7 @@ public class UserRealm extends AuthorizingRealm {
 
     /**
      * 登录验证
+     *
      * @param token
      * @return
      * @throws AuthenticationException
@@ -48,7 +50,7 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         //TODO 封装用户角色信息
         String username = (String) token.getPrincipal();
-        String password = new String((char[])token.getCredentials());
+        String password = new String((char[]) token.getCredentials());
         SysUserEntity user = sysUserService.getByUserName(username);
         // 账号不存在
         if (user == null) {

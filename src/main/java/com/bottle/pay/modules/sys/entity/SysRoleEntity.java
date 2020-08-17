@@ -14,148 +14,148 @@ import java.util.List;
  * @date 2017年8月10日 上午10:48:22
  */
 public class SysRoleEntity implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 角色id
-	 */
-	private Long roleId;
-	
-	/**
-	 * 机构id
-	 */
-	private Long orgId;
-	
-	/**
-	 * 机构名称
-	 */
-	private String orgName;
 
-	/**
-	 * 角色名称
-	 */
-	private String roleName;
-	
-	/**
-	 * 角色标识
-	 */
-	private String roleSign;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 备注
-	 */
-	private String remark;
-	
-	/**
-	 * 创建者id
-	 */
-	private Long userIdCreate;
-	
-	private List<Long> menuIdList;
-	
-	private List<Long> orgIdList;
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
-	
-	/**
-	 * 修改时间
-	 */
-	private Timestamp gmtModified;
+    /**
+     * 角色id
+     */
+    private Long roleId;
 
-	public SysRoleEntity() {
-		super();
-	}
+    /**
+     * 机构id
+     */
+    private Long orgId;
 
-	public Long getRoleId() {
-		return roleId;
-	}
+    /**
+     * 机构名称
+     */
+    private String orgName;
 
-	public void setRoleId(Long roleId) {
-		this.roleId = roleId;
-	}
+    /**
+     * 角色名称
+     */
+    private String roleName;
 
-	public Long getOrgId() {
-		return orgId;
-	}
+    /**
+     * 角色标识
+     */
+    private String roleSign;
 
-	public void setOrgId(Long orgId) {
-		this.orgId = orgId;
-	}
+    /**
+     * 备注
+     */
+    private String remark;
 
-	public String getOrgName() {
-		return orgName;
-	}
+    /**
+     * 创建者id
+     */
+    private Long userIdCreate;
 
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
+    private List<Long> menuIdList;
 
-	public String getRoleName() {
-		return roleName;
-	}
+    private List<Long> orgIdList;
 
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
 
-	public String getRoleSign() {
-		return roleSign;
-	}
+    /**
+     * 修改时间
+     */
+    private Timestamp gmtModified;
 
-	public void setRoleSign(String roleSign) {
-		this.roleSign = roleSign;
-	}
+    public SysRoleEntity() {
+        super();
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public Long getRoleId() {
+        return roleId;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
 
-	public Long getUserIdCreate() {
-		return userIdCreate;
-	}
+    public Long getOrgId() {
+        return orgId;
+    }
 
-	public void setUserIdCreate(Long userIdCreate) {
-		this.userIdCreate = userIdCreate;
-	}
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
 
-	public List<Long> getMenuIdList() {
-		return menuIdList;
-	}
+    public String getOrgName() {
+        return orgName;
+    }
 
-	public void setMenuIdList(List<Long> menuIdList) {
-		this.menuIdList = menuIdList;
-	}
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
 
-	public List<Long> getOrgIdList() {
-		return orgIdList;
-	}
+    public String getRoleName() {
+        return roleName;
+    }
 
-	public void setOrgIdList(List<Long> orgIdList) {
-		this.orgIdList = orgIdList;
-	}
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public String getRoleSign() {
+        return roleSign;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public void setRoleSign(String roleSign) {
+        this.roleSign = roleSign;
+    }
 
-	public Timestamp getGmtModified() {
-		return gmtModified;
-	}
+    public String getRemark() {
+        return remark;
+    }
 
-	public void setGmtModified(Timestamp gmtModified) {
-		this.gmtModified = gmtModified;
-	}
-	
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Long getUserIdCreate() {
+        return userIdCreate;
+    }
+
+    public void setUserIdCreate(Long userIdCreate) {
+        this.userIdCreate = userIdCreate;
+    }
+
+    public List<Long> getMenuIdList() {
+        return menuIdList;
+    }
+
+    public void setMenuIdList(List<Long> menuIdList) {
+        this.menuIdList = menuIdList;
+    }
+
+    public List<Long> getOrgIdList() {
+        return orgIdList;
+    }
+
+    public void setOrgIdList(List<Long> orgIdList) {
+        this.orgIdList = orgIdList;
+    }
+
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Timestamp getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Timestamp gmtModified) {
+        this.gmtModified = gmtModified;
+    }
+
 }

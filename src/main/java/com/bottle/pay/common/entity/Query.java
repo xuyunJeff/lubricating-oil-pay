@@ -6,21 +6,22 @@ import java.util.Map;
 
 /**
  * 查询条件
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class Query extends HashMap<String, Object> {
-	
-	private static final long serialVersionUID = 1L;
-	
-	public Query() {
-		super();
-	}
 
-	public Query(Map<String, Object> params){
+    private static final long serialVersionUID = 1L;
+
+    public Query() {
+        super();
+    }
+
+    public Query(Map<String, Object> params) {
         this.putAll(params);
     }
-	
-	public Double getAsDouble(String name) {
+
+    public Double getAsDouble(String name) {
         Object value = this.get(name);
         if (value != null) {
             return Double.valueOf(value.toString());
@@ -57,7 +58,7 @@ public class Query extends HashMap<String, Object> {
     }
 
     public java.util.Date getAsDate(String name) {
-    	Object value = this.get(name);
+        Object value = this.get(name);
         if (value != null) {
             return Date.valueOf(value.toString());
         }
@@ -67,5 +68,5 @@ public class Query extends HashMap<String, Object> {
     public Object getObj(String name) {
         return this.get(name);
     }
-	
+
 }

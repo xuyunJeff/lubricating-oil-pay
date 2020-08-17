@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * 系统日志
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Service("sysLogService")
@@ -24,6 +25,7 @@ public class SysLogServiceImpl implements SysLogService {
 
     /**
      * 分页查询
+     *
      * @param params
      * @return
      */
@@ -37,6 +39,7 @@ public class SysLogServiceImpl implements SysLogService {
 
     /**
      * 批量删除
+     *
      * @param id
      * @return
      */
@@ -48,6 +51,7 @@ public class SysLogServiceImpl implements SysLogService {
 
     /**
      * 清空
+     *
      * @return
      */
     @Override

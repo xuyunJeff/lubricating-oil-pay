@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * jwt属性配置
+ *
  * @author zhouchenglin[yczclcn@163.com]
  */
 @Configuration

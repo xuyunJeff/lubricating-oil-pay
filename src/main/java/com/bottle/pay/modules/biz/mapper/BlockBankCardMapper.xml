@@ -2,101 +2,101 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bottle.pay.modules.biz.dao.BlockBankCardMapper">
-	
-	<select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.BlockBankCardEntity">
-		SELECT
-			`id`, 
-			`create_time`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`org_id`, 
-			`org_name`
-		FROM
-			block_bank_card
-		ORDER BY
-			id DESC
-	</select>
-	
-	<insert id="save">
-		INSERT INTO block_bank_card (
-			`create_time`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`org_id`, 
-			`org_name`
-		)
-		VALUES (
-			#{createTime}, 
-			#{bankCardNo}, 
-			#{bankName}, 
-			#{bankAccountName}, 
-			#{orgId}, 
-			#{orgName}
-		)
-	</insert>
-	
-	<select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.BlockBankCardEntity">
-		SELECT
-			`id`, 
-			`create_time`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`org_id`, 
-			`org_name`
-		FROM
-			block_bank_card
-		WHERE
-			id = #{id}
-	</select>
-	
-	<update id="update">
-		UPDATE block_bank_card
-	 	<set>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="bankCardNo != null">`bank_card_no` = #{bankCardNo}, </if>
-			<if test="bankName != null">`bank_name` = #{bankName}, </if>
-			<if test="bankAccountName != null">`bank_account_name` = #{bankAccountName}, </if>
-			<if test="orgId != null">`org_id` = #{orgId}, </if>
-			<if test="orgName != null">`org_name` = #{orgName}</if>
-		</set>
-		WHERE
-			id = #{id}
-	</update>
-	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			block_bank_card
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
-	<select id="selectOne"  resultType="com.bottle.pay.modules.biz.entity.BlockBankCardEntity">
-		SELECT
-			   `id`,
-			   `create_time`,
-			   `bank_card_no`,
-			   `bank_name`,
-			   `bank_account_name`,
-			   `org_id`,
-			   `org_name`
-		FROM
-			 block_bank_card
-		<where>
-			1=1
-			<if test="createTime != null"> and `create_time` = #{createTime} </if>
-			<if test="bankCardNo != null"> and `bank_card_no` = #{bankCardNo} </if>
-			<if test="bankName != null"> and `bank_name` = #{bankName}</if>
-			<if test="bankAccountName != null"> and `bank_account_name` = #{bankAccountName} </if>
-			<if test="orgId != null"> and `org_id` = #{orgId} </if>
-			<if test="orgName != null"> and `org_name` = #{orgName}</if>
-		</where>
-	</select>
+    <select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.BlockBankCardEntity">
+        SELECT
+        `id`,
+        `create_time`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `org_id`,
+        `org_name`
+        FROM
+        block_bank_card
+        ORDER BY
+        id DESC
+    </select>
+
+    <insert id="save">
+        INSERT INTO block_bank_card (
+        `create_time`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `org_id`,
+        `org_name`
+        )
+        VALUES (
+        #{createTime},
+        #{bankCardNo},
+        #{bankName},
+        #{bankAccountName},
+        #{orgId},
+        #{orgName}
+        )
+    </insert>
+
+    <select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.BlockBankCardEntity">
+        SELECT
+        `id`,
+        `create_time`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `org_id`,
+        `org_name`
+        FROM
+        block_bank_card
+        WHERE
+        id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE block_bank_card
+        <set>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="bankCardNo != null">`bank_card_no` = #{bankCardNo},</if>
+            <if test="bankName != null">`bank_name` = #{bankName},</if>
+            <if test="bankAccountName != null">`bank_account_name` = #{bankAccountName},</if>
+            <if test="orgId != null">`org_id` = #{orgId},</if>
+            <if test="orgName != null">`org_name` = #{orgName}</if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="batchRemove">
+        DELETE
+        FROM
+        block_bank_card
+        WHERE
+        id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectOne" resultType="com.bottle.pay.modules.biz.entity.BlockBankCardEntity">
+        SELECT
+        `id`,
+        `create_time`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `org_id`,
+        `org_name`
+        FROM
+        block_bank_card
+        <where>
+            1=1
+            <if test="createTime != null">and `create_time` = #{createTime}</if>
+            <if test="bankCardNo != null">and `bank_card_no` = #{bankCardNo}</if>
+            <if test="bankName != null">and `bank_name` = #{bankName}</if>
+            <if test="bankAccountName != null">and `bank_account_name` = #{bankAccountName}</if>
+            <if test="orgId != null">and `org_id` = #{orgId}</if>
+            <if test="orgName != null">and `org_name` = #{orgName}</if>
+        </where>
+    </select>
 
 </mapper>

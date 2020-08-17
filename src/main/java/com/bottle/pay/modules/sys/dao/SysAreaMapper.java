@@ -8,23 +8,26 @@ import java.util.List;
 
 /**
  * 行政区域
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Mapper
 public interface SysAreaMapper extends BaseMapper<SysAreaEntity> {
 
-	/**
-	 * 根据父计编码查询
-	 * @param query
-	 * @return
-	 */
-	List<SysAreaEntity> listAreaByParentCode(Query query);
+    /**
+     * 根据父计编码查询
+     *
+     * @param query
+     * @return
+     */
+    List<SysAreaEntity> listAreaByParentCode(Query query);
 
-	/**
-	 * 子节点总数
-	 * @param areaId
-	 * @return
-	 */
-	int countAreaChildren(Long areaId);
-	
+    /**
+     * 子节点总数
+     *
+     * @param areaId
+     * @return
+     */
+    int countAreaChildren(Long areaId);
+
 }

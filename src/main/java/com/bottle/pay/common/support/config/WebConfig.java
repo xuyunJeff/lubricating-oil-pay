@@ -25,6 +25,7 @@ import java.util.Properties;
 
 /**
  * web配置
+ *
  * @author zcl<yczclcn@163.com>
  */
 @DependsOn("springContextUtils")
@@ -36,6 +37,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
 
     /**
      * 文件上传路径虚拟映射
+     *
      * @param registry
      */
     @Override
@@ -58,6 +60,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
 
     /**
      * 配置拦截器
+     *
      * @param registry
      */
     @Override
@@ -68,6 +71,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
 
     /**
      * shiroFilter注册
+     *
      * @return
      */
     @Bean
@@ -83,6 +87,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
 
     /**
      * xssFilter注册
+     *
      * @return
      */
     @Bean
@@ -97,6 +102,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
 
     /**
      * 错误页面
+     *
      * @param registry
      */
     @Override

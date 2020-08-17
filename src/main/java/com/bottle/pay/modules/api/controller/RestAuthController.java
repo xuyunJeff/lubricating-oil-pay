@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * rest授权controller
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Api(value = "用户授权", description = "用户授权")
@@ -36,6 +37,7 @@ public class RestAuthController extends AbstractController {
 
     /**
      * 登录授权校验
+     *
      * @return
      */
     @ApiOperation(value = "登录")
@@ -80,6 +82,7 @@ public class RestAuthController extends AbstractController {
 
     /**
      * 异步校验token，用于接口异步校验登录状态
+     *
      * @return
      */
     @ApiOperation(value = "校验token是否可用")

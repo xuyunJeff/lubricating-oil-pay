@@ -12,6 +12,7 @@ public interface FrozenDetailMapper extends BottleBaseMapper<FrozenDetailEntity>
 
     /**
      * 解冻金额 累计解冻的
+     *
      * @return
      */
     int unFrozenMoney(FrozenDetailEntity frozenDetailEntity);

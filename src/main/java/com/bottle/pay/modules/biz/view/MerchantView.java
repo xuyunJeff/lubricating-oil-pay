@@ -57,7 +57,7 @@ public class MerchantView {
     private BigDecimal balanceFrozen;
 
     /**
-     *支付中余额
+     * 支付中余额
      */
     private BigDecimal balancePaying;
 }

@@ -3,125 +3,125 @@
 
 <mapper namespace="com.bottle.pay.modules.biz.dao.BankCardMapper">
 
-	<select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.BankCardEntity">
-		SELECT
-			`id`, 
-			`create_time`, 
-			`last_update`, 
-			`business_name`, 
-			`business_id`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`org_id`, 
-			`org_name`, 
-			`balance`, 
-			`card_status`, 
-			`enable`, 
-			`balance_daily_limit`
-		FROM
-			bank_card
-		ORDER BY
-			id DESC
-	</select>
-	
-	<insert id="save">
-		INSERT INTO bank_card (
-			`create_time`, 
-			`last_update`, 
-			`business_name`, 
-			`business_id`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`org_id`, 
-			`org_name`, 
-			`balance`, 
-			`card_status`, 
-			`enable`, 
-			`balance_daily_limit`
-		)
-		VALUES (
-			#{createTime}, 
-			#{lastUpdate}, 
-			#{businessName}, 
-			#{businessId}, 
-			#{bankCardNo}, 
-			#{bankName}, 
-			#{bankAccountName}, 
-			#{orgId}, 
-			#{orgName}, 
-			#{balance}, 
-			#{cardStatus}, 
-			#{enable}, 
-			#{balanceDailyLimit}
-		)
-	</insert>
-	
-	<select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.BankCardEntity">
-		SELECT
-			`id`, 
-			`create_time`, 
-			`last_update`, 
-			`business_name`, 
-			`business_id`, 
-			`bank_card_no`, 
-			`bank_name`, 
-			`bank_account_name`, 
-			`org_id`, 
-			`org_name`, 
-			`balance`, 
-			`card_status`, 
-			`enable`, 
-			`balance_daily_limit`
-		FROM
-			bank_card
-		WHERE
-			id = #{id}
-	</select>
-	
-	<update id="update">
-		UPDATE bank_card
-	 	<set>
-			<if test="createTime != null">`create_time` = #{createTime}, </if>
-			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
-			<if test="businessName != null">`business_name` = #{businessName}, </if>
-			<if test="businessId != null">`business_id` = #{businessId}, </if>
-			<if test="bankCardNo != null">`bank_card_no` = #{bankCardNo}, </if>
-			<if test="bankName != null">`bank_name` = #{bankName}, </if>
-			<if test="bankAccountName != null">`bank_account_name` = #{bankAccountName}, </if>
-			<if test="orgId != null">`org_id` = #{orgId}, </if>
-			<if test="orgName != null">`org_name` = #{orgName}, </if>
-			<if test="balance != null">`balance` = #{balance}, </if>
-			<if test="cardStatus != null">`card_status` = #{cardStatus}, </if>
-			<if test="enable != null">`enable` = #{enable}, </if>
-			<if test="balanceDailyLimit != null">`balance_daily_limit` = #{balanceDailyLimit}</if>
-		</set>
-		WHERE
-			id = #{id}
-	</update>
-	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			bank_card
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
+    <select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.BankCardEntity">
+        SELECT
+        `id`,
+        `create_time`,
+        `last_update`,
+        `business_name`,
+        `business_id`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `org_id`,
+        `org_name`,
+        `balance`,
+        `card_status`,
+        `enable`,
+        `balance_daily_limit`
+        FROM
+        bank_card
+        ORDER BY
+        id DESC
+    </select>
 
-	<select id="batchSelect" resultType="com.bottle.pay.modules.biz.entity.BankCardEntity">
-		SELECT *
-		FROM
-		bank_card
-		WHERE
-		id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</select>
+    <insert id="save">
+        INSERT INTO bank_card (
+        `create_time`,
+        `last_update`,
+        `business_name`,
+        `business_id`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `org_id`,
+        `org_name`,
+        `balance`,
+        `card_status`,
+        `enable`,
+        `balance_daily_limit`
+        )
+        VALUES (
+        #{createTime},
+        #{lastUpdate},
+        #{businessName},
+        #{businessId},
+        #{bankCardNo},
+        #{bankName},
+        #{bankAccountName},
+        #{orgId},
+        #{orgName},
+        #{balance},
+        #{cardStatus},
+        #{enable},
+        #{balanceDailyLimit}
+        )
+    </insert>
+
+    <select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.BankCardEntity">
+        SELECT
+        `id`,
+        `create_time`,
+        `last_update`,
+        `business_name`,
+        `business_id`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `org_id`,
+        `org_name`,
+        `balance`,
+        `card_status`,
+        `enable`,
+        `balance_daily_limit`
+        FROM
+        bank_card
+        WHERE
+        id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE bank_card
+        <set>
+            <if test="createTime != null">`create_time` = #{createTime},</if>
+            <if test="lastUpdate != null">`last_update` = #{lastUpdate},</if>
+            <if test="businessName != null">`business_name` = #{businessName},</if>
+            <if test="businessId != null">`business_id` = #{businessId},</if>
+            <if test="bankCardNo != null">`bank_card_no` = #{bankCardNo},</if>
+            <if test="bankName != null">`bank_name` = #{bankName},</if>
+            <if test="bankAccountName != null">`bank_account_name` = #{bankAccountName},</if>
+            <if test="orgId != null">`org_id` = #{orgId},</if>
+            <if test="orgName != null">`org_name` = #{orgName},</if>
+            <if test="balance != null">`balance` = #{balance},</if>
+            <if test="cardStatus != null">`card_status` = #{cardStatus},</if>
+            <if test="enable != null">`enable` = #{enable},</if>
+            <if test="balanceDailyLimit != null">`balance_daily_limit` = #{balanceDailyLimit}</if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <delete id="batchRemove">
+        DELETE
+        FROM
+        bank_card
+        WHERE
+        id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="batchSelect" resultType="com.bottle.pay.modules.biz.entity.BankCardEntity">
+        SELECT *
+        FROM
+        bank_card
+        WHERE
+        id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 
 
     <update id="updateCardStatus">

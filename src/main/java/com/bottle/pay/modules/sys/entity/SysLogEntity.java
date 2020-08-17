@@ -13,128 +13,128 @@ import java.sql.Timestamp;
  * @date 2017年8月14日 下午8:05:17
  */
 public class SysLogEntity implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 日志id
-	 */
-	private Long id;
-	
-	/**
-	 * 操作用户id
-	 */
-	private Long userId;
-	
-	/**
-	 * 操作用户
-	 */
-	private String username;
-	
-	/**
-	 * 操作
-	 */
-	private String operation;
-	
-	/**
-	 * 方法
-	 */
-	private String method;
-	
-	/**
-	 * 参数
-	 */
-	private String params;
-	
-	/**
-	 * 耗时
-	 */
-	private Long time;
-	
-	/**
-	 * 操作ip地址
-	 */
-	private String ip;
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
 
-	public SysLogEntity() {
-		super();
-	}
+    private static final long serialVersionUID = 1L;
 
-	public Long getId() {
-		return id;
-	}
+    /**
+     * 日志id
+     */
+    private Long id;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    /**
+     * 操作用户id
+     */
+    private Long userId;
 
-	public Long getUserId() {
-		return userId;
-	}
+    /**
+     * 操作用户
+     */
+    private String username;
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    /**
+     * 操作
+     */
+    private String operation;
 
-	public String getUsername() {
-		return username;
-	}
+    /**
+     * 方法
+     */
+    private String method;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    /**
+     * 参数
+     */
+    private String params;
 
-	public String getOperation() {
-		return operation;
-	}
+    /**
+     * 耗时
+     */
+    private Long time;
 
-	public void setOperation(String operation) {
-		this.operation = operation;
-	}
+    /**
+     * 操作ip地址
+     */
+    private String ip;
 
-	public String getMethod() {
-		return method;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
 
-	public void setMethod(String method) {
-		this.method = method;
-	}
+    public SysLogEntity() {
+        super();
+    }
 
-	public String getParams() {
-		return params;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setParams(String params) {
-		this.params = params;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getTime() {
-		return time;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setTime(Long time) {
-		this.time = time;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public String getIp() {
-		return ip;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public String getOperation() {
+        return operation;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
-	
+    public void setOperation(String operation) {
+        this.operation = operation;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public void setMethod(String method) {
+        this.method = method;
+    }
+
+    public String getParams() {
+        return params;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
 }

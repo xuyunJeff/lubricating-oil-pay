@@ -12,50 +12,50 @@ import java.io.Serializable;
  * @date 2017年8月10日 上午10:48:34
  */
 public class SysRoleMenuEntity implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 记录id
-	 */
-	private Long id;
 
-	/**
-	 * 角色ID
-	 */
-	private Long roleId;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 菜单ID
-	 */
-	private Long menuId;
+    /**
+     * 记录id
+     */
+    private Long id;
 
-	public SysRoleMenuEntity() {
-		super();
-	}
+    /**
+     * 角色ID
+     */
+    private Long roleId;
 
-	public Long getId() {
-		return id;
-	}
+    /**
+     * 菜单ID
+     */
+    private Long menuId;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public SysRoleMenuEntity() {
+        super();
+    }
 
-	public Long getRoleId() {
-		return roleId;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setRoleId(Long roleId) {
-		this.roleId = roleId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getMenuId() {
-		return menuId;
-	}
+    public Long getRoleId() {
+        return roleId;
+    }
 
-	public void setMenuId(Long menuId) {
-		this.menuId = menuId;
-	}
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public Long getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(Long menuId) {
+        this.menuId = menuId;
+    }
 
 }

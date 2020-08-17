@@ -60,12 +60,13 @@ public class FrozenDetailController extends AbstractController {
 
     /**
      * 解冻
+     *
      * @return
      */
     @SysLog("解冻")
     @RequestMapping("/unFrozen")
-    public R update(Long id,BigDecimal unFrozen) {
-        return frozenDetailService.unFrozenMerchant(id,unFrozen);
+    public R update(Long id, BigDecimal unFrozen) {
+        return frozenDetailService.unFrozenMerchant(id, unFrozen);
     }
 
 //    /**

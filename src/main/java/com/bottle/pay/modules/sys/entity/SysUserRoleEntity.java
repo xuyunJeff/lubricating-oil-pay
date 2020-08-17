@@ -12,50 +12,50 @@ import java.io.Serializable;
  * @date 2017年8月10日 上午10:48:55
  */
 public class SysUserRoleEntity implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 记录id
-	 */
-	private Long id;
 
-	/**
-	 * 用户id
-	 */
-	private Long userId;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 角色id
-	 */
-	private Long roleId;
+    /**
+     * 记录id
+     */
+    private Long id;
 
-	public SysUserRoleEntity() {
-		super();
-	}
+    /**
+     * 用户id
+     */
+    private Long userId;
 
-	public Long getId() {
-		return id;
-	}
+    /**
+     * 角色id
+     */
+    private Long roleId;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public SysUserRoleEntity() {
+        super();
+    }
 
-	public Long getUserId() {
-		return userId;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Long getRoleId() {
-		return roleId;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setRoleId(Long roleId) {
-		this.roleId = roleId;
-	}
-	
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
 }

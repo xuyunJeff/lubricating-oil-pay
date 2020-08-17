@@ -11,6 +11,7 @@ import java.util.Map;
 
 /**
  * 富文本上传controller
+ *
  * @author zcl<yczclcn@163.com>
  */
 @RestController
@@ -21,6 +22,7 @@ public class SysEditorUploadController {
 
     /**
      * 上传图片
+     *
      * @param request
      * @return
      */

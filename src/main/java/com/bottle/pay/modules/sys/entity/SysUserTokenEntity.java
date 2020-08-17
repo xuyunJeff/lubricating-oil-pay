@@ -13,62 +13,62 @@ import java.util.Date;
  */
 public class SysUserTokenEntity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 用户id
-	 */
-	private Long userId;
-	
-	/**
-	 * token
-	 */
-	private String token;
-	
-	/**
-	 * 过期时间
-	 */
-	private Date gmtExpire;
-	
-	/**
-	 * 更新时间
-	 */
-	private Date gmtModified;
+    private static final long serialVersionUID = 1L;
 
-	public SysUserTokenEntity() {
-		super();
-	}
+    /**
+     * 用户id
+     */
+    private Long userId;
 
-	public Long getUserId() {
-		return userId;
-	}
+    /**
+     * token
+     */
+    private String token;
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    /**
+     * 过期时间
+     */
+    private Date gmtExpire;
 
-	public String getToken() {
-		return token;
-	}
+    /**
+     * 更新时间
+     */
+    private Date gmtModified;
 
-	public void setToken(String token) {
-		this.token = token;
-	}
+    public SysUserTokenEntity() {
+        super();
+    }
 
-	public Date getGmtExpire() {
-		return gmtExpire;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setGmtExpire(Date gmtExpire) {
-		this.gmtExpire = gmtExpire;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public Date getGmtModified() {
-		return gmtModified;
-	}
+    public String getToken() {
+        return token;
+    }
 
-	public void setGmtModified(Date gmtModified) {
-		this.gmtModified = gmtModified;
-	}
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getGmtExpire() {
+        return gmtExpire;
+    }
+
+    public void setGmtExpire(Date gmtExpire) {
+        this.gmtExpire = gmtExpire;
+    }
+
+    public Date getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Date gmtModified) {
+        this.gmtModified = gmtModified;
+    }
 
 }

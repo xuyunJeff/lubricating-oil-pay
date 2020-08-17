@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * 系统日志注解
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Target(ElementType.METHOD)
@@ -15,5 +16,5 @@ import java.lang.annotation.Target;
 @Documented
 public @interface SysLog {
 
-	String value() default "";
+    String value() default "";
 }

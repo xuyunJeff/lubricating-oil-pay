@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 处理ajax请求session过期
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class UserFilter extends AccessControlFilter {
@@ -30,8 +31,8 @@ public class UserFilter extends AccessControlFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         /**
          * 如果是ajax请求则不进行跳转

@@ -29,8 +29,8 @@ public class GsonUtil {
     private GsonUtil() {
     }
 
-    public static <T> T fromJson(String gsonString, Class<T> cls){
-        return gson.fromJson(gsonString,cls);
+    public static <T> T fromJson(String gsonString, Class<T> cls) {
+        return gson.fromJson(gsonString, cls);
     }
 
     /**

@@ -12,6 +12,7 @@ import java.util.*;
 
 /**
  * 代码生成工具类（使用jdbc生成本地代码）
+ *
  * @author zcl<yczclcn@163.com>
  */
 public class JdbcGenUtils {
@@ -22,7 +23,7 @@ public class JdbcGenUtils {
         String rootPath = "";
         String osName = "os.name";
         String osWindows = "win";
-        if(!System.getProperty(osName).toLowerCase().startsWith(osWindows)) {
+        if (!System.getProperty(osName).toLowerCase().startsWith(osWindows)) {
             rootPath = "/";
         }
 
@@ -35,7 +36,7 @@ public class JdbcGenUtils {
         List<TableEntity> tables = new ArrayList<>();
 
         Iterator<Map> tableIterator = tableList.iterator();
-        while(tableIterator.hasNext()) {
+        while (tableIterator.hasNext()) {
             Map<String, String> currTable = tableIterator.next();
             table = new TableEntity();
             String tableName = currTable.get("TABLE_NAME");
@@ -45,11 +46,11 @@ public class JdbcGenUtils {
             table.setObjName(StringUtils.uncapitalize(className));
             table.setTableComment(currTable.get("TABLE_COMMENT"));
 
-            String columnSql = "SELECT column_name,data_type,column_comment,column_key,extra FROM information_schema.columns WHERE TABLE_NAME = '"+ tableName + "' AND table_schema = (SELECT DATABASE()) ORDER BY ordinal_position";
+            String columnSql = "SELECT column_name,data_type,column_comment,column_key,extra FROM information_schema.columns WHERE TABLE_NAME = '" + tableName + "' AND table_schema = (SELECT DATABASE()) ORDER BY ordinal_position";
             ColumnEntity columnEntity = null;
-            List<Map> columnList = jdbcUtils.selectByParams(columnSql,null);
+            List<Map> columnList = jdbcUtils.selectByParams(columnSql, null);
             Iterator<Map> columnIterator = columnList.iterator();
-            while(columnIterator.hasNext()){
+            while (columnIterator.hasNext()) {
                 Map<String, String> currColumn = columnIterator.next();
                 columnEntity = new ColumnEntity();
                 columnEntity.setExtra(currColumn.get("EXTRA"));
@@ -83,7 +84,7 @@ public class JdbcGenUtils {
         }
 
         String projectPath = getProjectPath();
-        System.out.println("===>>>java generation path:" + projectPath +"/src/main/java");
+        System.out.println("===>>>java generation path:" + projectPath + "/src/main/java");
         Map<String, Object> map = null;
         for (TableEntity tableEntity : tables) {
             // 封装模板数据
@@ -94,9 +95,9 @@ public class JdbcGenUtils {
             map.put("className", tableEntity.getClassName());
             map.put("objName", tableEntity.getObjName());
             map.put("functionCode", webModule);
-            map.put("requestMapping", tableEntity.getTableName().replace("_","/"));
+            map.put("requestMapping", tableEntity.getTableName().replace("_", "/"));
             map.put("viewPath", webModule + "/" + tableEntity.getClassName().toLowerCase());
-            map.put("authKey", GenUtils.urlToAuthKey(tableEntity.getTableName().replace("_","/")));
+            map.put("authKey", GenUtils.urlToAuthKey(tableEntity.getTableName().replace("_", "/")));
             map.put("columns", tableEntity.getColumns());
             map.put("hasDecimal", tableEntity.buildHasDecimal().getHasDecimal());
             map.put("package", PropertiesUtils.getInstance("template/config").get("package"));
@@ -112,12 +113,12 @@ public class JdbcGenUtils {
                 System.out.println(filePath);
                 File dstDir = new File(CommonUtils.getPath(filePath));
                 //文件夹不存在创建文件夹
-                if(!dstDir.exists()){
+                if (!dstDir.exists()) {
                     dstDir.mkdirs();
                 }
                 File dstFile = new File(filePath);
                 //文件不存在则创建
-                if(!dstFile.exists()){
+                if (!dstFile.exists()) {
                     CommonUtils.generate(templatePath, filePath, map);
                     System.out.println(filePath + "===>>>创建成功！");
                 } else {
@@ -130,7 +131,7 @@ public class JdbcGenUtils {
 
 
     public static String getFileName(String template, String javaModule, String webModule, String className, String rootPath) {
-        String packagePath = rootPath + getProjectPath() + "/src/main/java/" + PropertiesUtils.getInstance("template/config").get("package").replace(".","/") + "/modules/" + javaModule + "/";
+        String packagePath = rootPath + getProjectPath() + "/src/main/java/" + PropertiesUtils.getInstance("template/config").get("package").replace(".", "/") + "/modules/" + javaModule + "/";
         String resourcePath = rootPath + getProjectPath() + "/src/main/resources/";
         String webPath = rootPath + getProjectPath() + "/src/main/webapp/";
         if (template.contains(GenConstant.JAVA_ENTITY)) {
@@ -174,11 +175,11 @@ public class JdbcGenUtils {
         }
 
         if (template.contains(GenConstant.JS_ADD)) {
-            return webPath + "static/js/" + webModule + "/" + className.toLowerCase()  + "/add.js";
+            return webPath + "static/js/" + webModule + "/" + className.toLowerCase() + "/add.js";
         }
 
         if (template.contains(GenConstant.JS_EDIT)) {
-            return webPath + "static/js/" + webModule + "/" + className.toLowerCase()  + "/edit.js";
+            return webPath + "static/js/" + webModule + "/" + className.toLowerCase() + "/edit.js";
         }
 
         if (template.contains(GenConstant.SQL_MENU)) {

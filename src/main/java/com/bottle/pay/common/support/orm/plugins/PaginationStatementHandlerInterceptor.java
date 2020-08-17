@@ -31,16 +31,17 @@ import com.bottle.pay.common.entity.Page;
 
 /**
  * PaginationStatementHandlerInterceptor
+ *
  * @author zcl<yczclcn@163.com>
  */
-@Intercepts({ @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class, Integer.class }) })
+@Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 public class PaginationStatementHandlerInterceptor implements Interceptor {
 
     private final static Logger logger = LoggerFactory.getLogger(PaginationStatementHandlerInterceptor.class);
 
     private static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
     private static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
-    private static final ReflectorFactory  DEFAULT_REFLECTOR_FACTORY = new DefaultReflectorFactory();
+    private static final ReflectorFactory DEFAULT_REFLECTOR_FACTORY = new DefaultReflectorFactory();
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -88,7 +89,7 @@ public class PaginationStatementHandlerInterceptor implements Interceptor {
 
     /**
      * 获取总计录
-     * 
+     *
      * @param parameterHandler
      * @param connection
      * @param countSql

@@ -13,186 +13,186 @@ import java.util.List;
  * @date 2017年8月8日 下午2:42:32
  */
 public class SysUserEntity implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
 
-	/**
-	 * 用户id
-	 */
-	private Long userId;
-	
-	/**
-	 * 机构id
-	 */
-	private Long orgId;
-	
-	/**
-	 * 机构名称
-	 */
-	private String orgName;
-	
-	/**
-	 * 用户名
-	 */
-	private String username;
-	
-	/**
-	 * 密码
-	 */
-	private String password;
-	
-	/**
-	 * 邮箱
-	 */
-	private String email;
-	
-	/**
-	 * 手机号
-	 */
-	private String mobile;
-	
-	/**
-	 * 状态(0：禁用   1：正常)
-	 */
-	private Integer status;
-	
-	/**
-	 * 创建用户id
-	 */
-	private Long userIdCreate;
-	
-	/**
-	 * 备注
-	 */
-	private String remark;
-	
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
-	
-	/**
-	 * 修改时间
-	 */
-	private Timestamp gmtModified;
-	
-	/**
-	 * 角色id列表
-	 */
-	private List<Long> roleIdList;
+    private static final long serialVersionUID = 1L;
 
-	public SysUserEntity() {
-		super();
-	}
+    /**
+     * 用户id
+     */
+    private Long userId;
 
-	public Long getUserId() {
-		return userId;
-	}
+    /**
+     * 机构id
+     */
+    private Long orgId;
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    /**
+     * 机构名称
+     */
+    private String orgName;
 
-	public Long getOrgId() {
-		return orgId;
-	}
+    /**
+     * 用户名
+     */
+    private String username;
 
-	public void setOrgId(Long orgId) {
-		this.orgId = orgId;
-	}
+    /**
+     * 密码
+     */
+    private String password;
 
-	public String getOrgName() {
-		return orgName;
-	}
+    /**
+     * 邮箱
+     */
+    private String email;
 
-	public void setOrgName(String orgName) {
-		this.orgName = orgName;
-	}
+    /**
+     * 手机号
+     */
+    private String mobile;
 
-	public String getUsername() {
-		return username;
-	}
+    /**
+     * 状态(0：禁用   1：正常)
+     */
+    private Integer status;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    /**
+     * 创建用户id
+     */
+    private Long userIdCreate;
 
-	public String getPassword() {
-		return password;
-	}
+    /**
+     * 备注
+     */
+    private String remark;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
-	public String getEmail() {
-		return email;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    /**
+     * 修改时间
+     */
+    private Timestamp gmtModified;
 
-	public String getMobile() {
-		return mobile;
-	}
+    /**
+     * 角色id列表
+     */
+    private List<Long> roleIdList;
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public SysUserEntity() {
+        super();
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
-	public Long getUserIdCreate() {
-		return userIdCreate;
-	}
+    public Long getOrgId() {
+        return orgId;
+    }
 
-	public void setUserIdCreate(Long userIdCreate) {
-		this.userIdCreate = userIdCreate;
-	}
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public String getOrgName() {
+        return orgName;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public Timestamp getGmtModified() {
-		return gmtModified;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setGmtModified(Timestamp gmtModified) {
-		this.gmtModified = gmtModified;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public List<Long> getRoleIdList() {
-		return roleIdList;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public Long getRoleId() {
-		if(null == roleIdList) return null;
-		return roleIdList.get(0);
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setRoleIdList(List<Long> roleIdList) {
-		this.roleIdList = roleIdList;
-	}
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Long getUserIdCreate() {
+        return userIdCreate;
+    }
+
+    public void setUserIdCreate(Long userIdCreate) {
+        this.userIdCreate = userIdCreate;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Timestamp getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Timestamp gmtModified) {
+        this.gmtModified = gmtModified;
+    }
+
+    public List<Long> getRoleIdList() {
+        return roleIdList;
+    }
+
+    public Long getRoleId() {
+        if (null == roleIdList) return null;
+        return roleIdList.get(0);
+    }
+
+    public void setRoleIdList(List<Long> roleIdList) {
+        this.roleIdList = roleIdList;
+    }
 
 }

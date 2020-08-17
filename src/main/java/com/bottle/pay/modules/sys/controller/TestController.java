@@ -22,9 +22,9 @@ public class TestController {
 
 
     @RequestMapping("/mail")
-    public void  sendMail(String to,String subject,String content){
+    public void sendMail(String to, String subject, String content) {
         try {
-            mailService.sendAttachmentMail(to,subject,content,"");
+            mailService.sendAttachmentMail(to, subject, content, "");
         } catch (MessagingException e) {
             e.printStackTrace();
         }

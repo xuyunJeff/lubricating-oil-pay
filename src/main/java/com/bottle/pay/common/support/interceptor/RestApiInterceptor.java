@@ -26,6 +26,7 @@ import java.util.List;
 
 /**
  * rest api拦截器
+ *
  * @author zcl<yczclcn@163.com>
  */
 @DependsOn("springContextUtils")
@@ -35,12 +36,13 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
 
     private SysUserService userService = (SysUserService) SpringContextUtils.getBean("sysUserService");
 
-    private RedisCacheManager redisCacheManager = (RedisCacheManager)SpringContextUtils.getBean(RedisCacheManager.class);
+    private RedisCacheManager redisCacheManager = (RedisCacheManager) SpringContextUtils.getBean(RedisCacheManager.class);
 
     private JwtUtils jwtUtils = SpringContextUtils.getBean("jwtUtils", JwtUtils.class);
 
     /**
      * 拦截
+     *
      * @param request
      * @param response
      * @param handler
@@ -64,6 +66,7 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * token校验
+     *
      * @param request
      * @param response
      * @return
@@ -117,14 +120,15 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
         String key = IPConstant.getIpWhiteListCacheKey(sysUserEntity.getUserId(), IPConstant.MerchantIPEnum.ADMIN.getCode());
-        List<Object> ipList = redisCacheManager.lGet(key,0,-1);
+        List<Object> ipList = redisCacheManager.lGet(key, 0, -1);
         //IP 白名单
         String ipAddr = WebUtils.getIpAddr();
-        return ipList.stream().anyMatch(ip->ip.equals(ipAddr));
+        return ipList.stream().anyMatch(ip -> ip.equals(ipAddr));
     }
 
     /**
      * 获取token
+     *
      * @param request
      * @return
      */

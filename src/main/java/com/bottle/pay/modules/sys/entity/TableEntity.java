@@ -15,131 +15,131 @@ import java.util.List;
  */
 public class TableEntity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * 表名
-	 */
-	private String tableName;
-	
-	/**
-	 * 表格备注
-	 */
-	private String tableComment;
-	
-	/**
-	 * 主键
-	 */
-	private ColumnEntity pk;
-	
-	/**
-	 * 表格列
-	 */
-	private List<ColumnEntity> columns;
-	
-	/**
-	 * 类名，作为实例对象使用（sysUser）
-	 */
-	private String objName;
-	
-	/**
-	 * 类名，作为类型使用（SysUser）
-	 */
-	private String className;
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp createTime;
+    /**
+     * 表名
+     */
+    private String tableName;
 
-	/**
-	 * 是否含有decimal类型数据
-	 */
-	private Boolean hasDecimal;
+    /**
+     * 表格备注
+     */
+    private String tableComment;
 
-	public TableEntity buildHasDecimal() {
-		for (ColumnEntity columnEntity : columns) {
-			if ("decimal".equals(columnEntity.getDataType().toLowerCase())) {
-				this.hasDecimal = true;
-				return this;
-			}
-		}
-		return this;
-	}
+    /**
+     * 主键
+     */
+    private ColumnEntity pk;
 
-	public Boolean getHasDecimal() {
-		return hasDecimal;
-	}
+    /**
+     * 表格列
+     */
+    private List<ColumnEntity> columns;
 
-	public void setHasDecimal(Boolean hasDecimal) {
-		this.hasDecimal = hasDecimal;
-	}
+    /**
+     * 类名，作为实例对象使用（sysUser）
+     */
+    private String objName;
 
-	public TableEntity() {
-		super();
-	}
+    /**
+     * 类名，作为类型使用（SysUser）
+     */
+    private String className;
 
-	public String getTableName() {
-		return tableName;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp createTime;
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
+    /**
+     * 是否含有decimal类型数据
+     */
+    private Boolean hasDecimal;
 
-	public String getTableComment() {
-		return tableComment;
-	}
+    public TableEntity buildHasDecimal() {
+        for (ColumnEntity columnEntity : columns) {
+            if ("decimal".equals(columnEntity.getDataType().toLowerCase())) {
+                this.hasDecimal = true;
+                return this;
+            }
+        }
+        return this;
+    }
 
-	public void setTableComment(String tableComment) {
-		this.tableComment = tableComment;
-	}
+    public Boolean getHasDecimal() {
+        return hasDecimal;
+    }
 
-	public ColumnEntity getPk() {
-		return pk;
-	}
+    public void setHasDecimal(Boolean hasDecimal) {
+        this.hasDecimal = hasDecimal;
+    }
 
-	public void setPk(ColumnEntity pk) {
-		this.pk = pk;
-	}
+    public TableEntity() {
+        super();
+    }
 
-	public List<ColumnEntity> getColumns() {
-		return columns;
-	}
+    public String getTableName() {
+        return tableName;
+    }
 
-	public void setColumns(List<ColumnEntity> columns) {
-		this.columns = columns;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
-	public String getObjName() {
-		return objName;
-	}
+    public String getTableComment() {
+        return tableComment;
+    }
 
-	public void setObjName(String objName) {
-		this.objName = objName;
-	}
+    public void setTableComment(String tableComment) {
+        this.tableComment = tableComment;
+    }
 
-	public String getClassName() {
-		return className;
-	}
+    public ColumnEntity getPk() {
+        return pk;
+    }
 
-	public void setClassName(String className) {
-		this.className = className;
-	}
+    public void setPk(ColumnEntity pk) {
+        this.pk = pk;
+    }
 
-	public Timestamp getCreateTime() {
-		return createTime;
-	}
+    public List<ColumnEntity> getColumns() {
+        return columns;
+    }
 
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
-	}
+    public void setColumns(List<ColumnEntity> columns) {
+        this.columns = columns;
+    }
 
-	public void addColumn(ColumnEntity columnEntity) {
-		if (this.columns == null) {
-			columns = new ArrayList<>();
-		}
-		columns.add(columnEntity);
-	}
-	
+    public String getObjName() {
+        return objName;
+    }
+
+    public void setObjName(String objName) {
+        this.objName = objName;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public void addColumn(ColumnEntity columnEntity) {
+        if (this.columns == null) {
+            columns = new ArrayList<>();
+        }
+        columns.add(columnEntity);
+    }
+
 }

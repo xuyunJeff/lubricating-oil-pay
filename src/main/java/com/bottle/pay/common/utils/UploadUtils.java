@@ -17,6 +17,7 @@ import java.util.UUID;
 
 /**
  * 文件上传工具类
+ *
  * @author zcl<yczclcn@163.com>
  */
 @DependsOn("springContextUtils")
@@ -26,7 +27,9 @@ public class UploadUtils {
 
     private static GlobalProperties globalProperties = SpringContextUtils.getBean("globalProperties", GlobalProperties.class);
 
-    /** 上传文件处理(支持批量) */
+    /**
+     * 上传文件处理(支持批量)
+     */
     public static List<String> uploadFile(HttpServletRequest request) {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
                 request.getSession().getServletContext());
@@ -37,7 +40,7 @@ public class UploadUtils {
             if (!dirFile.isDirectory()) {
                 dirFile.mkdirs();
             }
-            for (Iterator<String> iterator = multiRequest.getFileNames(); iterator.hasNext();) {
+            for (Iterator<String> iterator = multiRequest.getFileNames(); iterator.hasNext(); ) {
                 String key = iterator.next();
                 MultipartFile multipartFile = multiRequest.getFile(key);
                 if (multipartFile != null) {
@@ -60,7 +63,9 @@ public class UploadUtils {
         return fileNames;
     }
 
-    /** 上传文件处理(支持批量) */
+    /**
+     * 上传文件处理(支持批量)
+     */
     public static List<String> uploadFile(HttpServletRequest request, String path) {
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
                 request.getSession().getServletContext());
@@ -71,7 +76,7 @@ public class UploadUtils {
             if (!dirFile.isDirectory()) {
                 dirFile.mkdirs();
             }
-            for (Iterator<String> iterator = multiRequest.getFileNames(); iterator.hasNext();) {
+            for (Iterator<String> iterator = multiRequest.getFileNames(); iterator.hasNext(); ) {
                 String key = iterator.next();
                 MultipartFile multipartFile = multiRequest.getFile(key);
                 if (multipartFile != null) {

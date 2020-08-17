@@ -16,18 +16,20 @@ import java.util.List;
 @Mapper
 public interface SysOrgMapper extends BaseMapper<SysOrgEntity> {
 
-	/**
-	 * 统计子机构数量
-	 * @param parentId
-	 * @return
-	 */
-	int countOrgChildren(Long parentId);
+    /**
+     * 统计子机构数量
+     *
+     * @param parentId
+     * @return
+     */
+    int countOrgChildren(Long parentId);
 
-	/**
-	 * 查询子机构集合
-	 * @param parentId
-	 * @return
-	 */
-	List<Long> listOrgChildren(Long parentId);
-	
+    /**
+     * 查询子机构集合
+     *
+     * @param parentId
+     * @return
+     */
+    List<Long> listOrgChildren(Long parentId);
+
 }

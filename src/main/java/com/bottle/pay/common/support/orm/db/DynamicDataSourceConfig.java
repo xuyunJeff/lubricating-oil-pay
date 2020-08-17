@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * 配置多数据源
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Configuration
@@ -19,7 +20,7 @@ public class DynamicDataSourceConfig {
 
     @Bean
     @ConfigurationProperties("spring.datasource.druid.master-data-source")
-    public DataSource defaultDataSource(){
+    public DataSource defaultDataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 

@@ -4,164 +4,163 @@
 <mapper namespace="com.bottle.pay.modules.api.dao.BalanceMapper">
 
 
-	
-	<select id="listForPage" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
-		SELECT
-			`id`, 
-			`user_name`, 
-			`user_id`, 
-			`balance`, 
-			`balance_frozen`, 
-			`balance_paying`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`,
-			`org_name`,
-			`role_id`, 
-			`role_name`, 
-			`bill_out_limit`
-		FROM
-			balance
-		ORDER BY
-			id DESC
-	</select>
-	
-	<insert id="save">
-		INSERT INTO balance (
-			`user_name`, 
-			`user_id`, 
-			`balance`, 
-			`balance_frozen`, 
-			`balance_paying`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`,
-			`org_name`,
-			`role_id`, 
-			`role_name`, 
-			`bill_out_limit`
-		)
-		VALUES (
-			#{userName}, 
-			#{userId}, 
-			#{balance}, 
-			#{balanceFrozen}, 
-			#{balancePaying}, 
-			#{createTime}, 
-			#{lastUpdate}, 
-			#{orgId},
-			#{orgName},
-			#{roleId}, 
-			#{roleName}, 
-			#{billOutLimit}
-		)
-	</insert>
-	
-	<select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
-		SELECT
-			`id`, 
-			`user_name`, 
-			`user_id`, 
-			`balance`, 
-			`balance_frozen`, 
-			`balance_paying`, 
-			`create_time`, 
-			`last_update`, 
-			`org_id`,
-			`org_name`,
-			`role_id`, 
-			`role_name`, 
-			`bill_out_limit`
-		FROM
-			balance
-		WHERE
-			id = #{id}
-	</select>
-	
-	<update id="update">
-		UPDATE balance
-	 	<set>
-			<if test="userName != null">`user_name` = #{userName}, </if>
-			<if test="userId != null">`user_id` = #{userId}, </if>
-			<!--<if test="balance != null">`balance` = #{balance}, </if>-->
-			<!--<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>-->
-			<!--<if test="balancePaying != null">`balance_paying` = #{balancePaying}, </if>-->
-			<!--<if test="createTime != null">`create_time` = #{createTime}, </if>-->
-			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
-			<if test="orgId != null">`org_id` = #{orgId}, </if>
-			<if test="orgName != null">`org_name` = #{orgName}, </if>
-			<if test="roleId != null">`role_id` = #{roleId}, </if>
-			<if test="roleName != null">`role_name` = #{roleName}, </if>
-			<if test="billOutLimit != null">`bill_out_limit` = #{billOutLimit}</if>
-		</set>
-		WHERE
-			id = #{id}
-	</update>
+    <select id="listForPage" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
+        SELECT
+        `id`,
+        `user_name`,
+        `user_id`,
+        `balance`,
+        `balance_frozen`,
+        `balance_paying`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `org_name`,
+        `role_id`,
+        `role_name`,
+        `bill_out_limit`
+        FROM
+        balance
+        ORDER BY
+        id DESC
+    </select>
+
+    <insert id="save">
+        INSERT INTO balance (
+        `user_name`,
+        `user_id`,
+        `balance`,
+        `balance_frozen`,
+        `balance_paying`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `org_name`,
+        `role_id`,
+        `role_name`,
+        `bill_out_limit`
+        )
+        VALUES (
+        #{userName},
+        #{userId},
+        #{balance},
+        #{balanceFrozen},
+        #{balancePaying},
+        #{createTime},
+        #{lastUpdate},
+        #{orgId},
+        #{orgName},
+        #{roleId},
+        #{roleName},
+        #{billOutLimit}
+        )
+    </insert>
+
+    <select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
+        SELECT
+        `id`,
+        `user_name`,
+        `user_id`,
+        `balance`,
+        `balance_frozen`,
+        `balance_paying`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `org_name`,
+        `role_id`,
+        `role_name`,
+        `bill_out_limit`
+        FROM
+        balance
+        WHERE
+        id = #{id}
+    </select>
+
+    <update id="update">
+        UPDATE balance
+        <set>
+            <if test="userName != null">`user_name` = #{userName},</if>
+            <if test="userId != null">`user_id` = #{userId},</if>
+            <!--<if test="balance != null">`balance` = #{balance}, </if>-->
+            <!--<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>-->
+            <!--<if test="balancePaying != null">`balance_paying` = #{balancePaying}, </if>-->
+            <!--<if test="createTime != null">`create_time` = #{createTime}, </if>-->
+            <if test="lastUpdate != null">`last_update` = #{lastUpdate},</if>
+            <if test="orgId != null">`org_id` = #{orgId},</if>
+            <if test="orgName != null">`org_name` = #{orgName},</if>
+            <if test="roleId != null">`role_id` = #{roleId},</if>
+            <if test="roleName != null">`role_name` = #{roleName},</if>
+            <if test="billOutLimit != null">`bill_out_limit` = #{billOutLimit}</if>
+        </set>
+        WHERE
+        id = #{id}
+    </update>
 
     <update id="updateBalance" parameterType="com.bottle.pay.modules.api.entity.BalanceEntity">
         update balance
         <set>
-            <if test="balance != null">balance= balance + #{balance}, </if>
-            <if test="balanceFrozen != null">balance_frozen = balance_frozen + #{balanceFrozen}, </if>
-            <if test="balancePaying != null">balance_paying = balance_paying + #{balancePaying}, </if>
+            <if test="balance != null">balance= balance + #{balance},</if>
+            <if test="balanceFrozen != null">balance_frozen = balance_frozen + #{balanceFrozen},</if>
+            <if test="balancePaying != null">balance_paying = balance_paying + #{balancePaying},</if>
             last_update = #{lastUpdate}
         </set>
         WHERE
         id = #{id}
-        <if test="userId != null"> and `user_id` = #{userId}</if>
+        <if test="userId != null">and `user_id` = #{userId}</if>
     </update>
-	
-	<delete id="batchRemove">
-		DELETE
-		FROM
-			balance
-		WHERE
-			id IN
-		<foreach item="id" collection="array" open="(" separator="," close=")">
-			#{id}
-		</foreach>
-	</delete>
 
-	<select id="selectForUpdate" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
-		SELECT
-			   `id`,
-			   `user_name`,
-			   `user_id`,
-			   `balance`,
-			   `balance_frozen`,
-			   `balance_paying`,
-			   `create_time`,
-			   `last_update`,
-			   `org_id`,
-			   `org_name`,
-			   `role_id`,
-			   `role_name`,
-			   `bill_out_limit`
-		FROM
-			 balance
-		where
-			`user_id` = #{userId}
-		for update
-	</select>
+    <delete id="batchRemove">
+        DELETE
+        FROM
+        balance
+        WHERE
+        id IN
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
-	<update id="billoutBalanceMerchantChange">
-		UPDATE balance
-		<set>
-			`balance` = balance - #{amount},
-			`balance_paying` = balance_paying + #{amount}
-		</set>
-		WHERE
-		id = #{id}
-	</update>
+    <select id="selectForUpdate" resultType="com.bottle.pay.modules.api.entity.BalanceEntity">
+        SELECT
+        `id`,
+        `user_name`,
+        `user_id`,
+        `balance`,
+        `balance_frozen`,
+        `balance_paying`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `org_name`,
+        `role_id`,
+        `role_name`,
+        `bill_out_limit`
+        FROM
+        balance
+        where
+        `user_id` = #{userId}
+        for update
+    </select>
 
-	<update id="billOutMerchantChangePayingBalance">
-		UPDATE balance
-		<set>
-			`balance_paying` = balance_paying + #{amount}
-		</set>
-		WHERE
-		id = #{id}
-	</update>
+    <update id="billoutBalanceMerchantChange">
+        UPDATE balance
+        <set>
+            `balance` = balance - #{amount},
+            `balance_paying` = balance_paying + #{amount}
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
+    <update id="billOutMerchantChangePayingBalance">
+        UPDATE balance
+        <set>
+            `balance_paying` = balance_paying + #{amount}
+        </set>
+        WHERE
+        id = #{id}
+    </update>
 
     <update id="frozenMerchant">
         UPDATE balance

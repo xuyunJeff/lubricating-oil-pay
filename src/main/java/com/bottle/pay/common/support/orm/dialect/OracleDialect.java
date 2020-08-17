@@ -2,6 +2,7 @@ package com.bottle.pay.common.support.orm.dialect;
 
 /**
  * oracle方言
+ *
  * @author zhouchenglin[yczclcn@163.com]
  */
 public class OracleDialect extends Dialect {

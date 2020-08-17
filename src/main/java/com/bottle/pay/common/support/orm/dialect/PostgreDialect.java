@@ -2,6 +2,7 @@ package com.bottle.pay.common.support.orm.dialect;
 
 /**
  * Postgre 数据库 方言
+ *
  * @author zhouchenglin[yczclcn@163.com]
  */
 public class PostgreDialect extends Dialect {

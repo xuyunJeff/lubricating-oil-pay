@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 测试接口
+ *
  * @author zcl<yczclcn@163.com>
  */
 @Api(value = "测试接口", description = "测试接口")
@@ -19,6 +20,7 @@ public class RestTestController {
 
     /**
      * 验证拦截
+     *
      * @return
      */
     @ApiOperation(value = "测试接口")
@@ -29,6 +31,7 @@ public class RestTestController {
 
     /**
      * 匿名调用：@RestAnon
+     *
      * @return
      */
     @ApiOperation(value = "匿名访问接口")

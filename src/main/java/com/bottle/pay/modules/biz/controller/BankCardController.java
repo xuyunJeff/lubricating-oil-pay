@@ -38,8 +38,8 @@ public class BankCardController extends AbstractController {
      */
     @RequestMapping("/org/list")
     public Page<BankCardEntity> list(@RequestBody Map<String, Object> params) {
-        Long orgId = (Long)Optional.ofNullable(params.get("orgId")).orElse(0L);
-        if(orgId<= 0L){
+        Long orgId = (Long) Optional.ofNullable(params.get("orgId")).orElse(0L);
+        if (orgId <= 0L) {
             throw new RRException("机构ID不能为空");
         }
         return bankCardService.listEntity(params);

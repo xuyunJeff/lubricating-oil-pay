@@ -14,150 +14,150 @@ import java.util.List;
  */
 public class SysOrgEntity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
-	
-	/**
-	 * 机构id
-	 */
-	private Long orgId;
-	
-	/**
-	 * 上级机构id，一级部门为0
-	 */
-	private Long parentId;
-	
-	/**
-	 * 上级机构名称
-	 */
-	private String parentName;
-	
-	/**
-	 * 机构编码
-	 */
-	private String code;
-	
-	/**
-	 * 机构名称
-	 */
-	private String name;
-	
-	/**
-	 * 排序
-	 */
-	private Integer orderNum;
-	
-	/**
-	 * 可用标识，1：可用，0：不可用
-	 */
-	private Integer status;
-	
-	/**
-	 * 创建时间
-	 */
-	private Timestamp gmtCreate;
-	
-	/**
-	 * 修改时间
-	 */
-	private Timestamp gmtModified;
-	
-	/**
-	 * ztree属性
-	 */
-	private Boolean open;
-	
-	private List<?> list;
+    private static final long serialVersionUID = 1L;
 
-	public SysOrgEntity() {
-		super();
-	}
+    /**
+     * 机构id
+     */
+    private Long orgId;
 
-	public Long getOrgId() {
-		return orgId;
-	}
+    /**
+     * 上级机构id，一级部门为0
+     */
+    private Long parentId;
 
-	public void setOrgId(Long orgId) {
-		this.orgId = orgId;
-	}
+    /**
+     * 上级机构名称
+     */
+    private String parentName;
 
-	public Long getParentId() {
-		return parentId;
-	}
+    /**
+     * 机构编码
+     */
+    private String code;
 
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
+    /**
+     * 机构名称
+     */
+    private String name;
 
-	public String getParentName() {
-		return parentName;
-	}
+    /**
+     * 排序
+     */
+    private Integer orderNum;
 
-	public void setParentName(String parentName) {
-		this.parentName = parentName;
-	}
+    /**
+     * 可用标识，1：可用，0：不可用
+     */
+    private Integer status;
 
-	public String getCode() {
-		return code;
-	}
+    /**
+     * 创建时间
+     */
+    private Timestamp gmtCreate;
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    /**
+     * 修改时间
+     */
+    private Timestamp gmtModified;
 
-	public String getName() {
-		return name;
-	}
+    /**
+     * ztree属性
+     */
+    private Boolean open;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private List<?> list;
 
-	public Integer getOrderNum() {
-		return orderNum;
-	}
+    public SysOrgEntity() {
+        super();
+    }
 
-	public void setOrderNum(Integer orderNum) {
-		this.orderNum = orderNum;
-	}
+    public Long getOrgId() {
+        return orgId;
+    }
 
-	public Integer getStatus() {
-		return status;
-	}
+    public void setOrgId(Long orgId) {
+        this.orgId = orgId;
+    }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+    public Long getParentId() {
+        return parentId;
+    }
 
-	public Timestamp getGmtCreate() {
-		return gmtCreate;
-	}
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
 
-	public void setGmtCreate(Timestamp gmtCreate) {
-		this.gmtCreate = gmtCreate;
-	}
+    public String getParentName() {
+        return parentName;
+    }
 
-	public Timestamp getGmtModified() {
-		return gmtModified;
-	}
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
 
-	public void setGmtModified(Timestamp gmtModified) {
-		this.gmtModified = gmtModified;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public Boolean getOpen() {
-		return open;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public void setOpen(Boolean open) {
-		this.open = open;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public List<?> getList() {
-		return list;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setList(List<?> list) {
-		this.list = list;
-	}
-	
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Timestamp getGmtCreate() {
+        return gmtCreate;
+    }
+
+    public void setGmtCreate(Timestamp gmtCreate) {
+        this.gmtCreate = gmtCreate;
+    }
+
+    public Timestamp getGmtModified() {
+        return gmtModified;
+    }
+
+    public void setGmtModified(Timestamp gmtModified) {
+        this.gmtModified = gmtModified;
+    }
+
+    public Boolean getOpen() {
+        return open;
+    }
+
+    public void setOpen(Boolean open) {
+        this.open = open;
+    }
+
+    public List<?> getList() {
+        return list;
+    }
+
+    public void setList(List<?> list) {
+        this.list = list;
+    }
+
 }
