@@ -1,0 +1,41 @@
+@layout("../../system/layout.html", {title: ""}){
+<table class="form" id="form">
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="blockBankCard.createTime" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款会员的卡号<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款会员的卡号" v-model="blockBankCard.bankCardNo" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">银行名称<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="blockBankCard.bankName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款用户名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款用户名" v-model="blockBankCard.bankAccountName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">代理商id<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商id" v-model="blockBankCard.orgId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">代理商姓名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商姓名" v-model="blockBankCard.orgName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+</table>
+<script src="${ctxPath}/static/js/modules/blockCard/edit.js"></script>
+@}

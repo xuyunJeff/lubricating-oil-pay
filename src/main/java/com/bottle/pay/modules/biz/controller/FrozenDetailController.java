@@ -17,7 +17,7 @@ import com.bottle.pay.common.entity.R;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/merchant/frozen")
+@RequestMapping("/merchant")
 @Slf4j
 public class FrozenDetailController extends AbstractController {
 
@@ -30,7 +30,7 @@ public class FrozenDetailController extends AbstractController {
      * @param params
      * @return
      */
-    @RequestMapping("/list")
+    @RequestMapping("/frozen/list")
     public Page<FrozenDetailEntity> list(@RequestBody Map<String, Object> params) {
         return frozenDetailService.pageList(params);
     }
@@ -42,7 +42,7 @@ public class FrozenDetailController extends AbstractController {
      * @return
      */
     @SysLog("新增")
-    @RequestMapping("/frozen")
+    @RequestMapping("/frozen/add")
     public R save(@RequestBody FrozenDetailEntity frozenDetail) {
         return frozenDetailService.frozenMerchant(frozenDetail);
     }
@@ -53,7 +53,7 @@ public class FrozenDetailController extends AbstractController {
      * @param id
      * @return
      */
-    @RequestMapping("/info")
+    @RequestMapping("/frozen/info")
     public R getById(Long id) {
         return frozenDetailService.getEntityById(id);
     }

@@ -334,4 +334,33 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
         }
         return CommonUtils.msg(num);
     }
+
+    /**
+     * 余额调度是 增加当前余额
+     * @return
+     */
+    public boolean addBalance(Long userId,String bankCard,BigDecimal balance){
+        BankCardEntity bankCardEntity = new BankCardEntity();
+        bankCardEntity.setBusinessId(userId);
+        bankCardEntity.setBankCardNo(bankCard);
+        bankCardEntity.setBalance(balance);
+        bankCardEntity.setLastUpdate(new Date());
+        boolean result = mapper.addBalance(bankCardEntity)>0;
+        log.info("专员:{},银行卡:{},增加的金额:{},结果:{}",userId,balance,balance,result);
+        return result;
+    }
+    /**
+     * 余额调度是 增加当前余额
+     * @return
+     */
+    public boolean minusBalance(Long userId,String bankCard,BigDecimal balance){
+        BankCardEntity bankCardEntity = new BankCardEntity();
+        bankCardEntity.setBusinessId(userId);
+        bankCardEntity.setBankCardNo(bankCard);
+        bankCardEntity.setBalance(balance);
+        bankCardEntity.setLastUpdate(new Date());
+        boolean result = mapper.minusBalance(bankCardEntity)>0;
+        log.info("专员:{},银行卡:{},增加的金额:{},结果:{}",userId,balance,balance,result);
+        return result;
+    }
 }

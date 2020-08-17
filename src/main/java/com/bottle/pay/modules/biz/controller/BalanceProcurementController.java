@@ -15,9 +15,6 @@ import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * @author ZhouChenglin<yczclcn@163.com>
- */
 @RestController
 @RequestMapping("//balance/procurement")
 @Slf4j
@@ -34,7 +31,7 @@ public class BalanceProcurementController extends AbstractController {
      */
     @RequestMapping("/list")
     public Page<BalanceProcurementEntity> list(@RequestBody Map<String, Object> params) {
-        return balanceProcurementService.listEntity(params);
+        return balanceProcurementService.getProcureList(params);
     }
 
     /**
@@ -46,7 +43,7 @@ public class BalanceProcurementController extends AbstractController {
     @SysLog("新增")
     @RequestMapping("/save")
     public R save(@RequestBody BalanceProcurementEntity balanceProcurement) {
-        return balanceProcurementService.saveEntity(balanceProcurement);
+        return balanceProcurementService.balanceProcure(balanceProcurement);
     }
 
     /**
@@ -55,10 +52,10 @@ public class BalanceProcurementController extends AbstractController {
      * @param id
      * @return
      */
-    @RequestMapping("/info")
-    public R getById(@RequestBody Long id) {
-        return balanceProcurementService.getEntityById(id);
-    }
+//    @RequestMapping("/info")
+//    public R getById(@RequestBody Long id) {
+//        return balanceProcurementService.getEntityById(id);
+//    }
 
     /**
      * 修改
@@ -66,11 +63,11 @@ public class BalanceProcurementController extends AbstractController {
      * @param balanceProcurement
      * @return
      */
-    @SysLog("修改")
-    @RequestMapping("/update")
-    public R update(@RequestBody BalanceProcurementEntity balanceProcurement) {
-        return balanceProcurementService.updateEntity(balanceProcurement);
-    }
+//    @SysLog("修改")
+//    @RequestMapping("/update")
+//    public R update(@RequestBody BalanceProcurementEntity balanceProcurement) {
+//        return balanceProcurementService.updateEntity(balanceProcurement);
+//    }
 
     /**
      * 删除
@@ -78,10 +75,10 @@ public class BalanceProcurementController extends AbstractController {
      * @param id
      * @return
      */
-    @SysLog("删除")
-    @RequestMapping("/remove")
-    public R batchRemove(@RequestBody Long[] id) {
-        return balanceProcurementService.batchRemove(id);
-    }
+//    @SysLog("删除")
+//    @RequestMapping("/remove")
+//    public R batchRemove(@RequestBody Long[] id) {
+//        return balanceProcurementService.batchRemove(id);
+//    }
 
 }

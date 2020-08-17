@@ -127,4 +127,66 @@
 		</foreach>
 	</delete>
 
+	<select id="selectCount" resultType="java.lang.Integer">>
+		SELECT count(1)
+		FROM balance_procurement
+		WHERE
+		1=1
+		<if test="businessId != null">
+			(out_business_id = #{businessId}
+			or
+			in_business_id = #{businessId})
+		</if>
+		<if test="orgId != null">
+			org_id = #{orgId}
+		</if>
+		<if test="startTime != null">
+			create_time &gt; #{startTime}
+		</if>
+		<if test="endTime">
+			create_time &lt; #{endTime}
+		</if>
+	</select>
+
+	<select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
+		SELECT
+		`id`,
+		`out_business_id`,
+		`out_business_name`,
+		`in_business_name`,
+		`in_business_id`,
+		`price`,
+		`create_time`,
+		`last_update`,
+		`org_id`,
+		`in_bank_card_no`,
+		`in_bank_name`,
+		`out_bank_card_no`,
+		`out_bank_name`,
+		`in_before_balance`,
+		`out_before_balance`,
+		`in_after_balance`,
+		`out_after_balance`
+		FROM
+		balance_procurement
+		WHERE
+		1=1
+		<if test="businessId != null">
+			(out_business_id = #{businessId}
+			or
+			in_business_id = #{businessId})
+		</if>
+		<if test="orgId != null">
+			org_id = #{orgId}
+		</if>
+		<if test="startTime != null">
+			create_time &gt; #{startTime}
+		</if>
+		<if test="endTime">
+			create_time &lt; #{endTime}
+		</if>
+		ORDER BY
+		create_time DESC
+		limit #{offset},#{pageSize}
+	</select>
 </mapper>

@@ -12,6 +12,7 @@ import com.bottle.pay.common.utils.ShiroUtils;
 import com.bottle.pay.modules.sys.dao.SysUserMapper;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,9 @@ public abstract class BottleBaseService<M extends BottleBaseMapper,E extends Bot
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    protected StringRedisTemplate stringRedisTemplate;
 
 
     /**

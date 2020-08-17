@@ -23,4 +23,13 @@ public interface BankCardMapper extends BottleBaseMapper<BankCardEntity> {
      */
     int updateCardStatus(BankCardEntity entity);
 
+    /**
+     * 余额调度时：增加余额
+     */
+    int addBalance(BankCardEntity entity);
+
+    /**
+     * 余额调度时：减少金额并判断减少前金额大于待减金额
+     */
+    int minusBalance(BankCardEntity entity);
 }

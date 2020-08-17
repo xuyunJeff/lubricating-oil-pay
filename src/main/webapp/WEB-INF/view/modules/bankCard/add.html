@@ -1,0 +1,83 @@
+@layout("../../system/layout.html", {title: ""}){
+<table class="form" id="form">
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="bankCard.createTime" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="bankCard.lastUpdate" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款专员姓名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款专员姓名" v-model="bankCard.businessName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款专员ID<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款专员ID" v-model="bankCard.businessId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款会员的卡号<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款会员的卡号" v-model="bankCard.bankCardNo" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">银行名称<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="bankCard.bankName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款用户名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款用户名" v-model="bankCard.bankAccountName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">代理商id<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商id" v-model="bankCard.orgId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">代理商姓名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商姓名" v-model="bankCard.orgName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">可用余额<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="可用余额" v-model="bankCard.balance" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">1 可用 2 冻结 <font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="1 可用 2 冻结 " v-model="bankCard.cardStatus" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">0 禁用 1 启用<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="0 禁用 1 启用" v-model="bankCard.enable" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="bankCard.balanceDailyLimit" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+</table>
+<script src="${ctxPath}/static/js/modules/bankCard/add.js"></script>
+@}
