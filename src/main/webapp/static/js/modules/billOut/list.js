@@ -35,7 +35,7 @@ function getGrid() {
             {title : "操作", width : "90px", formatter : function(value, row, index) {
                     var _html = '';
                     if (hasPermission('apiV1:billOut:success')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="确认"><i class="fa fa fa-check"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.billSuccess(\''+row.billId+'\')" title="确认"><i class="fa fa fa-check"></i></a>';
                     }
                     if (hasPermission('apiV1:billOut:failed')) {
                         _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="作废"><i class="fa fa-times"></i></a>';
@@ -119,18 +119,15 @@ var vm = new Vue({
 				},
 			});
 		},
-		edit: function(id) {
-            dialogOpen({
-                title: '编辑',
-                url: 'modules/billOut/edit.html?_' + $.now(),
-                width: '420px',
-                height: '350px',
-                success: function(iframeId){
-                    top.frames[iframeId].vm.billOut.id = id;
-                    top.frames[iframeId].vm.setForm();
-                },
-                yes: function(iframeId){
-                    top.frames[iframeId].vm.acceptClick();
+        billSuccess: function(billId) {
+		    // var bill = JSON.parse(row)
+		    // debugger;
+            //"确定已经出款？</br>会员名："+bill.bankAccountName+" 金额:"+bill.price,
+            $.ConfirmAjax({
+                msg : "确定已经出款？",
+                url: '../../apiV1/billOut/bill/success?billId='+billId+'&_' + $.now(),
+                success: function(data) {
+                    vm.load();
                 }
             });
         },

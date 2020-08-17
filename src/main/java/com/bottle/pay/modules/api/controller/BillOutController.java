@@ -61,7 +61,7 @@ public class BillOutController extends AbstractController {
 
 
     @SysLog("后端派单")
-    @PostMapping("/push/order")
+    @RequestMapping("/push/order")
     public R pushOrder(@RequestBody BillOutView billOutView, HttpServletRequest request) {
         SysUserEntity userEntity = getUser();
         //FIXME 使用系统的  WebUtils.getIpAddr()
@@ -80,7 +80,7 @@ public class BillOutController extends AbstractController {
     }
 
     @SysLog("人工派单接口")
-    @GetMapping("/appoint/human")
+    @RequestMapping("/appoint/human")
     public R arrangeBillsOutBusinessByHuman(Long businessId, String billId) {
         SysUserEntity userEntity = getUser();
         if (!SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId()))
@@ -95,8 +95,8 @@ public class BillOutController extends AbstractController {
     }
 
     @SysLog("出款员订单回退到机构")
-    @GetMapping("/bill/goBackOrg")
-    public R billsOutBusinessGoBack(String billId) {
+    @RequestMapping("/bill/goBackOrg")
+    public R billsOutBusinessGoBack(@ModelAttribute("billId") String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
@@ -106,7 +106,7 @@ public class BillOutController extends AbstractController {
     }
 
     @SysLog("出款员订单确认出款成功")
-    @GetMapping("/bill/success")
+    @RequestMapping("/bill/success")
     public R billsOutSuccess(String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
@@ -117,7 +117,7 @@ public class BillOutController extends AbstractController {
     }
 
     @SysLog("出款员作废订单")
-    @GetMapping("/bill/failed")
+    @RequestMapping("/bill/failed")
     public R billsOutFailed(String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));

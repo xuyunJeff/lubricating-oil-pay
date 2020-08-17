@@ -2,6 +2,8 @@ package com.bottle.pay.common.constant;
 
 import lombok.AllArgsConstructor;
 
+import java.math.BigDecimal;
+
 /**
  * 系统级静态变量
  *
@@ -15,6 +17,8 @@ public class SystemConstant {
     public static final long SUPER_ADMIN = 1;
 
     public static final String USER_LOGIN_REDI_KEY = "login";
+
+    public static final BigDecimal BIG_DECIMAL_HUNDRED = BigDecimal.valueOf(100);
 
     public static String getUserLoginRedisKey(String username) {
         return USER_LOGIN_REDI_KEY + ":" + username;

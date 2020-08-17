@@ -1,6 +1,7 @@
 package com.bottle.pay.modules.api.service;
 
 import com.bottle.pay.common.constant.BillConstant;
+import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
@@ -132,7 +133,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 扣除出款员代付中
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中
-        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getBusinessId());
+        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
         // TODO 回调商户
         billOutNotifySercice.billsOutPaidSuccessNotify(entity);
         BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
@@ -244,13 +245,13 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * 获取出款员代付中余额
      *
      * @param businessId
-     * @return
+     * @return 单位分
      */
     public BigDecimal getBusinessBillOutBalance(Long businessId) {
         String redisKey = BillConstant.BillRedisKey.billOutBusinessBalance(businessId.toString());
         Object balance = redisCacheManager.get(redisKey);
         if (ObjectUtils.isEmpty(balance)) {
-            BigDecimal businessPaying = mapper.sumByBusinessId(businessId);
+            BigDecimal businessPaying = mapper.sumByBusinessId(businessId).multiply(SystemConstant.BIG_DECIMAL_HUNDRED);
             redisCacheManager.set(redisKey, businessPaying);
             return businessPaying;
         }

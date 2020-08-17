@@ -56,13 +56,12 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
 
     @Transactional
     public BalanceEntity billOutMerchantChangePayingBalance(BigDecimal amount, Long userId) {
-        BalanceEntity balance = new BalanceEntity();
-        balance.setUserId(userId);
+        BalanceEntity balance = new BalanceEntity(userId);
         synchronized (this) {
             balance = mapper.selectForUpdate(balance);
             mapper.billOutMerchantChangePayingBalance(amount, balance.getId());
         }
-        BalanceEntity balanceAfter = mapper.selectOne(balance);
+        BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
         log.info("商户余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
         return balanceAfter;
     }
