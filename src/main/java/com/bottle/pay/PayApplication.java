@@ -13,7 +13,7 @@ public class PayApplication {
         SpringApplication application = new SpringApplication(PayApplication.class);
         application.setBannerMode(Banner.Mode.OFF);
         application.run(args);
-        log.info("The Dp application has been started successfully!");
+        log.info("The bottle_pay application has been started successfully!");
     }
 
 }

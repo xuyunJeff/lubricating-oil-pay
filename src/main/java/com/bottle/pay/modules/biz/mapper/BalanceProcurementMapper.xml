@@ -127,7 +127,7 @@
         </foreach>
     </delete>
 
-    <select id="selectCount" resultType="java.lang.Integer">>
+    <select id="selectCountPage" resultType="java.lang.Integer">
         SELECT count(1)
         FROM balance_procurement
         WHERE

@@ -12,14 +12,11 @@ import com.bottle.pay.modules.biz.entity.BalanceProcurementEntity;
 import com.bottle.pay.modules.biz.entity.BankCardEntity;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.google.common.collect.Lists;
-import io.swagger.models.auth.In;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -193,7 +190,7 @@ public class BalanceProcurementService extends BottleBaseService<BalanceProcurem
             params.put("businessId", null);
         }
         try {
-            int count = mapper.selectCount(params);
+            int count = mapper.selectCountPage(params);
             List<BalanceProcurementEntity> list = mapper.selectPage(params);
             page.setTotal(count);
             page.setRows(list);
