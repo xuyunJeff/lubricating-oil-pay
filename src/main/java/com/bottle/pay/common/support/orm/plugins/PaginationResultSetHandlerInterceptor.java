@@ -3,6 +3,8 @@ package com.bottle.pay.common.support.orm.plugins;
 import java.sql.Statement;
 import java.util.Properties;
 
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.resultset.DefaultResultSetHandler;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.Interceptor;
@@ -26,6 +28,7 @@ import com.bottle.pay.common.entity.Page;
  *
  * @author zcl<yczclcn@163.com>
  */
+@Slf4j
 @Intercepts({@Signature(type = ResultSetHandler.class, method = "handleResultSets", args = {Statement.class})})
 public class PaginationResultSetHandlerInterceptor implements Interceptor {
 

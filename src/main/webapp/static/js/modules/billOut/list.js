@@ -18,8 +18,17 @@ function getGrid() {
 		url: '../../apiV1/billOut/list?_' + $.now(),
 		height: $(window).height()-56,
 		queryParams: function(params){
-			params.name = vm.keyword;
-			return params;
+            params.merchantName = $('#merchantName').val()
+            params.businessName = $('#businessName').val()
+            params.bankAccountName = $('#bankAccountName').val()
+            params.thirdBillId = $('#thirdBillId').val()
+            params.billId = $('#billId').val()
+            params.billStatus = $('#billStatus').val()
+            params.notice = $('#notice').val()
+            params.billType = $('#billType').val()
+            params.createTime = $('#createTime').val()
+			// params.name = vm.keyword;
+			return removeEmptyField(params);
 		},
 		columns: [
 			{checkbox: true},
@@ -57,23 +66,23 @@ function getGrid() {
                      if(row.billStatus ==3) {return "失败"}
                 }},
             //：1未通知 2 已通知 3 失败
-            {field : "notice", title : "通知", width : "60px",formatter:function (index,row) {
+            {field : "notice", title : "通知", width : "80px",formatter:function (index,row) {
                     if(row.notice == 1) {return  "未通知"}
                     if(row.notice ==2) {return "已通知"}
                     if(row.notice ==3) {return "<div style='color: red'>通知失败</div>"}
                 }},
             {field : "price", title : "账单金额", width : "100px"},
-            {field : "bankCardNo", title : "付款会员的卡号", width : "180px",formatter:function (index,row) {
+            {field : "bankCardNo", title : "会员银行卡号", width : "180px",formatter:function (index,row) {
                     return row.bankCardNo + '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankCardNo+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             {field : "bankName", title : "银行名称", width : "100px",formatter:function (index,row) {
                 return row.bankName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
-            {field : "bankAccountName", title : "银行卡用户名", width : "100px",formatter:function (index,row) {
+            {field : "bankAccountName", title : "会员名", width : "100px",formatter:function (index,row) {
                     return row.bankAccountName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankAccountName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             //1 手动 2 自动 3 大额 4 订单退回机构
-            {field : "billType", title : "派单", width : "100px",formatter:function (index,row) {
+            {field : "billType", title : "派单", width : "120px",formatter:function (index,row) {
                     if(row.billType == 1) {return  "手动"}
                     if(row.billType ==2) {return "自动"}
                     if(row.billType ==3) {return "<div style='color: red'>大额</div>"}

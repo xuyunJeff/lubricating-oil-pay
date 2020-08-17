@@ -1,21 +1,48 @@
 @layout("../../system/layout.html", {title: "代付订单"}){
 <div class="row">
-    <div class="col-md-4 form-inline pull-left">
-        <div class="form-group">
-            <input v-model="keyword" \@keyup.enter="load" type="text" class="form-control" placeholder="请输入查询关键字" style="width: 220px;" />
-        </div>
+    <div class="col-md-4 form-inline pull-left" style="width: 88%;">
+            <input  id="createTime"  class="form-control" type="date" style="width: 120px;"/>
+            <input  id="merchantName" \@keyup.enter="load" type="text" class="form-control" placeholder="商户名" style="width: 100px;" />
+            <input  id="businessName" \@keyup.enter="load" type="text" class="form-control" placeholder="付款专员姓名" style="width: 100px;" />
+            <input  id="bankAccountName"  \@keyup.enter="load" type="text" class="form-control" placeholder="会员名" style="width: 100px;" />
+            <input  id="thirdBillId"  \@keyup.enter="load" type="text" class="form-control" placeholder="第三方订单号" style="width: 180px;" />
+            <input  id="billId"  \@keyup.enter="load" type="text" class="form-control" placeholder="订单号" style="width: 180px;" />
+            订单状态:&nbsp;&nbsp;&nbsp;
+                <select  id="billStatus"  class="form-control"  style="width: 100px;" >
+                    <option value=""  style="display:none">请选择</option>
+                    <option value="1">未支付</option>
+                    <option value="2">成功</option>
+                    <option value="3">失败</option>
+                </select>
+            通知:&nbsp;&nbsp;&nbsp;
+                <select  id="notice"  class="form-control"  style="width: 100px;" >
+                    <option value=""  style="display:none">请选择</option>
+                    <option value="1">未通知</option>
+                    <option value="2">已通知</option>
+                    <option value="3">通知失败</option>
+                </select>
+
+            派单类型:&nbsp;&nbsp;&nbsp;
+                <select  id="billType"   class="form-control"  style="width: 100px;" >
+                    <option value=""  style="display:none">请选择</option>
+                    <option value="1">手动</option>
+                    <option value="2">自动</option>
+                    <option value="3">大额</option>
+                    <option value="4">订单退回机构</option>
+                </select>
         <div class="form-group">
             <a class="btn btn-primary" \@click="load"><i class="fa fa-search"></i>&nbsp;查询</a>
         </div>
-    </div>
-    <div class="col-md-8">
+        </div>
+    <div class="col-md-8" style="width: 12%;">
         <div class="btn-toolbar pull-right">
             <div class="btn-group">
-                <a v-if="hasPermission('apiV1:billOut:list')" class="btn btn-default" onclick="reload();"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
-                <a v-if="hasPermission('apiV1:billOut:save')" class="btn btn-default" \@click="save"><i class="fa fa-plus"></i>&nbsp;派单</a>
-                <a v-if="hasPermission('apiV1:billOut:appoint:auto')" class="btn btn-default" \@click="auto"><i class="fa fa-play"></i>&nbsp;自动开关</a>
+                <a v-if="hasPermission('apiV1:billOut:list')" class="btn btn-default" onclick="reload();" title="刷新" ><i class="fa fa-refresh"></i></a>
+                <a v-if="hasPermission('apiV1:billOut:save')" class="btn btn-default" \@click="save" title="添加出款订单"><i class="fa fa-plus"></i></a>
+                <a v-if="hasPermission('apiV1:billOut:appoint:auto')" class="btn btn-default" \@click="auto" title="自动开关"><i class="fa fa-play"></i></a>
             </div>
         </div>
+    </div>
     </div>
 </div>
 <div class="row">

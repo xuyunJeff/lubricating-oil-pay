@@ -46,6 +46,16 @@ public class BillOutController extends AbstractController {
      */
     @RequestMapping("/list")
     public Page<BillOutEntity> list(@RequestBody Map<String, Object> params) {
+        SysUserEntity userEntity = getUser();
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            // 机构管理员查询机构下的所有数据
+            params.put("orgId",userEntity.getOrgId());
+        }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            // 出款员查看自己的数据的所有数据
+            params.put("orgId",userEntity.getOrgId());
+            params.put("businessId",userEntity.getUserId());
+        }
         return billOutService.listEntity(params);
     }
 
