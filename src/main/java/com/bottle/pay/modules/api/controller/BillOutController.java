@@ -22,6 +22,7 @@ import com.bottle.pay.modules.api.entity.BillOutEntity;
 import com.bottle.pay.modules.api.service.BillOutService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotNull;
 
 
 @RestController
@@ -81,7 +82,7 @@ public class BillOutController extends AbstractController {
 
     @SysLog("人工派单接口")
     @RequestMapping("/appoint/human")
-    public R arrangeBillsOutBusinessByHuman(Long businessId, String billId) {
+    public R arrangeBillsOutBusinessByHuman(@NotNull(message = "businessId 不能为空") Long businessId, @NotNull(message = "billId 不能为空")String billId) {
         SysUserEntity userEntity = getUser();
         if (!SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId()))
             return R.error("必须的机构管理员才能派单");
@@ -96,7 +97,7 @@ public class BillOutController extends AbstractController {
 
     @SysLog("出款员订单回退到机构")
     @RequestMapping("/bill/goBackOrg")
-    public R billsOutBusinessGoBack(@ModelAttribute("billId") String billId) {
+    public R billsOutBusinessGoBack(@NotNull(message = "billId 不能为空")String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
@@ -107,7 +108,7 @@ public class BillOutController extends AbstractController {
 
     @SysLog("出款员订单确认出款成功")
     @RequestMapping("/bill/success")
-    public R billsOutSuccess(String billId) {
+    public R billsOutSuccess(@NotNull(message = "billId 不能为空")String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
@@ -118,7 +119,7 @@ public class BillOutController extends AbstractController {
 
     @SysLog("出款员作废订单")
     @RequestMapping("/bill/failed")
-    public R billsOutFailed(String billId) {
+    public R billsOutFailed(@NotNull(message = "billId 不能为空") String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
