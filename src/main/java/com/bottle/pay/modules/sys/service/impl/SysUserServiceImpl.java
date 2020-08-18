@@ -76,8 +76,10 @@ public class SysUserServiceImpl implements SysUserService {
             return userEntity;
         }
         SysUserEntity user = sysUserMapper.getByUserName(username);
-        List<Long> roles = sysRoleMapper.listUserRoleIds(user.getUserId());
-        user.setRoleIdList(roles);
+        List<Long> roleIds = sysRoleMapper.listUserRoleIds(user.getUserId());
+        user.setRoleIdList(roleIds);
+        List<String> roleNames = sysRoleMapper.listUserRoleNames(user.getRoleId());
+        user.setRoleNameList(roleNames);
         redisCacheManager.set(redisKey, JSONUtils.beanToJson(user), jwtProperties.getExpiration() * 1000);
         return user;
     }

@@ -88,6 +88,8 @@ public class BillOutController extends AbstractController {
             return R.error("必须的机构管理员才能派单");
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
+        if(bill.getPosition().equals(BillConstant.BillPostionEnum.Business.getCode())) return R.error("此订单已经派单");
+        if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())) return R.error("此订单无需人工派单");
         // 判断出款员是否在线
         OnlineBusinessEntity onlineBusinessEntity = onlineBusinessService.getOnlineBusiness(businessId, userEntity.getOrgId());
         if (null == onlineBusinessEntity) return R.error("所选出款员不在线");

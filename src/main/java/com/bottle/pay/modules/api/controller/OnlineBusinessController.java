@@ -2,6 +2,7 @@ package com.bottle.pay.modules.api.controller;
 
 import java.util.Map;
 
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,8 @@ public class OnlineBusinessController extends AbstractController {
      */
     @RequestMapping("/list")
     public Page<OnlineBusinessEntity> list(@RequestBody Map<String, Object> params) {
+        SysUserEntity userEntity = getUser();
+        params.put("orgId",userEntity.getOrgId());
         return onlineBusinessService.listEntity(params);
     }
 

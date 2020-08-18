@@ -31,20 +31,20 @@ function getGrid() {
 			return removeEmptyField(params);
 		},
 		columns: [
-			{checkbox: true},
-            {title : "操作", width : "90px", formatter : function(value, row, index) {
+			// {checkbox: true},
+            {title : "操作", width : "110px", formatter : function(value, row, index) {
                     var _html = '';
                     if (hasPermission('apiV1:billOut:success')) {
-                        _html += '<a href="javascript:;" onclick="vm.billSuccess(\''+row.billId+'\')" title="确认"><i class="fa fa fa-check"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.billSuccess(\''+row.billId+'\')" title="确认"><i class="fa fa fa-check"></i></a>  ';
                     }
                     if (hasPermission('apiV1:billOut:failed')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="作废"><i class="fa fa-times"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.billFailed(\''+row.billId+'\')" title="作废"><i class="fa fa-times"></i></a>  ';
                     }
                     if (hasPermission('apiV1:billOut:goBack')) {
-                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="回退"><i class="fa fa-reply"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.billGoBackOrg(\''+row.billId+'\')" title="回退"><i class="fa fa-reply"></i></a>  ';
                     }
                     if (hasPermission('apiV1:billOut:appoint:people')) {
-                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="指定"><i class="fa fa-hand-pointer-o"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.appointHuman(\''+row.billId+'\')" title="指定"><i class="fa fa-hand-pointer-o"></i></a>';
                     }
                     return _html;
                 }
@@ -116,12 +116,10 @@ var vm = new Vue({
 				height: '420px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
-				},
+				}
 			});
 		},
         billSuccess: function(billId) {
-		    // var bill = JSON.parse(row)
-		    // debugger;
             //"确定已经出款？</br>会员名："+bill.bankAccountName+" 金额:"+bill.price,
             $.ConfirmAjax({
                 msg : "确定已经出款？",
@@ -131,24 +129,32 @@ var vm = new Vue({
                 }
             });
         },
-        remove: function(batch, id) {
-            var ids = [];
-            if (batch) {
-                var ck = $('#dataGrid').bootstrapTable('getSelections');
-                if (!checkedArray(ck)) {
-                    return false;
-                }
-                $.each(ck, function(idx, item){
-                    ids[idx] = item.id;
-                });
-            } else {
-                ids.push(id);
-            }
-            $.RemoveForm({
-                url: '../../apiV1/billOut/remove?_' + $.now(),
-                param: ids,
+        billFailed:function (billId) {
+            $.ConfirmAjax({
+                msg : "回退订单到机构？",
+                url: '../../apiV1/billOut/bill/failed?billId='+billId+'&_' + $.now(),
                 success: function(data) {
                     vm.load();
+                }
+            });
+        },
+        billGoBackOrg: function(billId){
+            $.ConfirmAjax({
+                msg : "确定作废订单？",
+                url: '../../apiV1/billOut/bill/goBackOrg?billId='+billId+'&_' + $.now(),
+                success: function(data) {
+                    vm.load();
+                }
+            });
+        },
+        appointHuman:function (billId) {
+            dialogOpen({
+                title: '指定出款员',
+                url: 'modules/billOut/appointHuman.html?_' + $.now(),
+                width: '800px',
+                height: '420px',
+                yes : function(iframeId) {
+                    top.frames[iframeId].vm.save(billId);
                 }
             });
         },
@@ -162,7 +168,7 @@ var vm = new Vue({
             oInput.remove()
         },
         auto: function () {
-            
+            // TODO 自动派单开关 @rmi
         }
 	}
 })

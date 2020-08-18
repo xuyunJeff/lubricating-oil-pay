@@ -127,4 +127,13 @@
         user_id = #{userId}
     </select>
 
+    <select id="listUserRoleNames" parameterType="long" resultType="String">
+        SELECT
+             role_name
+        FROM
+             sys_role
+        WHERE
+             role_id = #{roleId}
+    </select>
+
 </mapper>

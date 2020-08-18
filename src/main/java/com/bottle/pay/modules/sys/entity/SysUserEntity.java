@@ -82,6 +82,11 @@ public class SysUserEntity implements Serializable {
      */
     private List<Long> roleIdList;
 
+    /**
+     * 角色id列表
+     */
+    private List<String> roleNameList;
+
     public SysUserEntity() {
         super();
     }
@@ -195,4 +200,16 @@ public class SysUserEntity implements Serializable {
         this.roleIdList = roleIdList;
     }
 
+    public List<String> getRoleNameList() {
+        return roleNameList;
+    }
+
+    public void setRoleNameList(List<String> roleNameList) {
+        this.roleNameList = roleNameList;
+    }
+
+    public String getRoleName() {
+        if (null == roleNameList) return null;
+        return roleNameList.get(0);
+    }
 }
