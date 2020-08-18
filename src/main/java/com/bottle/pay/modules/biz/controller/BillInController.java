@@ -2,6 +2,7 @@ package com.bottle.pay.modules.biz.controller;
 
 import java.util.Map;
 
+import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.modules.biz.entity.BillInEntity;
 import com.bottle.pay.modules.biz.service.BillInService;
@@ -34,7 +35,7 @@ public class BillInController extends AbstractController {
      */
     @RequestMapping("/list")
     public Page<BillInEntity> list(Map<String, Object> params) {
-        return billInService.listEntity(params);
+        return billInService.selectForPage(params);
     }
 
     /**
@@ -46,7 +47,19 @@ public class BillInController extends AbstractController {
     @SysLog("新增")
     @RequestMapping("/save")
     public R save(@RequestBody BillInEntity billIn) {
-        return billInService.saveEntity(billIn);
+        return billInService.addBillIn(billIn);
+    }
+
+    @SysLog("确认成功")
+    @RequestMapping("/success")
+    public R confirmSuccess(String billId,String comment){
+        return billInService.confirmBillIn(billId,comment, BillConstant.BillStatusEnum.Success);
+    }
+
+    @SysLog("确认失败")
+    @RequestMapping("/fail")
+    public R confirmFail(String billId,String comment){
+        return billInService.confirmBillIn(billId,comment, BillConstant.BillStatusEnum.Failed);
     }
 
     /**
@@ -55,10 +68,10 @@ public class BillInController extends AbstractController {
      * @param id
      * @return
      */
-    @RequestMapping("/info")
-    public R getById(Long id) {
-        return billInService.getEntityById(id);
-    }
+//    @RequestMapping("/info")
+//    public R getById(Long id) {
+//        return billInService.getEntityById(id);
+//    }
 
     /**
      * 修改
@@ -66,11 +79,11 @@ public class BillInController extends AbstractController {
      * @param billIn
      * @return
      */
-    @SysLog("修改")
-    @RequestMapping("/update")
-    public R update(@RequestBody BillInEntity billIn) {
-        return billInService.updateEntity(billIn);
-    }
+//    @SysLog("修改")
+//    @RequestMapping("/update")
+//    public R update(@RequestBody BillInEntity billIn) {
+//        return billInService.updateEntity(billIn);
+//    }
 
     /**
      * 删除
@@ -78,10 +91,10 @@ public class BillInController extends AbstractController {
      * @param id
      * @return
      */
-    @SysLog("删除")
-    @RequestMapping("/remove")
-    public R batchRemove(@RequestBody Long[] id) {
-        return billInService.batchRemove(id);
-    }
+//    @SysLog("删除")
+//    @RequestMapping("/remove")
+//    public R batchRemove(@RequestBody Long[] id) {
+//        return billInService.batchRemove(id);
+//    }
 
 }

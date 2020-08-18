@@ -5,16 +5,22 @@ import lombok.AllArgsConstructor;
 public class BillConstant {
 
     public static final String BILL_OUT_ID = "bill:out";
+
+    public static final String BILL_IN_ID = "bill:in";
     // 代付中余额
     public static final String BILL_OUT_BUSINESS_BALANCE = "bill:out:balance";
 
     public interface BillRedisKey {
-        public static String billOutBusinessBalance(String businessId) {
+        static String billOutBusinessBalance(String businessId) {
             return BILL_OUT_BUSINESS_BALANCE + ":" + businessId;
         }
 
-        public static String billOutId(String merchantId, String today) {
+        static String billOutId(String merchantId, String today) {
             return BILL_OUT_ID + ":" + today + ":" + merchantId;
+        }
+
+        static String billInId(String merchantId, String today) {
+            return BILL_IN_ID + ":" + today + ":" + merchantId;
         }
     }
 

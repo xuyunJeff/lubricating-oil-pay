@@ -311,11 +311,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @return
      */
     private BillConstant.BillTypeEnum setBillType(BigDecimal price, Long merchantId) {
-        BalanceEntity balance = balanceService.selectOne(new BalanceEntity(merchantId));
-        if (balance == null) {
-            // FIXME 根据业务在适当的地方添加分布式锁
-            balanceService.createBalanceAccount(merchantId);
-        }
+        BalanceEntity balance = balanceService.createBalanceAccount(merchantId);
         BigDecimal billOutLimit = balance.getBillOutLimit();
         if (price.compareTo(billOutLimit) == -1) {
             return BillConstant.BillTypeEnum.Auto;

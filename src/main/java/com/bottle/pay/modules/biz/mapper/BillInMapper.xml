@@ -132,4 +132,49 @@
         </foreach>
     </delete>
 
+    <select id="selectCountForPage" resultType="com.bottle.pay.modules.biz.entity.BillInEntity">
+        SELECT count(1)
+        FROM bill_in
+        WHERE
+        1=1
+        <if test="merchantId != null"> AND `merchant_id` = #{merchantId}</if>
+        <if test="orgId != null">AND  `org_id` = #{orgId}</if>
+        <if test="businessId != null">AND `business_id` = #{businessId}</if>
+        <if test="startTime != null">AND  `create_time` &gt; #{startTime}</if>
+        <if test="endTime">AND  `create_time` &lt; #{endTime}</if>
+        <if test="billStatus != null">AND  `bill_status` = #{billStatus}</if>
+    </select>
+
+    <select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.BillInEntity">
+        SELECT
+        `id`,
+        `create_time`,
+        `last_update`,
+        `merchant_name`,
+        `merchant_id`,
+        `bill_id`,
+        `third_bill_id`,
+        `ip`,
+        `business_name`,
+        `business_id`,
+        `bill_status`,
+        `price`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `org_id`,
+        `org_name`,
+        `comment`
+        FROM bill_in
+        WHERE
+        1=1
+        <if test="merchantId != null"> AND `merchant_id` = #{merchantId}</if>
+        <if test="orgId != null">AND  `org_id` = #{orgId}</if>
+        <if test="businessId != null">AND `business_id` = #{businessId}</if>
+        <if test="startTime != null">AND  `create_time` &gt; #{startTime}</if>
+        <if test="endTime">AND  `create_time` &lt; #{endTime}</if>
+        <if test="billStatus != null">AND  `bill_status` = #{billStatus}</if>
+        ORDER BY create_time DESC
+        limit #{offset},#{pageSize}
+    </select>
 </mapper>

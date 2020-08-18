@@ -20,5 +20,11 @@ public interface BalanceProcurementMapper extends BottleBaseMapper<BalanceProcur
      */
     int selectCountPage(Map<String, Object> params);
 
+    /**
+     * 分页总条数
+     *
+     * @param params
+     * @return
+     */
     List<BalanceProcurementEntity> selectPage(Map<String, Object> params);
 }

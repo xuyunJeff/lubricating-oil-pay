@@ -8,17 +8,14 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by zhy on 2020/8/13.
- */
 
 @Data
 public abstract class BottleBaseEntity implements Serializable {
 
-    protected BottleBaseEntity() {
-        // TODO 对公共组件查询时有问题，我先注释了。我们还是在set时new Date() 吧 @mighty
-//        this.lastUpdate = new Date();
-    }
+//    protected BottleBaseEntity() {
+//        // TODO 对公共组件查询时有问题，我先注释了。我们还是在set时new Date() 吧 @mighty
+////        this.lastUpdate = new Date();
+//    }
 
     protected static final long serialVersionUID = 1L;
 
@@ -49,4 +46,14 @@ public abstract class BottleBaseEntity implements Serializable {
      * 代理商姓名
      */
     public String orgName;
+
+    /**
+     * 查询开始时间
+     */
+    public Date startTime;
+
+    /**
+     * 查询结束时间
+     */
+    public Date endTime;
 }

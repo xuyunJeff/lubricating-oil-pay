@@ -4,7 +4,6 @@ import com.bottle.pay.common.entity.BottleBaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
 import javax.persistence.Table;
 
 import lombok.ToString;
@@ -57,7 +56,7 @@ public class BillInEntity extends BottleBaseEntity {
     /**
      * 付款专员ID
      */
-    private Integer businessId;
+    private Long businessId;
 
     /**
      * 订单状态：  1未支付 2 成功 3 失败

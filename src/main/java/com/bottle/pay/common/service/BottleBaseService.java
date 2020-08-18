@@ -117,6 +117,18 @@ public abstract class BottleBaseService<M extends BottleBaseMapper, E extends Bo
     }
 
     /**
+     * 判断是否商户
+     * @return
+     */
+    protected boolean isOutMerchant(){
+        SysUserEntity userEntity = getCurrentUser();
+        if (SystemConstant.RoleEnum.BillOutMerchant.getCode().equals(userEntity.getRoleId())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 判断是否是指定机构管理员机构管理员
      *
      * @return
