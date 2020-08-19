@@ -251,7 +251,11 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         String redisKey = BillConstant.BillRedisKey.billOutBusinessBalance(businessId.toString());
         Object balance = redisCacheManager.get(redisKey);
         if (ObjectUtils.isEmpty(balance)) {
-            BigDecimal businessPaying = mapper.sumByBusinessId(businessId).multiply(SystemConstant.BIG_DECIMAL_HUNDRED);
+            BigDecimal businessPaying = mapper.sumByBusinessId(businessId);
+            if(businessPaying == null) {
+                businessPaying =BigDecimal.ZERO;
+            }
+            businessPaying = businessPaying.multiply(SystemConstant.BIG_DECIMAL_HUNDRED);
             redisCacheManager.set(redisKey, businessPaying);
             return businessPaying;
         }

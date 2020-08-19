@@ -24,7 +24,10 @@
         `bill_type`,
         `org_id`,
         `org_name`,
-        `position`
+        `position`,
+        `business_bank_card_no`,
+        `business_bank_name`,
+        `business_bank_account_name`
         FROM
         bill_out
         <where>

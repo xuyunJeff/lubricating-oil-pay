@@ -23,22 +23,24 @@ function getGrid() {
 		},
 		columns: [
 			{checkbox: true},
-            {field : "agentId", title : "代理商id", width : "100px"},
-            {field : "agentName", title : "代理商姓名", width : "100px"},
-            {field : "businessName", title : "付款专员姓名", width : "100px"},
-            {field : "businessId", title : "付款专员ID", width : "100px"},
-            {field : "position", title : "", width : "100px"},
-            {title : "操作", formatter : function(value, row, index) {
+            {title : "操作", width : "100px", formatter : function(value, row, index) {
                     var _html = '';
-                    if (hasPermission('apiV1:onlineBusiness:edit')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
-                    }
-                    if (hasPermission('apiV1:onlineBusiness:remove')) {
-                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                    if (hasPermission('apiV1:onlineBusiness:enable')) {
+                        _html += '<a href="javascript:;" onclick="vm.disable(\''+row.businessId+'\')" title="禁用"><i class="fa fa-times"></i></a>';
                     }
                     return _html;
                 }
-            }
+            },
+            {field : "agentId", title : "代理商id", width : "100px",visible : false},
+            {field : "agentName", title : "代理商姓名", width : "100px",visible : false},
+            {field : "businessName", title : "付款专员姓名", width : "100px"},
+            {field : "businessId", title : "付款专员ID", width : "100px",visible : false},
+            {field : "payingBalance", title : "代付中余额", width : "100px"},
+            {field : "balance", title : "余额", width : "100px"},
+            {field : "businessBankCardNo", title : "付款卡号", width : "100px"},
+            {field : "businessBankName", title : "付款银行", width : "100px"},
+            {field : "businessBankAccountName", title : "付款卡姓名", width : "100px"},
+            {field : "position", title : "位置", width : "100px"}
 		]
 	})
 }
@@ -52,48 +54,9 @@ var vm = new Vue({
 		load: function() {
 			$('#dataGrid').bootstrapTable('refresh');
 		},
-		save: function() {
-			dialogOpen({
-				title: '新增',
-				url: 'modules/onlineBusiness/add.html?_' + $.now(),
-				width: '420px',
-				height: '350px',
-				yes : function(iframeId) {
-					top.frames[iframeId].vm.acceptClick();
-				},
-			});
-		},
-		edit: function(id) {
-            dialogOpen({
-                title: '编辑',
-                url: 'modules/onlineBusiness/edit.html?_' + $.now(),
-                width: '420px',
-                height: '350px',
-                success: function(iframeId){
-                    top.frames[iframeId].vm.onlineBusiness.id = id;
-                    top.frames[iframeId].vm.setForm();
-                },
-                yes: function(iframeId){
-                    top.frames[iframeId].vm.acceptClick();
-                }
-            });
-        },
-        remove: function(batch, id) {
-            var ids = [];
-            if (batch) {
-                var ck = $('#dataGrid').bootstrapTable('getSelections');
-                if (!checkedArray(ck)) {
-                    return false;
-                }
-                $.each(ck, function(idx, item){
-                    ids[idx] = item.id;
-                });
-            } else {
-                ids.push(id);
-            }
+        disable: function(businessId) {
             $.RemoveForm({
-                url: '../../apiV1/onlineBusiness/remove?_' + $.now(),
-                param: ids,
+                url: '../../apiV1/onlineBusiness/offline?businessId='+businessId+'&_' + $.now(),
                 success: function(data) {
                     vm.load();
                 }

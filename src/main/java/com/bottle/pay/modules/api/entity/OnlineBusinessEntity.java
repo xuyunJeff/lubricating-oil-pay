@@ -4,8 +4,10 @@ import com.bottle.pay.common.entity.BottleBaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.ToString;
 import lombok.NoArgsConstructor;
@@ -33,5 +35,32 @@ public class OnlineBusinessEntity extends BottleBaseEntity {
      */
     private Integer position;
 
+    @Transient
+    private BigDecimal payingBalance;
 
+    @Transient
+    private BigDecimal balance;
+
+
+    /**
+     * 付款会员的卡号
+     */
+    @Transient
+    private String bankCardNo;
+
+    /**
+     * 银行名称
+     */
+    @Transient
+    private String bankName;
+
+    /**
+     * 付款用户名
+     */
+    @Transient
+    private String bankAccountName;
+
+    public OnlineBusinessEntity(Long businessId) {
+        this.businessId = businessId;
+    }
 }

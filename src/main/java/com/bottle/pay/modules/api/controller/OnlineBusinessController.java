@@ -1,7 +1,13 @@
 package com.bottle.pay.modules.api.controller;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import com.bottle.pay.modules.api.service.BillOutService;
+import com.bottle.pay.modules.biz.entity.BankCardEntity;
+import com.bottle.pay.modules.biz.service.BankCardService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +33,11 @@ public class OnlineBusinessController extends AbstractController {
     @Autowired
     private OnlineBusinessService onlineBusinessService;
 
+    @Autowired
+    private BillOutService billOutService;
+
+    @Autowired
+    private BankCardService bankCardService;
     /**
      * 列表
      *
@@ -37,54 +48,34 @@ public class OnlineBusinessController extends AbstractController {
     public Page<OnlineBusinessEntity> list(@RequestBody Map<String, Object> params) {
         SysUserEntity userEntity = getUser();
         params.put("orgId",userEntity.getOrgId());
-        return onlineBusinessService.listEntity(params);
+        Page<OnlineBusinessEntity>  page = onlineBusinessService.listEntity(params);
+        List<OnlineBusinessEntity> entities = page.getRows();
+        List<OnlineBusinessEntity> onlineBusinessEntities = new ArrayList<>();
+        entities.forEach(it->{
+            it.setPayingBalance(billOutService.getBusinessBillOutBalance(it.getBusinessId()));
+            BigDecimal businessTotalBalance = bankCardService.getAllCardsBalanceWithoutFrozen(it.getBusinessId());
+            BankCardEntity enableBankCard =bankCardService.getCardOpenedListByBusinessId(it.getBusinessId());
+            it.setBalance(businessTotalBalance);
+            if(enableBankCard != null) {
+                it.setBankAccountName(enableBankCard.getBankAccountName());
+                it.setBankName(enableBankCard.getBankName());
+                it.setBankName(enableBankCard.getBankName());
+            }
+            onlineBusinessEntities.add(it);
+        });
+        page.setRows(onlineBusinessEntities);
+        return page;
     }
-
-    /**
-     * 新增
-     *
-     * @param onlineBusiness
-     * @return
-     */
-    @SysLog("新增")
-    @RequestMapping("/save")
-    public R save(@RequestBody OnlineBusinessEntity onlineBusiness) {
-        return onlineBusinessService.saveEntity(onlineBusiness);
-    }
-
-    /**
-     * 根据id查询详情
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping("/info")
-    public R getById(@RequestBody Long id) {
-        return onlineBusinessService.getEntityById(id);
-    }
-
-    /**
-     * 修改
-     *
-     * @param onlineBusiness
-     * @return
-     */
-    @SysLog("修改")
-    @RequestMapping("/update")
-    public R update(@RequestBody OnlineBusinessEntity onlineBusiness) {
-        return onlineBusinessService.updateEntity(onlineBusiness);
-    }
-
     /**
      * 删除
      *
-     * @param id
+     * @param businessId
      * @return
      */
     @SysLog("删除")
-    @RequestMapping("/remove")
-    public R batchRemove(@RequestBody Long[] id) {
-        return onlineBusinessService.batchRemove(id);
+    @RequestMapping("/offline")
+    public R offline(Long businessId) {
+        return R.ok().put("success",onlineBusinessService.offline(businessId));
     }
 
 }

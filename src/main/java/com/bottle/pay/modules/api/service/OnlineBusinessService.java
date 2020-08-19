@@ -1,6 +1,7 @@
 package com.bottle.pay.modules.api.service;
 
 import com.bottle.pay.common.constant.BusinessConstant;
+import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
@@ -26,6 +27,7 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
     private RedisCacheManager redisCacheManager;
     @Autowired
     private SysUserMapper sysUserMapper;
+
 
     public OnlineBusinessEntity getNextBusiness(Long orgId) {
         String redisKey = BusinessConstant.BusinessRedisKey.onlinePosition(orgId);

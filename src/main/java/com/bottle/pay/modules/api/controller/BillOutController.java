@@ -138,9 +138,6 @@ public class BillOutController extends AbstractController {
      * @return
      */
     private boolean existBlockCard(String bankCardNo, Long orgId) {
-        // TODO @mighty  SELECT id,create_time,last_update,org_id,org_name,bank_card_no,bank_name,bank_account_name  FROM block_bank_card  WHERE  org_id = ? AND bank_card_no = ?
-        //### Cause: java.sql.SQLSyntaxErrorException: Unknown column 'last_update' in 'field list'
-        //; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown column 'last_update' in 'field list'
         BlockBankCardEntity query = new BlockBankCardEntity();
         query.setOrgId(orgId);
         query.setBankCardNo(bankCardNo);

@@ -32,7 +32,7 @@ function getGrid() {
 		},
 		columns: [
 			// {checkbox: true},
-            {title : "操作", width : "110px", formatter : function(value, row, index) {
+            {title : "操作", width : "146px", formatter : function(value, row, index) {
                     var _html = '';
                     if (hasPermission('apiV1:billOut:success')) {
                         _html += '<a href="javascript:;" onclick="vm.billSuccess(\''+row.billId+'\')" title="确认"><i class="fa fa fa-check"></i></a>  ';
@@ -72,14 +72,14 @@ function getGrid() {
                     if(row.notice ==3) {return "<div style='color: red'>通知失败</div>"}
                 }},
             {field : "price", title : "账单金额", width : "100px"},
+            {field : "bankAccountName", title : "会员名", width : "100px",formatter:function (index,row) {
+                    return '<div style="color: red">'+row.bankAccountName +  '</div><a href="javascript:;" onclick="vm.copyValue(\''+row.bankAccountName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
+                }},
             {field : "bankCardNo", title : "会员银行卡号", width : "180px",formatter:function (index,row) {
                     return row.bankCardNo + '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankCardNo+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             {field : "bankName", title : "银行名称", width : "100px",formatter:function (index,row) {
                 return row.bankName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
-                }},
-            {field : "bankAccountName", title : "会员名", width : "100px",formatter:function (index,row) {
-                    return row.bankAccountName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankAccountName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             //1 手动 2 自动 3 大额 4 订单退回机构
             {field : "billType", title : "派单", width : "120px",formatter:function (index,row) {
@@ -92,9 +92,13 @@ function getGrid() {
             {field : "agentId", title : "代理商id", width : "100px",visible:false},
             {field : "agentName", title : "代理商姓名", width : "100px",visible:false},
             {field : "position", title : "订单位置", width : "100px",visible:false},
-            {field : "businessBankCardNo", title : "付款卡号", width : "100px",visible:false},
+            {field : "businessBankCardNo", title : "付款卡号", width : "160px",visible:false},
             {field : "businessBankName", title : "付款银行", width : "100px",visible:false},
-            {field : "businessBankAccountName", title : "付款卡姓名", width : "100px",visible:false}
+            {field : "businessBankAccountName", title : "付款卡姓名", width : "100px",visible:false},
+            {field : "businessBank", title : "付款银行卡", width : "160px",formatter:function (index,row) {
+                    return row.businessBankAccountName +"</br>"+row.businessBankCardNo + "</br>"+row.businessBankName
+                }
+            }
 		]
 	})
 }

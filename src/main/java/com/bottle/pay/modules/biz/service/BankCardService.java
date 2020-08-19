@@ -64,6 +64,7 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
     public List<BankCardEntity> getCardListByBusinessId(Long userId) {
         BankCardEntity query = new BankCardEntity();
         query.setBusinessId(userId);
+
         return mapper.select(query);
     }
 

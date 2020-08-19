@@ -5,6 +5,7 @@ import lombok.Data;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -50,10 +51,12 @@ public abstract class BottleBaseEntity implements Serializable {
     /**
      * 查询开始时间
      */
+    @Transient
     public Date startTime;
 
     /**
      * 查询结束时间
      */
+    @Transient
     public Date endTime;
 }
