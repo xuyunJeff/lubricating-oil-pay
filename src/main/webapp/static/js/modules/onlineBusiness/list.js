@@ -23,10 +23,10 @@ function getGrid() {
 		},
 		columns: [
 			{checkbox: true},
-            {title : "操作", width : "100px", formatter : function(value, row, index) {
+            {title : "操作", width : "40px", formatter : function(value, row, index) {
                     var _html = '';
                     if (hasPermission('apiV1:onlineBusiness:enable')) {
-                        _html += '<a href="javascript:;" onclick="vm.disable(\''+row.businessId+'\')" title="禁用"><i class="fa fa-times"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.disable(\''+row.businessId+'\'\''+row.businessBankCardNo+'\')" title="禁用"><i class="fa fa-times"></i></a>';
                     }
                     return _html;
                 }
@@ -54,9 +54,9 @@ var vm = new Vue({
 		load: function() {
 			$('#dataGrid').bootstrapTable('refresh');
 		},
-        disable: function(businessId) {
+        disable: function(businessId,businessBankCardNo) {
             $.RemoveForm({
-                url: '../../apiV1/onlineBusiness/offline?businessId='+businessId+'&_' + $.now(),
+                url: '../../apiV1/onlineBusiness/offline?businessId='+businessId+'&businessBankCardNo='+businessBankCardNo+'&_' + $.now(),
                 success: function(data) {
                     vm.load();
                 }

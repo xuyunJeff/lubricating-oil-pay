@@ -74,8 +74,8 @@ public class OnlineBusinessController extends AbstractController {
      */
     @SysLog("删除")
     @RequestMapping("/offline")
-    public R offline(Long businessId) {
-        return R.ok().put("success",onlineBusinessService.offline(businessId));
+    public R offline(Long businessId,String businessBankCardNo) {
+        return  bankCardService.disableCardByUserIdAndCardNo(businessId,businessBankCardNo);
     }
 
 }
