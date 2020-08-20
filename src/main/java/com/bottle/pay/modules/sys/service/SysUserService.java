@@ -40,6 +40,8 @@ public interface SysUserService {
      */
     R getUserById(Long userId);
 
+    SysUserEntity getUserEntityById(Long userId);
+
     /**
      * 修改用户
      *

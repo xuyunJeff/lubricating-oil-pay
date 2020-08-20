@@ -125,6 +125,14 @@ public class SysUserServiceImpl implements SysUserService {
         return CommonUtils.msg(user);
     }
 
+    @Override
+    public SysUserEntity getUserEntityById(Long userId) {
+        SysUserEntity user = sysUserMapper.getObjectById(userId);
+        user.setRoleIdList(sysUserRoleMapper.listUserRoleId(userId));
+        return user;
+    }
+
+
     /**
      * 修改用户
      *

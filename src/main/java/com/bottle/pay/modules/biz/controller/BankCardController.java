@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.utils.ShiroUtils;
 import com.bottle.pay.modules.biz.entity.BankCardEntity;
 import com.bottle.pay.modules.biz.service.BankCardService;
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
+import com.bottle.pay.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,25 +25,31 @@ import tk.mybatis.mapper.util.Assert;
 
 
 @RestController
-@RequestMapping("test/bankCard")
+@RequestMapping("apiV1/bankCard")
 @Slf4j
 public class BankCardController extends AbstractController {
 
     @Autowired
     private BankCardService bankCardService;
 
+    @Autowired
+    SysUserService userService;
+
 
     /**
-     * 分页获取机构下所有银行卡列表
+     * 查询银行卡
      *
      * @param params
      * @return
      */
-    @RequestMapping("/org/list")
+    @RequestMapping("/list")
     public Page<BankCardEntity> list(@RequestBody Map<String, Object> params) {
-        Long orgId = (Long) Optional.ofNullable(params.get("orgId")).orElse(0L);
-        if (orgId <= 0L) {
-            throw new RRException("机构ID不能为空");
+        SysUserEntity user = getUser();
+        if(user.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            params.put("business_id",user.getUserId());
+        }
+        if(user.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            params.put("org_id",user.getUserId());
         }
         return bankCardService.listEntity(params);
     }
@@ -90,8 +99,12 @@ public class BankCardController extends AbstractController {
      * @return
      */
     @RequestMapping("/enable")
-    public R enableCard(Long userId, String cardNo) {
-        return bankCardService.enableCardByUserIdAndCardNo(userId, cardNo);
+    public R enableCard(String cardNo) {
+        SysUserEntity user = getUser();
+        if(!user.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            return R.error("只有出款员可以启用银行卡");
+        }
+        return bankCardService.enableCardByUserIdAndCardNo(user.getUserId(), cardNo);
     }
 
     /**
@@ -101,7 +114,18 @@ public class BankCardController extends AbstractController {
      */
     @RequestMapping("/disable")
     public R disableCard(Long userId, String cardNo) {
-        return bankCardService.disableCardByUserIdAndCardNo(userId, cardNo);
+        SysUserEntity loginUser = getUser();
+        if(loginUser.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            // 出款员只能禁用自己的卡
+            return bankCardService.disableCardByUserIdAndCardNo(loginUser.getUserId(), cardNo);
+        }
+        if(loginUser.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            SysUserEntity userEntity = userService.getUserEntityById(userId);
+            if(userEntity.getOrgId().equals(loginUser.getOrgId())){
+                return bankCardService.disableCardByUserIdAndCardNo(userId, cardNo);
+            }
+        }
+        return R.error("角色越权");
     }
 
     /**
