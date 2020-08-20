@@ -21,6 +21,22 @@
         `balance_daily_limit`
         FROM
         bank_card
+
+        <where>
+            1=1
+            <if test="createTime != null">  and DATE_FORMAT(`create_time`,'%Y-%m-%d') = #{createTime} </if>
+            <if test="businessName != null">  and `business_name` = #{businessName}</if>
+            <if test="businessId != null">  and `business_id` = #{businessId}</if>
+            <if test="bankCardNo != null">  and `bank_card_no` = #{bankCardNo}</if>
+            <if test="bankName != null">  and `bank_name` = #{bankName}</if>
+            <if test="bankAccountName != null">  and `bank_account_name` = #{bankAccountName}</if>
+            <if test="orgId != null">  and `org_id` = #{orgId}</if>
+            <if test="orgName != null">  and `org_name` = #{orgName}</if>
+            <if test="balance != null">  and `balance` = #{balance}</if>
+            <if test="cardStatus != null">  and `card_status` = #{cardStatus}</if>
+            <if test="enable != null">  and `enable` = #{enable}</if>
+            <if test="balanceDailyLimit != null">  and `balance_daily_limit` = #{balanceDailyLimit}</if>
+        </where>
         ORDER BY
         id DESC
     </select>

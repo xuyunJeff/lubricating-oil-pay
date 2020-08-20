@@ -1,19 +1,21 @@
 @layout("../../system/layout.html", {title: ""}){
 <div class="row">
-    <div class="col-md-4 form-inline pull-left">
+    <div class="col-md-4 form-inline pull-left" style="width: 88%;">
         <div class="form-group">
-            <input v-model="keyword" \@keyup.enter="load" type="text" class="form-control" placeholder="请输入查询关键字" style="width: 220px;" />
+            <input v-model="keyword" id="businessName" \@keyup.enter="load" type="text" class="form-control" placeholder="出款员" style="width: 220px;" />
+            <input v-model="keyword" id="bankCardNo" \@keyup.enter="load" type="text" class="form-control" placeholder="银行卡号" style="width: 220px;" />
+            <input v-model="keyword" id="bankAccountName" \@keyup.enter="load" type="text" class="form-control" placeholder="银行卡用户名" style="width: 220px;" />
         </div>
         <div class="form-group">
             <a class="btn btn-primary" \@click="load"><i class="fa fa-search"></i>&nbsp;查询</a>
         </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8" style="width: 12%;">
         <div class="btn-toolbar pull-right">
             <div class="btn-group">
-                <a v-if="hasPermission('bankCard:list')" class="btn btn-default" onclick="reload();"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
-                <a v-if="hasPermission('bankCard:save')" class="btn btn-default" \@click="save"><i class="fa fa-plus"></i>&nbsp;新增</a>
-                <a v-if="hasPermission('bankCard:remove')" class="btn btn-default" \@click="remove(false)"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+                <a v-if="hasPermission('bankCard:list')" class="btn btn-default" onclick="reload();"><i class="fa fa-refresh" title="刷新"></i>&nbsp;</a>
+                <a v-if="hasPermission('bankCard:save')" class="btn btn-default" \@click="save"><i class="fa fa-plus" title="新增"></i>&nbsp;</a>
+                <a v-if="hasPermission('bankCard:remove')" class="btn btn-default" \@click="remove(false)"><i class="fa fa-trash-o" title="删除"></i>&nbsp;</a>
             </div>
         </div>
     </div>

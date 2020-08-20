@@ -46,12 +46,18 @@ public class BankCardController extends AbstractController {
     public Page<BankCardEntity> list(@RequestBody Map<String, Object> params) {
         SysUserEntity user = getUser();
         if(user.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
-            params.put("business_id",user.getUserId());
+            params.put("businessId",user.getUserId());
+            params.put("orgId",user.getOrgId());
+            return bankCardService.listEntity(params);
         }
         if(user.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
-            params.put("org_id",user.getUserId());
+            params.put("orgId",user.getOrgId());
+            return bankCardService.listEntity(params);
         }
-        return bankCardService.listEntity(params);
+        if(user.getRoleId().equals(SystemConstant.SUPER_ADMIN)) {
+            return bankCardService.listEntity(params);
+        }
+        throw  new RRException("角色越权");
     }
 
     /**
