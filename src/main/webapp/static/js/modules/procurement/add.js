@@ -20,6 +20,18 @@ var vm = new Vue({
 		    		$.currentIframe().vm.load();
 		    	}
 		    });
-		}
+		},
+        outBusiness:function () {
+			alert("outBusiness")
+        },
+        outBankCard:function () {
+            alert("outBankCard")
+        },
+        inBusiness:function () {
+            alert("inBusiness")
+        },
+        inBankCard:function () {
+            alert("inBankCard")
+        }
 	}
 })
