@@ -7,9 +7,9 @@
         </td>
     </tr>
     <tr>
-        <td class="formTitle">商户ID<font face="宋体">*</font></td>
+        <td class="formTitle"></td>
         <td class="formValue">
-            <input type="text" class="form-control" placeholder="商户ID" v-model="frozenDetail.merchantId" isvalid="yes" checkexpession="NotNull">
+            <input type="text" style="display:none" class="form-control" placeholder="商户ID" v-model="frozenDetail.merchantId" isvalid="no" checkexpession="NotNull">
         </td>
     </tr>
     <tr>
@@ -19,9 +19,9 @@
         </td>
     </tr>
     <tr>
-        <td class="formTitle">解冻余额<font face="宋体">*</font></td>
+        <td class="formTitle">解冻余额</td>
         <td class="formValue">
-            <input type="text" class="form-control" placeholder="解冻余额" v-model="frozenDetail.balanceUnfrozen" isvalid="yes" checkexpession="NotNull">
+            <input type="text" class="form-control" placeholder="解冻余额" v-model="frozenDetail.balanceUnfrozen" isvalid="yes" >
         </td>
     </tr>
     <tr>
@@ -42,22 +42,11 @@
             <input type="text" class="form-control" placeholder="付款用户名" v-model="frozenDetail.bankAccountName" isvalid="yes" checkexpession="NotNull">
         </td>
     </tr>
+
     <tr>
-        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formTitle"></td>
         <td class="formValue">
-            <input type="text" class="form-control" placeholder="" v-model="frozenDetail.createTime" isvalid="yes" checkexpession="NotNull">
-        </td>
-    </tr>
-    <tr>
-        <td class="formTitle"><font face="宋体">*</font></td>
-        <td class="formValue">
-            <input type="text" class="form-control" placeholder="" v-model="frozenDetail.lastUpdate" isvalid="yes" checkexpession="NotNull">
-        </td>
-    </tr>
-    <tr>
-        <td class="formTitle">代理商id<font face="宋体">*</font></td>
-        <td class="formValue">
-            <input type="text" class="form-control" placeholder="代理商id" v-model="frozenDetail.orgId" isvalid="yes" checkexpession="NotNull">
+            <input type="text" style="display:none" class="form-control" placeholder="代理商id" v-model="frozenDetail.orgId" isvalid="no" checkexpession="NotNull">
         </td>
     </tr>
     <tr>
@@ -73,9 +62,9 @@
         </td>
     </tr>
     <tr>
-        <td class="formTitle">付款专员ID<font face="宋体">*</font></td>
+        <td class="formTitle"></td>
         <td class="formValue">
-            <input type="text" class="form-control" placeholder="付款专员ID" v-model="frozenDetail.businessId" isvalid="yes" checkexpession="NotNull">
+            <input type="text" style="display:none" class="form-control" placeholder="付款专员ID" v-model="frozenDetail.businessId" isvalid="yes" checkexpession="NotNull">
         </td>
     </tr>
 </table>

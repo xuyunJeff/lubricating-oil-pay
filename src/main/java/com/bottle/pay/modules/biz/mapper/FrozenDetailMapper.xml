@@ -116,8 +116,8 @@
         UPDATE frozen_detail
         <set>
             <!--<if test="balanceFrozen != null">`balance_frozen` = #{balanceFrozen}, </if>-->
-            <if test="balanceUnfrozen != null">`balance_unfrozen` = balance_unfrozen + #{balanceUnfrozen},</if>
-            <if test="lastUpdate != null">`last_update` = #{lastUpdate},</if>
+            <if test="balanceUnfrozen != null">`balance_unfrozen` = balance_unfrozen + #{balanceUnfrozen}</if>
+            <if test="lastUpdate != null">,`last_update` = #{lastUpdate}</if>
         </set>
         WHERE
         id = #{id}

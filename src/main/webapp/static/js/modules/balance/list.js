@@ -24,15 +24,15 @@ function getGrid() {
 		columns: [
 			{checkbox: true},
             {field : "userName", title : "用户名", width : "100px"},
-            {field : "userId", title : "用户ID", width : "100px"},
+            {field : "userId", title : "用户ID", width : "100px",style:"display:none"},
             {field : "balance", title : "可用余额", width : "100px"},
             {field : "balanceFrozen", title : "冻结余额", width : "100px"},
             {field : "balancePaying", title : "", width : "100px"},
-            {field : "createTime", title : "", width : "100px"},
-            {field : "lastUpdate", title : "", width : "100px"},
-            {field : "agentId", title : "代理商id", width : "100px"},
+            {field : "createTime", title : "创建时间", width : "100px"},
+            {field : "lastUpdate", title : "更新时间", width : "100px"},
+            {field : "agentId", title : "代理商id", width : "100px",style:"display:none"},
             {field : "agentName", title : "代理商姓名", width : "100px"},
-            {field : "roleId", title : "角色id", width : "100px"},
+            {field : "roleId", title : "角色id", width : "100px",style:"display:none"},
             {field : "roleName", title : "角色名称", width : "100px"},
             {field : "billOutLimit", title : "自动出款上线额度，超出额度要手动派单", width : "100px"},
             {title : "操作", formatter : function(value, row, index) {
@@ -64,7 +64,7 @@ var vm = new Vue({
 				title: '新增',
 				url: 'modules/balance/add.html?_' + $.now(),
 				width: '420px',
-				height: '350px',
+				height: '500px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
 				},

@@ -78,7 +78,7 @@ public class FrozenDetailService extends BottleBaseService<FrozenDetailMapper, F
         log.info("管理员:{}-{}解冻商户:{},银行卡:{}金额:{}", ShiroUtils.getUserId(), WebUtils.getIpAddr(),
                 frozenDetailEntity.getMerchantId(), frozenDetailEntity.getBankCardNo(), unFrozen);
         //更新商户余额表 可用金额 和 冻结金额
-        num = balanceMapper.frozenMerchant(frozenDetailEntity.getMerchantId(), unFrozen);
+        num = balanceMapper.unFrozenMerchant(frozenDetailEntity.getMerchantId(), unFrozen);
         log.info("冻结商户:{},扣掉可用余额,增加冻结余额:{},执行结果:{}", frozenDetailEntity.getMerchantId(), unFrozen, num > 0);
         //判断冻结余额是否为0，为0则解冻专员银行卡
         frozenDetailEntity = mapper.getObjectById(id);

@@ -1,11 +1,14 @@
 package com.bottle.pay.modules.biz.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.utils.CommonUtils;
 import com.bottle.pay.modules.api.service.MerchantService;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import com.bottle.pay.modules.biz.service.IpLimitService;
+import com.bottle.pay.modules.biz.view.MerchantView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +28,12 @@ public class MerchantController extends AbstractController {
 
     @Autowired
     private MerchantService merchantService;
+
+
+    @RequestMapping("/list")
+    public Page<MerchantView>  merchantList(@RequestBody Map<String,Object> params){
+        return merchantService.merchantList(params);
+    }
 
     /**
      * 列表 商户查询自己登陆ip 黑/白名单

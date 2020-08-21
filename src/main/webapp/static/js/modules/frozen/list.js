@@ -65,7 +65,7 @@ var vm = new Vue({
 				title: '新增',
 				url: 'modules/frozen/add.html?_' + $.now(),
 				width: '420px',
-				height: '350px',
+				height: '520px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
 				},
