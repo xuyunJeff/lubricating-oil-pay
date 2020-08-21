@@ -72,8 +72,8 @@ var vm = new Vue({
 			dialogOpen({
 				title: '新增银行卡',
 				url: 'modules/bankCard/add.html?_' + $.now(),
-				width: '420px',
-				height: '350px',
+                width: '400px',
+                height: '320px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
 				},
