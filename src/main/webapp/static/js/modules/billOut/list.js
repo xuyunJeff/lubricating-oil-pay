@@ -27,7 +27,6 @@ function getGrid() {
             params.notice = $('#notice').val()
             params.billType = $('#billType').val()
             params.createTime = $('#createTime').val()
-			// params.name = vm.keyword;
 			return removeEmptyField(params);
 		},
 		columns: [

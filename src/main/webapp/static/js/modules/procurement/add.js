@@ -14,7 +14,7 @@ var vm = new Vue({
 		        return false;
 		    }
 		    $.SaveForm({
-		    	url: '../..//balance/procurement/save?_' + $.now(),
+		    	url: '../../balance/procurement/save?_' + $.now(),
 		    	param: vm.balanceProcurement,
 		    	success: function(data) {
 		    		$.currentIframe().vm.load();

@@ -18,38 +18,28 @@ function getGrid() {
 		url: '../..//balance/procurement/list?_' + $.now(),
 		height: $(window).height()-56,
 		queryParams: function(params){
-			params.name = vm.keyword;
-			return params;
+            params.createTime = $('#createTime').val()
+            params.inBusinessName = $('#inBusinessName').val()
+            params.outBusinessName = $('#outBusinessName').val()
+			return removeEmptyField(params);
 		},
 		columns: [
-			{checkbox: true},
-            {field : "outBusinessId", title : "", width : "100px"},
-            {field : "outBusinessName", title : "", width : "100px"},
-            {field : "inBusinessName", title : "付款专员姓名", width : "100px"},
-            {field : "inBusinessId", title : "付款专员ID", width : "100px"},
+            {field : "outBusinessId", title : "", width : "100px",visible:false},
+            {field : "inBusinessName", title : "转入专员", width : "70px"},
+            {field : "outBusinessName", title : "转出专员", width : "70px"},
+            {field : "inBusinessId", title : "付款专员ID", width : "100px",visible:false},
             {field : "price", title : "账单金额", width : "100px"},
-            {field : "createTime", title : "", width : "100px"},
-            {field : "lastUpdate", title : "", width : "100px"},
-            {field : "orgId", title : "代理商id", width : "100px"},
-            {field : "inBankCardNo", title : "付款会员的卡号", width : "100px"},
-            {field : "inBankName", title : "银行名称", width : "100px"},
-            {field : "outBankCardNo", title : "付款会员的卡号", width : "100px"},
-            {field : "outBankName", title : "银行名称", width : "100px"},
-            {field : "inBeforeBalance", title : "", width : "100px"},
-            {field : "outBeforeBalance", title : "", width : "100px"},
-            {field : "inAfterBalance", title : "", width : "100px"},
-            {field : "outAfterBalance", title : "", width : "100px"},
-            {title : "操作", formatter : function(value, row, index) {
-                    var _html = '';
-                    if (hasPermission(':balance:procurement:edit')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
-                    }
-                    if (hasPermission(':balance:procurement:remove')) {
-                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
-                    }
-                    return _html;
-                }
-            }
+            {field : "createTime", title : "时间", width : "180px"},
+            {field : "lastUpdate", title : "", width : "100px",visible:false},
+            {field : "orgId", title : "代理商id", width : "100px",visible:false},
+            {field : "inBeforeBalance", title : "转入卡转入前余额", width : "70px"},
+            {field : "inAfterBalance", title : "转入卡转入后余额", width : "70px"},
+            {field : "inBankCardNo", title : "转入卡号", width : "180px"},
+            {field : "inBankName", title : "转入银行名称", width : "70px"},
+            {field : "outBeforeBalance", title : "转出卡转出前余额", width : "70px"},
+            {field : "outAfterBalance", title : "转出卡转出后余额", width : "70px"},
+            {field : "outBankCardNo", title : "转出卡号", width : "180px"},
+            {field : "outBankName", title : "转出银行名称", width : "70px"}
 		]
 	})
 }
@@ -67,48 +57,12 @@ var vm = new Vue({
 			dialogOpen({
 				title: '新增',
 				url: 'modules/procurement/add.html?_' + $.now(),
-				width: '420px',
-				height: '350px',
+                width: '800px',
+                height: '420px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
-				},
+				}
 			});
-		},
-		edit: function(id) {
-            dialogOpen({
-                title: '编辑',
-                url: 'modules/procurement/edit.html?_' + $.now(),
-                width: '420px',
-                height: '350px',
-                success: function(iframeId){
-                    top.frames[iframeId].vm.balanceProcurement.id = id;
-                    top.frames[iframeId].vm.setForm();
-                },
-                yes: function(iframeId){
-                    top.frames[iframeId].vm.acceptClick();
-                }
-            });
-        },
-        remove: function(batch, id) {
-            var ids = [];
-            if (batch) {
-                var ck = $('#dataGrid').bootstrapTable('getSelections');
-                if (!checkedArray(ck)) {
-                    return false;
-                }
-                $.each(ck, function(idx, item){
-                    ids[idx] = item.id;
-                });
-            } else {
-                ids.push(id);
-            }
-            $.RemoveForm({
-                url: '../..//balance/procurement/remove?_' + $.now(),
-                param: ids,
-                success: function(data) {
-                    vm.load();
-                }
-            });
-        }
+		}
 	}
 })

@@ -2,8 +2,10 @@ package com.bottle.pay.modules.biz.controller;
 
 import java.util.Map;
 
+import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.modules.biz.entity.BalanceProcurementEntity;
 import com.bottle.pay.modules.biz.service.BalanceProcurementService;
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +18,7 @@ import com.bottle.pay.common.entity.R;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("//balance/procurement")
+@RequestMapping("/balance/procurement")
 @Slf4j
 public class BalanceProcurementController extends AbstractController {
 
@@ -31,6 +33,16 @@ public class BalanceProcurementController extends AbstractController {
      */
     @RequestMapping("/list")
     public Page<BalanceProcurementEntity> list(@RequestBody Map<String, Object> params) {
+        SysUserEntity userEntity = getUser();
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            // 机构管理员查询机构下的所有数据
+            params.put("orgId",userEntity.getOrgId());
+        }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            // 出款员查看自己转出的数据的所有数据
+            params.put("orgId",userEntity.getOrgId());
+            params.put("outBusinessId",userEntity.getUserId());
+        }
         return balanceProcurementService.getProcureList(params);
     }
 
@@ -43,7 +55,22 @@ public class BalanceProcurementController extends AbstractController {
     @SysLog("新增")
     @RequestMapping("/save")
     public R save(@RequestBody BalanceProcurementEntity balanceProcurement) {
-        return balanceProcurementService.balanceProcure(balanceProcurement);
+        SysUserEntity userEntity = getUser();
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            // 出款员查把自己的余额调出
+            balanceProcurement.setOutBusinessId(userEntity.getUserId());
+            balanceProcurement.setOutBusinessName(userEntity.getUsername());
+            balanceProcurement.setOrgId(userEntity.getOrgId());
+            balanceProcurement.setOrgName(userEntity.getOrgName());
+            return balanceProcurementService.balanceProcure(balanceProcurement);
+        }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            // 机构管理员可以调度别人的余额
+            balanceProcurement.setOrgId(userEntity.getOrgId());
+            balanceProcurement.setOrgName(userEntity.getOrgName());
+            return balanceProcurementService.balanceProcure(balanceProcurement);
+        }
+       return R.error("只有出款员和机构管理员可以调度银行卡余额");
     }
 
     /**
