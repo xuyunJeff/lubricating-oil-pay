@@ -62,6 +62,12 @@ public class SysUserServiceImpl implements SysUserService {
         return page;
     }
 
+    @Override
+    public List<SysUserEntity> list(Map<String, Object> params) {
+        Query form = new Query(params);
+       return sysUserMapper.list(form);
+    }
+
     /**
      * 根据用户名查询用户信息
      *

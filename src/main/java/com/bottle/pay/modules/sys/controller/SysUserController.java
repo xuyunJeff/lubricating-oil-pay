@@ -1,5 +1,6 @@
 package com.bottle.pay.modules.sys.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.bottle.pay.common.utils.CommonUtils;
@@ -39,6 +40,15 @@ public class SysUserController extends AbstractController {
             params.put("userIdCreate", getUserId());
         }
         return sysUserService.listUser(params);
+    }
+
+    @RequestMapping("/listBusiness")
+    public R listBusiness(@RequestBody Map<String, Object> params) {
+        SysUserEntity user = getUser();
+        if (getUserId() != SystemConstant.SUPER_ADMIN) {
+            params.put("orgId", user.getOrgId());
+        }
+        return R.ok().put("rows",sysUserService.list(params));
     }
 
     /**

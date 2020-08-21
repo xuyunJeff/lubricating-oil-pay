@@ -1,5 +1,6 @@
 package com.bottle.pay.modules.biz.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -56,6 +57,25 @@ public class BankCardController extends AbstractController {
         }
         if(user.getRoleId().equals(SystemConstant.SUPER_ADMIN)) {
             return bankCardService.listEntity(params);
+        }
+        throw  new RRException("角色越权");
+    }
+
+
+    /**
+     * 查询银行卡
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping("/listForSelect")
+    public R listForSelect() {
+        SysUserEntity user = getUser();
+        if(user.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            return R.ok().put("rows",bankCardService.listByOrgId(user.getOrgId()));
+        }
+        if(user.getRoleId().equals(SystemConstant.SUPER_ADMIN)) {
+            return R.ok().put("rows",bankCardService.listByOrgId(null));
         }
         throw  new RRException("角色越权");
     }

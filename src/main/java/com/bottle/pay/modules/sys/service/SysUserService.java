@@ -24,6 +24,8 @@ public interface SysUserService {
      */
     Page<SysUserEntity> listUser(Map<String, Object> params);
 
+    List<SysUserEntity> list(Map<String, Object> params);
+
     /**
      * 新增用户
      *

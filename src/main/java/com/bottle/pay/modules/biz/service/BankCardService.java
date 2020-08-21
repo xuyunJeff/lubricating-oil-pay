@@ -3,6 +3,7 @@ package com.bottle.pay.modules.biz.service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -65,6 +66,12 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
         BankCardEntity query = new BankCardEntity();
         query.setBusinessId(userId);
 
+        return mapper.select(query);
+    }
+
+    public List<BankCardEntity> listByOrgId(Long orgId) {
+        BankCardEntity query = new BankCardEntity();
+        query.setOrgId(orgId);
         return mapper.select(query);
     }
 
