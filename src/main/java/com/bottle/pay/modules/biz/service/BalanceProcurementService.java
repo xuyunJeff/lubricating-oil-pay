@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -191,9 +192,13 @@ public class BalanceProcurementService extends BottleBaseService<BalanceProcurem
         }
         try {
             int count = mapper.selectCountPage(params);
-            List<BalanceProcurementEntity> list = mapper.selectPage(params);
             page.setTotal(count);
-            page.setRows(list);
+            if(count != 0) {
+                List<BalanceProcurementEntity> list = mapper.selectPage(params);
+                page.setRows(list);
+            }else {
+                page.setRows(Collections.emptyList());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -146,7 +146,7 @@
         </if>
     </select>
 
-    <select id="selectPage">
+    <select id="selectPage" parameterType="map" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
         SELECT
         `id`,
         `out_business_id`,
@@ -182,6 +182,6 @@
             AND  create_time &lt; #{endTime}
         </if>
         ORDER BY create_time DESC
-        limit #{offset},#{pageSize}
+        limit #{offSet},#{pageSize}
     </select>
 </mapper>
