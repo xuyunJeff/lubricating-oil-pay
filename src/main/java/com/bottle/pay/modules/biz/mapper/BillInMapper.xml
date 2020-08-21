@@ -132,7 +132,7 @@
         </foreach>
     </delete>
 
-    <select id="selectCountForPage" resultType="com.bottle.pay.modules.biz.entity.BillInEntity">
+    <select id="selectCountForPage" resultType="int">
         SELECT count(1)
         FROM bill_in
         WHERE
@@ -175,6 +175,6 @@
         <if test="endTime">AND  `create_time` &lt; #{endTime}</if>
         <if test="billStatus != null">AND  `bill_status` = #{billStatus}</if>
         ORDER BY create_time DESC
-        limit #{offset},#{pageSize}
+        limit #{offSet},#{pageSize}
     </select>
 </mapper>

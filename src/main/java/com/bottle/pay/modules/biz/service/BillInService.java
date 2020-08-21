@@ -57,7 +57,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
     public Page<BillInEntity> selectForPage(Map<String,Object> params){
         //机构管理员 和 商户看到页面是一样的，但只有机构管理员有确认权限
         SysUserEntity userEntity = super.getCurrentUser();
-        int pageNo = Integer.valueOf(params.get("pageNo").toString());
+        int pageNo = Integer.valueOf(params.get("pageNumber").toString());
         int pageSize = Integer.valueOf(params.get("pageSize").toString());
         Page<BillInEntity> page = new Page<>(pageNo, pageSize);
         params.put("offSet", page.getOffset());

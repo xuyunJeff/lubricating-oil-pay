@@ -146,7 +146,7 @@
         </if>
     </select>
 
-    <select id="selectPage" parameterType="map" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
+    <select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.BalanceProcurementEntity">
         SELECT
         `id`,
         `out_business_id`,

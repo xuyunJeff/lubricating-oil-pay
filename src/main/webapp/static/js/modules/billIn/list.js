@@ -23,23 +23,23 @@ function getGrid() {
 		},
 		columns: [
 			{checkbox: true},
-            {field : "createTime", title : "", width : "100px"},
-            {field : "lastUpdate", title : "", width : "100px"},
+            {field : "createTime", title : "创建时间", width : "100px"},
+//            {field : "lastUpdate", title : "", width : "100px"},
             {field : "merchantName", title : "商户名", width : "100px"},
             {field : "merchantId", title : "商户ID", width : "100px"},
-            {field : "billId", title : "订单号：商户id+时间戳 + 4位自增", width : "100px"},
+            {field : "billId", title : "订单号", width : "100px"},
             {field : "thirdBillId", title : "第三方订单号", width : "100px"},
             {field : "ip", title : "第三方订单派发服务器ip", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px"},
             {field : "businessId", title : "付款专员ID", width : "100px"},
-            {field : "billStatus", title : "订单状态：  1未支付 2 成功 3 失败", width : "100px"},
+            {field : "billStatus", title : "订单状态", width : "100px"},
             {field : "price", title : "账单金额", width : "100px"},
             {field : "bankCardNo", title : "付款会员的卡号", width : "100px"},
             {field : "bankName", title : "银行名称", width : "100px"},
             {field : "bankAccountName", title : "付款用户名", width : "100px"},
             {field : "orgId", title : "代理商id", width : "100px"},
             {field : "orgName", title : "代理商姓名", width : "100px"},
-            {field : "comment", title : "", width : "100px"},
+            {field : "comment", title : "注解", width : "100px"},
             {title : "操作", formatter : function(value, row, index) {
                     var _html = '';
                     if (hasPermission('merchant:charge:edit')) {
@@ -47,6 +47,12 @@ function getGrid() {
                     }
                     if (hasPermission('merchant:charge:remove')) {
                         _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+                    }
+                    if (hasPermission('merchant:charge:success')) {
+                        _html += '<a href="javascript:;" onclick="vm.success(false,\''+row.id+'\')" title="充值成功"><i class="fa fa-trash-o"></i></a>';
+                    }
+                    if (hasPermission('merchant:charge:fail')) {
+                        _html += '<a href="javascript:;" onclick="vm.fail(false,\''+row.id+'\')" title="充值失败"><i class="fa fa-trash-o"></i></a>';
                     }
                     return _html;
                 }
@@ -67,7 +73,7 @@ var vm = new Vue({
 		save: function() {
 			dialogOpen({
 				title: '新增',
-				url: 'modules/charge/add.html?_' + $.now(),
+				url: 'modules/billIn/add.html?_' + $.now(),
 				width: '420px',
 				height: '350px',
 				yes : function(iframeId) {
@@ -78,7 +84,7 @@ var vm = new Vue({
 		edit: function(id) {
             dialogOpen({
                 title: '编辑',
-                url: 'modules/charge/edit.html?_' + $.now(),
+                url: 'modules/billIn/edit.html?_' + $.now(),
                 width: '420px',
                 height: '350px',
                 success: function(iframeId){
@@ -87,6 +93,48 @@ var vm = new Vue({
                 },
                 yes: function(iframeId){
                     top.frames[iframeId].vm.acceptClick();
+                }
+            });
+        },
+        success: function(id) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if (!checkedArray(ck)) {
+                    return false;
+                }
+                $.each(ck, function(idx, item){
+                    ids[idx] = item.id;
+                });
+            } else {
+                ids.push(id);
+            }
+            $.RemoveForm({
+                url: '../../merchant/charge/success?_' + $.now(),
+                param: ids,
+                success: function(data) {
+                    vm.load();
+                }
+            });
+        },
+        fail: function(id) {
+            var ids = [];
+            if (batch) {
+                var ck = $('#dataGrid').bootstrapTable('getSelections');
+                if (!checkedArray(ck)) {
+                    return false;
+                }
+                $.each(ck, function(idx, item){
+                    ids[idx] = item.id;
+                });
+            } else {
+                ids.push(id);
+            }
+            $.RemoveForm({
+                url: '../../merchant/charge/fail?_' + $.now(),
+                param: ids,
+                success: function(data) {
+                    vm.load();
                 }
             });
         },

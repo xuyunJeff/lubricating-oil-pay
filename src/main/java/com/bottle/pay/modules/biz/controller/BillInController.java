@@ -34,7 +34,7 @@ public class BillInController extends AbstractController {
      * @return
      */
     @RequestMapping("/list")
-    public Page<BillInEntity> list(Map<String, Object> params) {
+    public Page<BillInEntity> list(@RequestBody  Map<String, Object> params) {
         return billInService.selectForPage(params);
     }
 

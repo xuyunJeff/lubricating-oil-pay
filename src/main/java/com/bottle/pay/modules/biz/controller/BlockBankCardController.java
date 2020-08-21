@@ -33,7 +33,7 @@ public class BlockBankCardController extends AbstractController {
      * @return
      */
     @RequestMapping("/list")
-    public Page<BlockBankCardEntity> list(Map<String, Object> params) {
+    public Page<BlockBankCardEntity> list(@RequestBody Map<String, Object> params) {
         return blockBankCardService.listEntity(params);
     }
 

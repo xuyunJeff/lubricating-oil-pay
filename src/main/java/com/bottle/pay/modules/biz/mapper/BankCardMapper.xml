@@ -173,4 +173,44 @@
         `balance` >= #{balance}
     </update>
 
+    <!--<select id="selectCountForPage" resultType="int">-->
+        <!--SELECT count(1)-->
+        <!--FROM bank_card-->
+        <!--WHERE-->
+        <!--1=1-->
+        <!--<if test="merchantId != null"> AND `merchant_id` = #{merchantId}</if>-->
+        <!--<if test="businessId != null">AND `business_id` = #{businessId}</if>-->
+        <!--<if test="businessName != null">`business_name` = #{businessName}</if>-->
+        <!--<if test="startTime != null">AND  `create_time` &gt; #{startTime}</if>-->
+        <!--<if test="endTime">AND  `create_time` &lt; #{endTime}</if>-->
+    <!--</select>-->
+
+    <!--<select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.BillInEntity">-->
+        <!--SELECT-->
+        <!--`id`,-->
+        <!--`create_time`,-->
+        <!--`last_update`,-->
+        <!--`business_name`,-->
+        <!--`business_id`,-->
+        <!--`bank_card_no`,-->
+        <!--`bank_name`,-->
+        <!--`bank_account_name`,-->
+        <!--`org_id`,-->
+        <!--`org_name`,-->
+        <!--`balance`,-->
+        <!--`card_status`,-->
+        <!--`enable`,-->
+        <!--`balance_daily_limit`-->
+        <!--FROM bank_card-->
+        <!--WHERE-->
+        <!--1=1-->
+        <!--<if test="merchantId != null"> AND `merchant_id` = #{merchantId}</if>-->
+        <!--<if test="businessId != null">AND `business_id` = #{businessId}</if>-->
+        <!--<if test="businessName != null">`business_name` = #{businessName}</if>-->
+        <!--<if test="startTime != null">AND  `create_time` &gt; #{startTime}</if>-->
+        <!--<if test="endTime">AND  `create_time` &lt; #{endTime}</if>-->
+        <!--ORDER BY create_time DESC-->
+        <!--limit #{offSet},#{pageSize}-->
+    <!--</select>-->
+
 </mapper>

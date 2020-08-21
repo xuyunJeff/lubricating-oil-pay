@@ -1,87 +1,66 @@
 @layout("../../system/layout.html", {title: ""}){
 <table class="form" id="form">
-    <!--<tr>-->
-        <!--<td class="formTitle">转出专员ID<font face="宋体">*</font></td>-->
-        <!--<td class="formValue">-->
-            <!--<input type="text" class="form-control" placeholder="" v-model="balanceProcurement.outBusinessId" isvalid="yes" checkexpession="NotNull">-->
-        <!--</td>-->
-    <!--</tr>-->
-    <tr v-if="hasPermission('procurement:save:agent')">
-        <td class="formTitle" style="width: 100px;"> 转出专员<font face="宋体">*</font></td>
-        <td class="formValue" style="width: 100px;">
-        <select  style="width: 200px;"  v-model="balanceProcurement.outBusinessName" id="outBusiness"  class="form-control"  \@click="outBusiness()"  style="width: 100px;" >
-            <option value="-1"  style="display:none">请选择</option>
-        </select>
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="出款专员Id" v-model="balanceProcurement.outBusinessId" isvalid="yes" checkexpession="NotNull">
         </td>
     </tr>
     <tr>
-        <td class="formTitle" style="width: 100px;">出款银行卡<font face="宋体">*</font></td>
-        <td class="formValue" style="width: 200px;">
-            <select  style="width: 200px;" v-model="balanceProcurement.outBankCard" id="outBankCard"  class="form-control" \@click="outBankCard()"  style="width: 100px;" >
-                <option value="-1"  style="display:none">请选择</option>
-            </select>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="出款专员姓名" v-model="balanceProcurement.outBusinessName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款专员姓名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款专员姓名" v-model="balanceProcurement.inBusinessName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款专员ID<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款专员ID" v-model="balanceProcurement.inBusinessId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">账单金额<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="调度金额" v-model="balanceProcurement.price" isvalid="yes" checkexpession="NotNull">
         </td>
     </tr>
 
-    <!--<tr>-->
-        <!--<td class="formTitle">转入专员专员ID<font face="宋体">*</font></td>-->
-        <!--<td class="formValue">-->
-            <!--<input type="text" class="form-control" placeholder="付款专员ID" v-model="balanceProcurement.inBusinessId" isvalid="yes" checkexpession="NotNull">-->
-        <!--</td>-->
-    <!--</tr>-->
     <tr>
-        <td class="formTitle" style="width: 100px;">账单金额<font face="宋体">*</font></td>
-        <td class="formValue" style="width: 100px;">
-            <input type="text" class="form-control" placeholder="账单金额" v-model="balanceProcurement.price" isvalid="yes" checkexpession="NotNull" style="width: 200px;">
-        </td>
-    </tr>
-    <!--<tr>-->
-        <!--<td class="formTitle"><font face="宋体">*</font></td>-->
-        <!--<td class="formValue">-->
-            <!--<input type="text" class="form-control" placeholder="" v-model="balanceProcurement.createTime" isvalid="yes" checkexpession="NotNull">-->
-        <!--</td>-->
-    <!--</tr>-->
-    <!--<tr>-->
-        <!--<td class="formTitle"><font face="宋体">*</font></td>-->
-        <!--<td class="formValue">-->
-            <!--<input type="text" class="form-control" placeholder="" v-model="balanceProcurement.lastUpdate" isvalid="yes" checkexpession="NotNull">-->
-        <!--</td>-->
-    <!--</tr>-->
-    <!--<tr>-->
-        <!--<td class="formTitle">代理商id<font face="宋体">*</font></td>-->
-        <!--<td class="formValue">-->
-            <!--<input type="text" class="form-control" placeholder="代理商id" v-model="balanceProcurement.orgId" isvalid="yes" checkexpession="NotNull">-->
-        <!--</td>-->
-    <!--</tr>-->
-    <tr>
-        <td class="formTitle" style="width: 100px;">转入专员<font face="宋体">*</font></td>
-        <td class="formValue" style="width: 100px;">
-            <select  style="width: 200px;"  v-model="balanceProcurement.inBusinessName" id="inBusiness"  class="form-control"  \@click="inBusiness()"  style="width: 100px;" >
-                <option value="-1"  style="display:none">请选择</option>
-            </select>
+        <td class="formTitle">代理商id<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商id" v-model="balanceProcurement.orgId" isvalid="yes" checkexpession="NotNull">
         </td>
     </tr>
     <tr>
-        <td class="formTitle" style="width: 100px;">入款银行卡<font face="宋体">*</font></td>
-        <td class="formValue" style="width: 200px;">
-            <select  style="width: 200px;" v-model="balanceProcurement.inBankCard" id="inBankCard"  class="form-control" \@click="inBankCard()"  style="width: 100px;" >
-                <option value="-1"  style="display:none">请选择</option>
-            </select>
+        <td class="formTitle">付款会员的卡号<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款会员的卡号" v-model="balanceProcurement.inBankCardNo" isvalid="yes" checkexpession="NotNull">
         </td>
     </tr>
-    <!--<tr>-->
-        <!--<td class="formTitle">银行名称<font face="宋体">*</font></td>-->
-        <!--<td class="formValue">-->
-            <!--<input type="text" class="form-control" placeholder="银行名称" v-model="balanceProcurement.inBankName" isvalid="yes" checkexpession="NotNull">-->
-        <!--</td>-->
-    <!--</tr>-->
-
-    <!--<tr>-->
-        <!--<td class="formTitle">银行名称<font face="宋体">*</font></td>-->
-        <!--<td class="formValue">-->
-            <!--<input type="text" class="form-control" placeholder="银行名称" v-model="balanceProcurement.outBankName" isvalid="yes" checkexpession="NotNull">-->
-        <!--</td>-->
-    <!--</tr>-->
+    <tr>
+        <td class="formTitle">银行名称<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="balanceProcurement.inBankName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">付款会员的卡号<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="付款会员的卡号" v-model="balanceProcurement.outBankCardNo" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">银行名称<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="balanceProcurement.outBankName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
 </table>
 <script src="${ctxPath}/static/js/modules/procurement/add.js"></script>
 @}

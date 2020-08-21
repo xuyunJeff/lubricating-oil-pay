@@ -15,7 +15,7 @@ function initialPage() {
 
 function getGrid() {
 	$('#dataGrid').bootstrapTableEx({
-		url: '../../balance/procurement/list?_' + $.now(),
+		url: '../../bankCard/block/list?_' + $.now(),
 		height: $(window).height()-56,
 		queryParams: function(params){
 			params.name = vm.keyword;
@@ -23,28 +23,18 @@ function getGrid() {
 		},
 		columns: [
 			{checkbox: true},
-            {field : "outBusinessId", title : "", width : "100px"},
-            {field : "outBusinessName", title : "调出专员姓名", width : "100px"},
-            {field : "inBusinessName", title : "调入专员姓名", width : "100px"},
-            {field : "inBusinessId", title : "付款专员ID", width : "100px"},
-            {field : "price", title : "调度金额", width : "100px"},
-            {field : "createTime", title : "创建时间", width : "100px"},
-            {field : "lastUpdate", title : "最后更新时间", width : "100px"},
+            {field : "createTime", title : "", width : "100px"},
+            {field : "bankCardNo", title : "付款会员的卡号", width : "100px"},
+            {field : "bankName", title : "银行名称", width : "100px"},
+            {field : "bankAccountName", title : "付款用户名", width : "100px"},
             {field : "orgId", title : "代理商id", width : "100px"},
-            {field : "inBankCardNo", title : "付款会员的卡号", width : "100px"},
-            {field : "inBankName", title : "银行名称", width : "100px"},
-            {field : "outBankCardNo", title : "付款会员的卡号", width : "100px"},
-            {field : "outBankName", title : "银行名称", width : "100px"},
-            {field : "inBeforeBalance", title : "转入前金额", width : "100px"},
-            {field : "outBeforeBalance", title : "转出前金额", width : "100px"},
-            {field : "inAfterBalance", title : "转入后金额", width : "100px"},
-            {field : "outAfterBalance", title : "转出后金额", width : "100px"},
+            {field : "orgName", title : "代理商姓名", width : "100px"},
             {title : "操作", formatter : function(value, row, index) {
                     var _html = '';
-                    if (hasPermission(':balance:procurement:edit')) {
+                    if (hasPermission('bankCard:block:edit')) {
                         _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
                     }
-                    if (hasPermission(':balance:procurement:remove')) {
+                    if (hasPermission('bankCard:block:remove')) {
                         _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
                     }
                     return _html;
@@ -66,7 +56,7 @@ var vm = new Vue({
 		save: function() {
 			dialogOpen({
 				title: '新增',
-				url: 'modules/procurement/add.html?_' + $.now(),
+				url: 'modules/blockCard/add.html?_' + $.now(),
 				width: '420px',
 				height: '350px',
 				yes : function(iframeId) {
@@ -77,11 +67,11 @@ var vm = new Vue({
 		edit: function(id) {
             dialogOpen({
                 title: '编辑',
-                url: 'modules/procurement/edit.html?_' + $.now(),
+                url: 'modules/blockCard/edit.html?_' + $.now(),
                 width: '420px',
                 height: '350px',
                 success: function(iframeId){
-                    top.frames[iframeId].vm.balanceProcurement.id = id;
+                    top.frames[iframeId].vm.blockBankCard.id = id;
                     top.frames[iframeId].vm.setForm();
                 },
                 yes: function(iframeId){
@@ -103,7 +93,7 @@ var vm = new Vue({
                 ids.push(id);
             }
             $.RemoveForm({
-                url: '../../balance/procurement/remove?_' + $.now(),
+                url: '../../bankCard/block/remove?_' + $.now(),
                 param: ids,
                 success: function(data) {
                     vm.load();
