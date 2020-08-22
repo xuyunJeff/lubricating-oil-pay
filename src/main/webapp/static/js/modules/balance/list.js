@@ -34,7 +34,7 @@ function getGrid() {
             {field : "agentName", title : "代理商姓名", width : "100px"},
             {field : "roleId", title : "角色id", width : "100px",style:"display:none"},
             {field : "roleName", title : "角色名称", width : "100px"},
-            {field : "billOutLimit", title : "自动出款上线额度，超出额度要手动派单", width : "100px"},
+            {field : "billOutLimit", title : "自动出款额度", width : "100px"},
             {title : "操作", formatter : function(value, row, index) {
                     var _html = '';
                     if (hasPermission('apiV1:balance:edit')) {

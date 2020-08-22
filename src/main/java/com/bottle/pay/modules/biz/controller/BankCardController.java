@@ -12,6 +12,7 @@ import com.bottle.pay.modules.biz.entity.BankCardEntity;
 import com.bottle.pay.modules.biz.service.BankCardService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +52,8 @@ public class BankCardController extends AbstractController {
             params.put("orgId",user.getOrgId());
             return bankCardService.listEntity(params);
         }
-        if(user.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+        if(user.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())
+                ||user.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
             params.put("orgId",user.getOrgId());
             return bankCardService.listEntity(params);
         }
@@ -71,11 +73,25 @@ public class BankCardController extends AbstractController {
     @RequestMapping("/listForSelect")
     public R listForSelect() {
         SysUserEntity user = getUser();
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("pageNumber",1);
+        params.put("pageSize",10000);
+        Page<BankCardEntity> page = null;
         if(user.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
-            return R.ok().put("rows",bankCardService.listByOrgId(user.getOrgId()));
+            params.put("businessId",user.getUserId());
+            params.put("orgId",user.getOrgId());
+            page =  bankCardService.listEntity(params);
+        }
+        if(user.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())
+                ||user.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
+            params.put("orgId",user.getOrgId());
+            page =  bankCardService.listEntity(params);
         }
         if(user.getRoleId().equals(SystemConstant.SUPER_ADMIN)) {
-            return R.ok().put("rows",bankCardService.listByOrgId(null));
+            page =  bankCardService.listEntity(params);
+        }
+        if(page != null){
+            return R.ok().put("rows",page.getRows());
         }
         throw  new RRException("角色越权");
     }

@@ -39,24 +39,24 @@ function getGrid() {
             {field : "bankAccountName", title : "付款用户名", width : "100px"},
             {field : "orgId", title : "代理商id", width : "100px"},
             {field : "orgName", title : "代理商姓名", width : "100px"},
-            {field : "comment", title : "注解", width : "100px"},
-            {title : "操作", formatter : function(value, row, index) {
-                    var _html = '';
-                    if (hasPermission('merchant:charge:edit')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
-                    }
-                    if (hasPermission('merchant:charge:remove')) {
-                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
-                    }
-                    if (hasPermission('merchant:charge:success')) {
-                        _html += '<a href="javascript:;" onclick="vm.success(false,\''+row.id+'\')" title="充值成功"><i class="fa fa-trash-o"></i></a>';
-                    }
-                    if (hasPermission('merchant:charge:fail')) {
-                        _html += '<a href="javascript:;" onclick="vm.fail(false,\''+row.id+'\')" title="充值失败"><i class="fa fa-trash-o"></i></a>';
-                    }
-                    return _html;
-                }
-            }
+            {field : "comment", title : "注解", width : "100px"}
+//            {title : "操作", formatter : function(value, row, index) {
+//                    var _html = '';
+//                    if (hasPermission('merchant:charge:edit')) {
+//                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
+//                    }
+//                    if (hasPermission('merchant:charge:remove')) {
+//                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+//                    }
+//                    if (hasPermission('merchant:charge:success')) {
+//                        _html += '<a href="javascript:;" onclick="vm.success(false,\''+row.id+'\')" title="充值成功"><i class="fa fa-trash-o"></i></a>';
+//                    }
+//                    if (hasPermission('merchant:charge:fail')) {
+//                        _html += '<a href="javascript:;" onclick="vm.fail(false,\''+row.id+'\')" title="充值失败"><i class="fa fa-trash-o"></i></a>';
+//                    }
+//                    return _html;
+//                }
+//            }
 		]
 	})
 }
@@ -75,7 +75,7 @@ var vm = new Vue({
 				title: '新增',
 				url: 'modules/billIn/add.html?_' + $.now(),
 				width: '420px',
-				height: '350px',
+				height: '550px',
 				yes : function(iframeId) {
 					top.frames[iframeId].vm.acceptClick();
 				},
@@ -86,7 +86,7 @@ var vm = new Vue({
                 title: '编辑',
                 url: 'modules/billIn/edit.html?_' + $.now(),
                 width: '420px',
-                height: '350px',
+                height: '520px',
                 success: function(iframeId){
                     top.frames[iframeId].vm.billIn.id = id;
                     top.frames[iframeId].vm.setForm();

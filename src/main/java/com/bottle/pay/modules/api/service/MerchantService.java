@@ -2,6 +2,7 @@ package com.bottle.pay.modules.api.service;
 
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.Page;
+import com.bottle.pay.common.entity.Query;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.utils.ShiroUtils;
 import com.bottle.pay.common.utils.WebUtils;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -39,8 +41,22 @@ public class MerchantService {
             log.warn("userId:{}-{},不是机构管理员无权限查看此页面",userEntity.getUserId(), WebUtils.getIpAddr());
             throw new RRException("不是机构管理员无权限查看此页面");
         }
-        //TODO
-        return null;
+        Query query = new Query(params);
+        Page<BalanceEntity> page = new Page<>(query);
+        balanceMapper.listForPage(page,query);
+        Page<MerchantView> result = new Page<>(query);
+        List<BalanceEntity> list = page.getRows();
+        if(list != null){
+            for(BalanceEntity balance : list){
+                SysUserEntity user = sysUserMapper.getObjectById(balance.getUserId());
+                MerchantView view = new MerchantView();
+                view.setBizType(balance.getRoleName());
+                BeanUtils.copyProperties(balance, view);
+                BeanUtils.copyProperties(user, view);
+                result.getRows().add(view);
+            }
+        }
+        return result;
     }
 
     /**

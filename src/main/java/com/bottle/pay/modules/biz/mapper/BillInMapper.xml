@@ -143,6 +143,13 @@
         <if test="startTime != null">AND  `create_time` &gt; #{startTime}</if>
         <if test="endTime">AND  `create_time` &lt; #{endTime}</if>
         <if test="billStatus != null">AND  `bill_status` = #{billStatus}</if>
+        <if test="name != null">
+            AND
+            (
+            `bank_account_name` like CONCAT('%','${name}','%' )
+            or `business_name` like CONCAT('%','${name}','%' )
+            )
+        </if>
     </select>
 
     <select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.BillInEntity">
@@ -174,6 +181,13 @@
         <if test="startTime != null">AND  `create_time` &gt; #{startTime}</if>
         <if test="endTime">AND  `create_time` &lt; #{endTime}</if>
         <if test="billStatus != null">AND  `bill_status` = #{billStatus}</if>
+        <if test="name != null">
+            AND
+            (
+            `bank_account_name` like CONCAT('%','${name}','%' )
+             or `business_name` like CONCAT('%','${name}','%' )
+            )
+        </if>
         ORDER BY create_time DESC
         limit #{offSet},#{pageSize}
     </select>

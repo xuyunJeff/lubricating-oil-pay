@@ -13,7 +13,6 @@ import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
 import com.bottle.pay.modules.api.service.BalanceService;
 import com.bottle.pay.modules.biz.dao.BillInMapper;
-import com.bottle.pay.modules.biz.entity.BalanceProcurementEntity;
 import com.bottle.pay.modules.biz.entity.BankCardEntity;
 import com.bottle.pay.modules.biz.entity.BillInEntity;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
@@ -63,7 +62,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
         params.put("offSet", page.getOffset());
         params.put("orgId", userEntity.getOrgId());
         params.put("businessId", userEntity.getUserId());
-        if(!super.isOrgAdmin() && !super.isOutMerchant()){
+        if(super.isOrgAdmin() || super.isOutMerchant()){
             params.put("businessId", null);
         }
         try {
@@ -107,7 +106,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
         if(redisLock.lock()){
             try {
                 Date date = new Date();
-                params.setBillId(generateBillInBillId(String.valueOf(params.getMerchantId())));
+                params.setBillId(generateBillInBillId(String.valueOf(userEntity.getUserId())));
                 params.setBillStatus(BillConstant.BillStatusEnum.UnPay.getCode());
                 params.setCreateTime(date);
                 params.setLastUpdate(date);
