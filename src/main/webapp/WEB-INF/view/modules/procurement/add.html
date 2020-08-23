@@ -9,7 +9,7 @@
     <tr v-if="hasPermission('procurement:save:agent')">
         <td class="formTitle" style="width: 100px;"> 转出专员<font face="宋体">*</font></td>
         <td class="formValue" style="width: 350px;">
-        <select  style="width: 200px;"  v-model="balanceProcurement.outBusinessName" id="outBusiness"  class="form-control"   style="width: 100px;" >
+        <select  style="width: 200px;"  v-model="balanceProcurement.outBusinessId" id="outBusiness"  class="form-control"   style="width: 100px;" >
             <option value="-1"  style="display:none">请选择</option>
         </select>
         </td>
@@ -17,7 +17,7 @@
     <tr>
         <td class="formTitle" style="width: 250px;">出款银行卡<font face="宋体">*</font></td>
         <td class="formValue" style="width: 350px;">
-            <select  style="width: 350px;" v-model="balanceProcurement.outBankCard" id="outBankCard"  class="form-control" \@click="outBankCard()"  style="width: 100px;" >
+            <select  style="width: 350px;" v-model="balanceProcurement.outBankCardNo" id="outBankCard"  class="form-control" \@click="outBankCard()"  style="width: 100px;" >
                 <option value="-1"  style="display:none">请选择</option>
             </select>
         </td>
@@ -56,15 +56,15 @@
     <tr>
         <td class="formTitle" style="width: 100px;">转入专员<font face="宋体">*</font></td>
         <td class="formValue" style="width: 350px;">
-            <select  style="width: 200px;"  v-model="balanceProcurement.inBusinessName" id="inBusiness"  class="form-control"  style="width: 100px;" >
+            <select  style="width: 200px;"  v-model="balanceProcurement.inBusinessId" id="inBusiness"  class="form-control"  style="width: 100px;" >
                 <option value="-1"  style="display:none">请选择</option>
             </select>
         </td>
     </tr>
     <tr>
         <td class="formTitle" style="width: 100px;">入款银行卡<font face="宋体">*</font></td>
-        <td class="formValue" style="width: 350px;">
-            <select  style="width: 350px;" v-model="balanceProcurement.inBankCard" id="inBankCard"  class="form-control" \@click="inBankCard()"  style="width: 100px;" >
+        <td class="formValu e" style="width: 350px;">
+            <select  style="width: 350px;" v-model="balanceProcurement.inBankCardNo" id="inBankCard"  class="form-control" \@click="inBankCard()"  style="width: 100px;" >
                 <option value="-1"  style="display:none">请选择</option>
             </select>
         </td>

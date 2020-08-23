@@ -34,6 +34,7 @@ var vm = new Vue({
 			if (!$('#form').Validform()) {
 		        return false;
 		    }
+		    vm.outBusinessId = vm.
 		    $.SaveForm({
 		    	url: '../../balance/procurement/save?_' + $.now(),
 		    	param: vm.balanceProcurement,
