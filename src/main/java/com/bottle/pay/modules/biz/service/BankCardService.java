@@ -20,8 +20,6 @@ import com.bottle.pay.modules.api.service.BalanceService;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.biz.dao.BankCardMapper;
 import com.bottle.pay.modules.biz.entity.BankCardEntity;
-import com.bottle.pay.modules.sys.dao.SysRoleMapper;
-import com.bottle.pay.modules.sys.dao.SysUserMapper;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,10 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service("bankCardService")
 @Slf4j
 public class BankCardService extends BottleBaseService<BankCardMapper, BankCardEntity> {
-
-    @Autowired
-    private SysUserMapper sysUserMapper;
-
 
     @Autowired
     private BalanceMapper balanceMapper;
@@ -53,8 +47,6 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
     @Autowired
     private OnlineBusinessService onlineBusinessService;
 
-    @Autowired
-    private SysRoleMapper sysRoleMapper;
 
     /**
      * 根据专员Id获取对应银行卡列表
@@ -232,7 +224,7 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
                         //冻结余额
                         frozen = entity.getBalance();
                     }
-                    boolean count = balanceService.updateBalance(balanceEntity.getId(), balanceEntity.getUserId(), balance, frozen, null);
+                    boolean count = balanceService.updateBalance(balanceEntity.getUserId(), balance, frozen, null);
                     log.info("userId:{}绑定银行卡成功更新对应余额:{}结果:{}", entity.getBusinessId(), entity.getBalance(), count);
                 }
             } catch (Exception e) {
@@ -322,7 +314,6 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
         }
         List<Long> idList = null;
         //判断是机构管理员
-        Long roleId = ShiroUtils.getUserEntity().getRoleId();
         if (super.isOrgAdmin()) {
             //银行卡是当前机构的
             idList = cardList.stream()

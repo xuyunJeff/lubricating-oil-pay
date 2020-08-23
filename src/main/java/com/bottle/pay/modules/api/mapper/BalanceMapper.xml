@@ -105,9 +105,7 @@
             <if test="balancePaying != null">balance_paying = balance_paying + #{balancePaying},</if>
             last_update = #{lastUpdate}
         </set>
-        WHERE
-        id = #{id}
-        <if test="userId != null">and `user_id` = #{userId}</if>
+        WHERE `user_id` = #{userId}
     </update>
 
     <delete id="batchRemove">

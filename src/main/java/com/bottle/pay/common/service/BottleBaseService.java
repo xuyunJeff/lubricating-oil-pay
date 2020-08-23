@@ -9,13 +9,18 @@ import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.mapper.BottleBaseMapper;
 import com.bottle.pay.common.utils.CommonUtils;
 import com.bottle.pay.common.utils.ShiroUtils;
+import com.bottle.pay.modules.sys.dao.SysOrgMapper;
+import com.bottle.pay.modules.sys.dao.SysRoleMapper;
 import com.bottle.pay.modules.sys.dao.SysUserMapper;
+import com.bottle.pay.modules.sys.dao.SysUserRoleMapper;
+import com.bottle.pay.modules.sys.entity.SysRoleEntity;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by zhy on 2020/8/13.
@@ -26,7 +31,17 @@ public abstract class BottleBaseService<M extends BottleBaseMapper, E extends Bo
     protected M mapper;
 
     @Autowired
-    private SysUserMapper sysUserMapper;
+    protected SysUserMapper sysUserMapper;
+
+    @Autowired
+    protected SysRoleMapper sysRoleMapper;
+
+    @Autowired
+    protected SysOrgMapper sysOrgMapper;
+
+    @Autowired
+    protected SysUserRoleMapper userRoleMapper;
+
 
     @Autowired
     protected StringRedisTemplate stringRedisTemplate;
@@ -153,7 +168,11 @@ public abstract class BottleBaseService<M extends BottleBaseMapper, E extends Bo
         if (userId == null || userId == 0L) {
             throw new RRException("查询user时，userId不能为空");
         }
-        return sysUserMapper.getObjectById(userId);
+        SysUserEntity userEntity = sysUserMapper.getObjectById(userId);
+        userEntity.setRoleIdList(userRoleMapper.listUserRoleId(userEntity.getUserId()));
+        userEntity.setRoleNameList(sysRoleMapper.listUserRoleNames(userEntity.getRoleId()));
+        Optional.ofNullable(sysOrgMapper.getObjectById(userEntity.getOrgId())).ifPresent(org->userEntity.setOrgName(org.getName()));
+        return userEntity;
     }
 
 }

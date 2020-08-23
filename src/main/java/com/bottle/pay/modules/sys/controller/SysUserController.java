@@ -48,6 +48,17 @@ public class SysUserController extends AbstractController {
         if (getUserId() != SystemConstant.SUPER_ADMIN) {
             params.put("orgId", user.getOrgId());
         }
+        params.put("roleId",SystemConstant.RoleEnum.CustomerService.getCode());
+        return R.ok().put("rows",sysUserService.list(params));
+    }
+
+    @RequestMapping("/listMerchant")
+    public R listMerchant(@RequestBody Map<String, Object> params) {
+        SysUserEntity user = getUser();
+        if (getUserId() != SystemConstant.SUPER_ADMIN) {
+            params.put("orgId", user.getOrgId());
+        }
+        params.put("roleId",SystemConstant.RoleEnum.BillOutMerchant.getCode());
         return R.ok().put("rows",sysUserService.list(params));
     }
 

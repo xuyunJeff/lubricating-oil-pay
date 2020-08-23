@@ -28,7 +28,7 @@ var vm = new Vue({
                     bankCards = data.rows
                 }
             })
-        },
+    },
 	methods : {
 		acceptClick: function() {
 			if (!$('#form').Validform()) {

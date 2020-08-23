@@ -32,16 +32,26 @@ function getGrid() {
             {field : "ip", title : "第三方订单派发服务器ip", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px"},
             {field : "businessId", title : "付款专员ID", width : "100px"},
-            {field : "billStatus", title : "订单状态", width : "100px"},
+            {field : "billStatus", title : "订单状态", width : "100px",formatter:function(value){
+                if(value==1){
+                    return '未支付';
+                }
+                if(value ==2){
+                    return '成功';
+                }
+                if(value ==3){
+                    return '失败';
+                }
+            }},
             {field : "price", title : "账单金额", width : "100px"},
             {field : "bankCardNo", title : "付款会员的卡号", width : "100px"},
             {field : "bankName", title : "银行名称", width : "100px"},
             {field : "bankAccountName", title : "付款用户名", width : "100px"},
             {field : "orgId", title : "代理商id", width : "100px"},
             {field : "orgName", title : "代理商姓名", width : "100px"},
-            {field : "comment", title : "注解", width : "100px"}
-//            {title : "操作", formatter : function(value, row, index) {
-//                    var _html = '';
+            {field : "comment", title : "注解", width : "100px"},
+            {title : "操作", formatter : function(value, row, index) {
+                    var _html = '';
 //                    if (hasPermission('merchant:charge:edit')) {
 //                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
 //                    }
@@ -49,14 +59,14 @@ function getGrid() {
 //                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
 //                    }
 //                    if (hasPermission('merchant:charge:success')) {
-//                        _html += '<a href="javascript:;" onclick="vm.success(false,\''+row.id+'\')" title="充值成功"><i class="fa fa-trash-o"></i></a>';
+                       if(row.billStatus==1){
+                            _html += '<a href="javascript:;" onclick="vm.success(\''+row.billId+'\')" title="充值成功"><i class="fa fa-pencil">确认成功</i></a>';
+                            _html += '<a href="javascript:;" onclick="vm.fail(\''+row.billId+'\')" title="充值失败"><i class="fa fa-pencil">确认失败</i></a>';
+                       }
 //                    }
-//                    if (hasPermission('merchant:charge:fail')) {
-//                        _html += '<a href="javascript:;" onclick="vm.fail(false,\''+row.id+'\')" title="充值失败"><i class="fa fa-trash-o"></i></a>';
-//                    }
-//                    return _html;
-//                }
-//            }
+                    return _html;
+                }
+            }
 		]
 	})
 }
@@ -96,43 +106,19 @@ var vm = new Vue({
                 }
             });
         },
-        success: function(id) {
-            var ids = [];
-            if (batch) {
-                var ck = $('#dataGrid').bootstrapTable('getSelections');
-                if (!checkedArray(ck)) {
-                    return false;
-                }
-                $.each(ck, function(idx, item){
-                    ids[idx] = item.id;
-                });
-            } else {
-                ids.push(id);
-            }
-            $.RemoveForm({
-                url: '../../merchant/charge/success?_' + $.now(),
-                param: ids,
+        success: function(billId){
+            $.ConfirmAjax({
+                msg : "确定订单充值成功？",
+                url: '../../merchant/charge/success?billId='+billId+'&_' + $.now(),
                 success: function(data) {
                     vm.load();
                 }
             });
         },
-        fail: function(id) {
-            var ids = [];
-            if (batch) {
-                var ck = $('#dataGrid').bootstrapTable('getSelections');
-                if (!checkedArray(ck)) {
-                    return false;
-                }
-                $.each(ck, function(idx, item){
-                    ids[idx] = item.id;
-                });
-            } else {
-                ids.push(id);
-            }
-            $.RemoveForm({
-                url: '../../merchant/charge/fail?_' + $.now(),
-                param: ids,
+        fail: function(billId) {
+            $.ConfirmAjax({
+                msg : "确定订单充值失败？",
+                url: '../../merchant/charge/fail?billId='+billId+'&_' + $.now(),
                 success: function(data) {
                     vm.load();
                 }

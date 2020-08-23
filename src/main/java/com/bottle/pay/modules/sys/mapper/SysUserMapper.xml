@@ -178,14 +178,7 @@
         SELECT
         u.user_id,
         u.org_id,
-        (
-        SELECT
-        name
-        FROM
-        sys_org o
-        WHERE
-        o.org_id = u.org_id
-        ) AS orgName,
+        (SELECT name FROM sys_org o WHERE o.org_id = u.org_id) AS orgName,
         u.username,
         u.email,
         u.mobile,
@@ -194,7 +187,11 @@
         u.gmt_create
         FROM
         sys_user u
+        inner join sys_user_role r on u.user_id=r.user_id
         where 1=1
+        <if test="roleId != null">
+            AND r.role_id= #{roleId}
+        </if>
         <if test="userIdCreate != null">
             AND u.user_id_create = #{userIdCreate}
         </if>

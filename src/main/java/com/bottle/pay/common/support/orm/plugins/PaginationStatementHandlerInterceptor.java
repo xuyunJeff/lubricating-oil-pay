@@ -53,7 +53,7 @@ public class PaginationStatementHandlerInterceptor implements Interceptor {
         RowBounds rowBounds = (RowBounds) metaStatementHandler.getValue("delegate.rowBounds");
         // 没有分页参数
         if (rowBounds == null || rowBounds == RowBounds.DEFAULT) {
-            logger.info("SQL : " + boundSql.getSql());
+//            logger.info("SQL : " + boundSql.getSql());
             return invocation.proceed();
         }
 

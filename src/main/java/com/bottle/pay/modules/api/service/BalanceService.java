@@ -5,14 +5,8 @@ import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.modules.api.dao.BalanceMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
-import com.bottle.pay.modules.sys.dao.SysOrgMapper;
-import com.bottle.pay.modules.sys.dao.SysRoleMapper;
-import com.bottle.pay.modules.sys.dao.SysUserMapper;
-import com.bottle.pay.modules.sys.entity.SysOrgEntity;
-import com.bottle.pay.modules.sys.entity.SysRoleEntity;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,14 +20,8 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
 
     @Value("${merchant.billOutLimit:50000}")
     private BigDecimal billOutLimit;
-    @Autowired
-    private SysRoleMapper sysRoleMapper;
 
-    @Autowired
-    private SysOrgMapper sysOrgMapper;
 
-    @Autowired
-    private SysUserMapper sysUserMapper;
 
     private static final String CREATE_LOCK_KEY_PREFIX = "balance:create:";
     /**
@@ -79,22 +67,7 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
             log.info("商户:{}余额账户:{}已存在无需再创建",userId,balance.getId());
             return balance;
         }
-        SysUserEntity userEntity = sysUserMapper.getObjectById(userId);
-        if (userEntity == null) {
-            log.warn("userId:{} 在 user表里没有找到", userId);
-            throw new RRException("创建商户余额账户失败");
-        }
-        long roleId = userEntity.getRoleId();
-        SysRoleEntity sysRoleEntity = sysRoleMapper.getObjectById(roleId);
-        if (sysRoleEntity == null) {
-            log.warn("userId:{}对应角色roleId:{}在角色表里没有找到", userId, roleId);
-            throw new RRException("创建商户余额账户失败,role异常");
-        }
-        SysOrgEntity orgEntity = sysOrgMapper.getObjectById(userEntity.getOrgId());
-        if (orgEntity == null) {
-            log.warn("绑定银行卡时没找到专员:{}对应机构:{}", userId, userEntity.getOrgId());
-            throw new RRException("创建商户余额账户失败，org异常");
-        }
+        SysUserEntity userEntity = super.getUserById(userId);
         RedisLock redisLock = new RedisLock(stringRedisTemplate,CREATE_LOCK_KEY_PREFIX + userId);
         if(redisLock.lock()){
             try {
@@ -110,15 +83,15 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
                 balance.setBalance(BigDecimal.ZERO);
                 balance.setBalanceFrozen(BigDecimal.ZERO);
                 balance.setBalancePaying(BigDecimal.ZERO);
-                balance.setRoleId(roleId);
-                balance.setRoleName(sysRoleEntity.getRoleName());
+                balance.setRoleId(userEntity.getRoleId());
+                balance.setRoleName(userEntity.getRoleName());
                 balance.setBillOutLimit(billOutLimit);
                 balance.setCreateTime(date);
                 balance.setLastUpdate(date);
                 balance.setOrgId(userEntity.getOrgId());
                 balance.setOrgName(userEntity.getOrgName());
                 mapper.save(balance);
-                log.info("userId:{}-{},role:{}-{},orgId:{}-{}创建余额账户成功", userId, userEntity.getUsername(), roleId, sysRoleEntity.getRoleName(), userEntity.getOrgId(), userEntity.getOrgName());
+                log.info("userId:{}-{},role:{}-{},orgId:{}-{}创建余额账户成功", userId, userEntity.getUsername(), userEntity.getRoleId(), userEntity.getRoleName(), userEntity.getOrgId(), userEntity.getOrgName());
                 return balance;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -134,26 +107,24 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
      * 根据主键id 或者 userId 更新  可用余额，冻结余额，支付中余额
      *  增加时正数，减少时负数，不更新时就空值
      *  且各余额可为负数
-     * @param id 余额ID  必传
      * @param userId 商户ID
      * @param balance 可用余额
      * @param balanceFrozen 冻结余额
      * @param balancePaying 支付中余额
      * @return
      */
-    public boolean updateBalance(Long id, Long userId, BigDecimal balance, BigDecimal balanceFrozen, BigDecimal balancePaying) {
-        if (id == null && userId == null) {
-            throw new RRException("更新前请设置ID 或者 userId");
+    public boolean updateBalance(Long userId, BigDecimal balance, BigDecimal balanceFrozen, BigDecimal balancePaying) {
+        if (userId == null) {
+            throw new RRException("更新余额前请设置userId");
         }
         BalanceEntity entity = new BalanceEntity();
-        entity.setId(id);
         entity.setUserId(userId);
         entity.setBalance(balance);
         entity.setBalanceFrozen(balanceFrozen);
         entity.setBalancePaying(balancePaying);
         entity.setLastUpdate(new Date());
         int num = mapper.updateBalance(entity);
-        log.info("更新商户余额 ID:{},userId:{},balance:{},frozen:{},payIng:{}", id, userId, balance, balanceFrozen, balancePaying);
+        log.info("更新商户余额userId:{},balance:{},frozen:{},payIng:{}", userId, balance, balanceFrozen, balancePaying);
         if (num > 0) {
             return true;
         }

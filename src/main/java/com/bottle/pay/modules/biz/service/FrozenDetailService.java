@@ -113,7 +113,7 @@ public class FrozenDetailService extends BottleBaseService<FrozenDetailMapper, F
             throw new RRException("冻结金额大于0");
         }
         SysUserEntity merchant = super.getUserById(frozenDetail.getMerchantId());
-        if (merchant == null || SystemConstant.RoleEnum.BillOutMerchant.getCode().equals(merchant.getRoleId())) {
+        if (merchant == null || !SystemConstant.RoleEnum.BillOutMerchant.getCode().equals(merchant.getRoleId())) {
             log.warn("商户:{}信息不存在或者不是商户", frozenDetail.getMerchantId());
             throw new RRException("商户信息不存在或者不是商户");
         }
@@ -126,6 +126,7 @@ public class FrozenDetailService extends BottleBaseService<FrozenDetailMapper, F
             log.warn("专员:{}没找到或者 不属于当前商户的机构", frozenDetail.getBusinessId());
             throw new RRException("专员没找到或者 不属于当前商户的机构");
         }
+        frozenDetail.setMerchantName(merchant.getUsername());
         frozenDetail.setBusinessName(business.getUsername());
         frozenDetail.setOrgId(merchant.getOrgId());
         frozenDetail.setOrgName(merchant.getOrgName());

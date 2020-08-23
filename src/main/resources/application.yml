@@ -57,8 +57,14 @@ spring:
 # Mybatis配置
 mybatis:
   configLocation: classpath:mybatis.xml
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   mapper-locations: classpath*:com/bottle/pay/**/mapper/*.xml
 
+logging:
+  level:
+    -com.bottle.pay.modules.sys.dao: debug
+    -com.bottle.pay.modules.api.dao: debug
+    -com.bottle.pay.modules.biz.dao: debug
 #pagehelper:
 #  helperDialect: mysql
 #  reasonable: true

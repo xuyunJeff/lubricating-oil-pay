@@ -157,7 +157,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
             log.warn("充值订单:{}不存在或者已被确认过",billId);
             throw new RRException("充值订单不存在或者已被确认过");
         }
-        if(billInEntity.getOrgId().equals(userEntity.getOrgId())){
+        if(!billInEntity.getOrgId().equals(userEntity.getOrgId())){
             log.warn("订单:{}的机构{}不属于当前管理员:{}的机构:{}",billId,billInEntity.getOrgId(),userEntity.getUserId(),userEntity.getOrgId());
             throw new RRException("订单的机构不属于当前管理员的机构");
         }
@@ -179,7 +179,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                 if(statusEnum == BillConstant.BillStatusEnum.Success){
                     //商户可用余额充值
                     BalanceEntity balance = balanceService.createBalanceAccount(userEntity.getUserId());
-                    boolean result = balanceService.updateBalance(balance.getId(),userEntity.getUserId(),billInEntity.getPrice(),null,null);
+                    boolean result = balanceService.updateBalance(userEntity.getUserId(),billInEntity.getPrice(),null,null);
                     log.info("更新商户:{}可用余额结果:{}",balance.getUserId(),result);
                     if(!result){
                         throw new RRException("确认充值订单时，更新商户余额失败");
