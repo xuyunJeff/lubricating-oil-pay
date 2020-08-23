@@ -3,6 +3,7 @@ package com.bottle.pay.modules.biz.view;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -11,6 +12,11 @@ public class MerchantView {
      * 机构ID
      */
     private Long orgId;
+
+    /**
+     * 代理商姓名
+     */
+    public String orgName;
     /**
      * 商户ID
      */
@@ -60,4 +66,6 @@ public class MerchantView {
      * 支付中余额
      */
     private BigDecimal balancePaying;
+
+    private Date createTime;
 }

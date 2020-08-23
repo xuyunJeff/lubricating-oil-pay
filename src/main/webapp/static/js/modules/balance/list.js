@@ -15,34 +15,41 @@ function initialPage() {
 
 function getGrid() {
 	$('#dataGrid').bootstrapTableEx({
-		url: '../../apiV1/balance/list?_' + $.now(),
+		url: '../../merchant/list?_' + $.now(),
 		height: $(window).height()-56,
 		queryParams: function(params){
 			params.name = vm.keyword;
 			return params;
 		},
 		columns: [
-			{checkbox: true},
+            {field : "userId", title : "用户ID", width : "100px"},
             {field : "userName", title : "用户名", width : "100px"},
-            {field : "userId", title : "用户ID", width : "100px",style:"display:none"},
             {field : "balance", title : "可用余额", width : "100px"},
             {field : "balanceFrozen", title : "冻结余额", width : "100px"},
-            {field : "balancePaying", title : "", width : "100px"},
+            {field : "balancePaying", title : "支付中余额", width : "100px"},
             {field : "createTime", title : "创建时间", width : "100px"},
-            {field : "lastUpdate", title : "更新时间", width : "100px"},
-            {field : "agentId", title : "代理商id", width : "100px",style:"display:none"},
-            {field : "agentName", title : "代理商姓名", width : "100px"},
-            {field : "roleId", title : "角色id", width : "100px",style:"display:none"},
-            {field : "roleName", title : "角色名称", width : "100px"},
+            {field : "orgName", title : "代理商姓名", width : "100px"},
+            {field : "status", title : "状态", width : "100px",formatter:function(value){
+                if(value == 0){
+                return '禁用';
+                }
+                if(value == 1){
+                return '可用';
+                }
+            }},
+            {field : "bizType", title : "商户类型", width : "100px",formatter:function(value){return '代付商户'}},
             {field : "billOutLimit", title : "自动出款额度", width : "100px"},
+            {field : "mobile", title : "手机", width : "100px"},
+            {field : "email", title : "邮箱", width : "100px"},
             {title : "操作", formatter : function(value, row, index) {
                     var _html = '';
-                    if (hasPermission('apiV1:balance:edit')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
-                    }
-                    if (hasPermission('apiV1:balance:remove')) {
-                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
-                    }
+//                    if (hasPermission('apiV1:balance:edit')) {
+                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="查看IP"><i class="fa fa-pencil">IP查看</i></a>';
+//                    }
+//                    if (hasPermission('apiV1:balance:remove')) {
+                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="修改IP"><i class="fa fa-trash-o">IP修改</i></a>';
+//                    }
+
                     return _html;
                 }
             }
