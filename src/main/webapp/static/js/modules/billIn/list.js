@@ -22,7 +22,7 @@ function getGrid() {
 			return params;
 		},
 		columns: [
-			{checkbox: true},
+//			{checkbox: true},
             {field : "createTime", title : "创建时间", width : "100px"},
 //            {field : "lastUpdate", title : "", width : "100px"},
             {field : "merchantName", title : "商户名", width : "100px"},

@@ -23,8 +23,8 @@ var vm = new Vue({
 		        return false;
 		    }
 		    $.ConfirmForm({
-		    	url: '../../merchant/frozen/update?_' + $.now(),
-		    	param: vm.frozenDetail,
+		    	url: '../../merchant/unFrozen?id='+vm.frozenDetail.id+'&unFrozen='+ vm.frozenDetail.balanceUnfrozen +'&time_' + $.now(),
+//		    	param: vm.frozenDetail,
 		    	success: function(data) {
 		    		$.currentIframe().vm.load();
 		    	}

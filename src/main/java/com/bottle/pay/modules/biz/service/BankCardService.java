@@ -234,7 +234,7 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
                 redisLock.unLock();
             }
         }
-        return CommonUtils.msg(num);
+        throw new RRException("绑定银行卡异常，请稍后在操作");
     }
 
     private void existBankCard(BankCardEntity entity) {

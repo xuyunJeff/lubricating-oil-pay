@@ -91,7 +91,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
         SysUserEntity userEntity = super.getCurrentUser();
         String ip = WebUtils.getIpAddr();
         if(!super.isOutMerchant()){
-            log.warn("user:{}-{}-{},不是代付商户，不能提交充值订单");
+            log.warn("user:{}-{}-{},不是代付商户，不能提交充值订单",userEntity.getUserId(),userEntity.getRoleName(),WebUtils.getIpAddr());
             throw new RRException("不是代付商户，不能提交充值订单");
         }
         BankCardEntity query = new BankCardEntity();
@@ -178,8 +178,8 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                 log.info("管理员:{}-{},确认订单:{}-{},结果:{}",userEntity.getUserId(),WebUtils.getIpAddr(),billId,statusEnum.getCode(),num>1);
                 if(statusEnum == BillConstant.BillStatusEnum.Success){
                     //商户可用余额充值
-                    BalanceEntity balance = balanceService.createBalanceAccount(userEntity.getUserId());
-                    boolean result = balanceService.updateBalance(userEntity.getUserId(),billInEntity.getPrice(),null,null);
+                    BalanceEntity balance = balanceService.createBalanceAccount(billInEntity.getMerchantId());
+                    boolean result = balanceService.updateBalance(billInEntity.getMerchantId(),billInEntity.getPrice(),null,null);
                     log.info("更新商户:{}可用余额结果:{}",balance.getUserId(),result);
                     if(!result){
                         throw new RRException("确认充值订单时，更新商户余额失败");

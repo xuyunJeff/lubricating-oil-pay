@@ -123,4 +123,48 @@
         id = #{id}
     </update>
 
+    <select id="selectCountForPage" resultType="int">
+        SELECT count(1)
+        FROM frozen_detail
+        WHERE
+        1=1
+        <if test="name != null">
+            AND
+            (
+            `bank_account_name` like CONCAT('%','${name}','%' )
+            or `business_name` like CONCAT('%','${name}','%' )
+            )
+        </if>
+    </select>
+
+    <select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.FrozenDetailEntity">
+        SELECT
+        `id`,
+        `merchant_name`,
+        `merchant_id`,
+        `balance_frozen`,
+        `balance_unfrozen`,
+        `bank_card_no`,
+        `bank_name`,
+        `bank_account_name`,
+        `create_time`,
+        `last_update`,
+        `org_id`,
+        `org_name`,
+        `business_name`,
+        `business_id`
+        FROM frozen_detail
+        WHERE
+        1=1
+        <if test="name != null">
+            AND
+            (
+            `bank_account_name` like CONCAT('%','${name}','%' )
+            or `business_name` like CONCAT('%','${name}','%' )
+            )
+        </if>
+        ORDER BY create_time DESC
+        limit #{offSet},#{pageSize}
+    </select>
+
 </mapper>

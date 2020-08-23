@@ -22,27 +22,30 @@ function getGrid() {
 			return params;
 		},
 		columns: [
-			{checkbox: true},
+//			{checkbox: true},
             {field : "merchantName", title : "商户名", width : "100px"},
-            {field : "merchantId", title : "商户ID", width : "100px"},
+//            {field : "merchantId", title : "商户ID", width : "100px"},
             {field : "balanceFrozen", title : "冻结余额", width : "100px"},
             {field : "balanceUnfrozen", title : "解冻余额", width : "100px"},
             {field : "bankCardNo", title : "付款会员的卡号", width : "100px"},
             {field : "bankName", title : "银行名称", width : "100px"},
             {field : "bankAccountName", title : "付款用户名", width : "100px"},
-            {field : "createTime", title : "", width : "100px"},
-            {field : "lastUpdate", title : "", width : "100px"},
-            {field : "orgId", title : "代理商id", width : "100px"},
+            {field : "createTime", title : "创建时间", width : "100px"},
+//            {field : "lastUpdate", title : "", width : "100px"},
+//            {field : "orgId", title : "代理商id", width : "100px"},
             {field : "orgName", title : "代理商姓名", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px"},
-            {field : "businessId", title : "付款专员ID", width : "100px"},
+//            {field : "businessId", title : "付款专员ID", width : "100px"},
             {title : "操作", formatter : function(value, row, index) {
                     var _html = '';
-                    if (hasPermission('merchant:frozen:edit')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
-                    }
-                    if (hasPermission('merchant:frozen:remove')) {
-                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+//                    if (hasPermission('merchant:frozen:edit')) {
+//                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
+//                    }
+//                    if (hasPermission('merchant:frozen:remove')) {
+//                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
+//                    }
+                    if(row.balanceFrozen != row.balanceUnfrozen){
+                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="解冻"><i class="fa fa-pencil">解冻</i></a>';
                     }
                     return _html;
                 }
@@ -76,10 +79,10 @@ var vm = new Vue({
                 title: '编辑',
                 url: 'modules/frozen/edit.html?_' + $.now(),
                 width: '420px',
-                height: '350px',
+                height: '200px',
                 success: function(iframeId){
                     top.frames[iframeId].vm.frozenDetail.id = id;
-                    top.frames[iframeId].vm.setForm();
+//                    top.frames[iframeId].vm.setForm();
                 },
                 yes: function(iframeId){
                     top.frames[iframeId].vm.acceptClick();

@@ -43,12 +43,12 @@ var vm = new Vue({
 		    });
 		},
         bankCard:function () {
-           var bankCard = $('#bankCardNo')
-           var outBusiness =$('#businessId').val()
-           bankCard.empty()
+           var bankCard = $('#bankCardNo');
+           var outBusiness =$('#businessId').val();
+           bankCard.empty().append('<option value="-1"> 请选择</option>');
            for (var i = 0; i < bankCards.length; i++) {
               if(bankCards[i].businessId == outBusiness){
-                   bankCard.append('<option value="'+bankCards[i].bankCardNo+'"> '+bankCards[i].bankAccountName+'-'+bankCards[i].bankCardNo+'-'+bankCards[i].bankName+'</option>')
+                   bankCard.append('<option value="'+bankCards[i].bankCardNo+'"> '+bankCards[i].bankAccountName+'-'+bankCards[i].bankCardNo+'-'+bankCards[i].bankName+'</option>');
               }
            }
         }
