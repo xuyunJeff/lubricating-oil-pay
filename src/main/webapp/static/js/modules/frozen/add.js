@@ -35,7 +35,7 @@ var vm = new Vue({
         })
         //专员银行卡选择下拉框
         $.AjaxFormNoMsg({
-            url: '../../apiV1/bankCard/listForSelect?_' + $.now(),
+            url: '../../bankCard/listForSelect?_' + $.now(),
             success: function(data) {
                 bankCards = data.rows
             }

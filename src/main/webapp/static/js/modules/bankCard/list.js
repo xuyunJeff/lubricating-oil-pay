@@ -15,7 +15,7 @@ function initialPage() {
 
 function getGrid() {
 	$('#dataGrid').bootstrapTableEx({
-		url: '../../apiV1/bankCard/list?_' + $.now(),
+		url: '../../bankCard/list?_' + $.now(),
 		height: $(window).height()-56,
         singleSelect:true,
 		queryParams: function(params){
@@ -83,7 +83,7 @@ var vm = new Vue({
 		    if(enable){
                 $.ConfirmAjax({
                     msg : "启用银行卡，会导致其他银行卡禁用",
-                    url: '../../apiV1/bankCard/enable?cardNo='+cardNo+'&_' + $.now(),
+                    url: '../../bankCard/enable?cardNo='+cardNo+'&_' + $.now(),
                     success: function(data) {
                         vm.load();
                     }
@@ -91,7 +91,7 @@ var vm = new Vue({
             }else {
                 $.ConfirmAjax({
                     msg : "禁用银行卡，如果全部银行卡禁用会自动下线",
-                    url: '../../apiV1/bankCard/disable?cardNo='+cardNo+'&userId='+userId+'&_' + $.now(),
+                    url: '../../bankCard/disable?cardNo='+cardNo+'&userId='+userId+'&_' + $.now(),
                     success: function(data) {
                         vm.load();
                     }

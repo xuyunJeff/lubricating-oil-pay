@@ -80,7 +80,7 @@ var vm = new Vue({
 		edit: function(id) {
             dialogOpen({
                 title: '编辑',
-                url: 'modules/balance/edit.html?_' + $.now(),
+                url: 'modules/iplimit/edit.html?_' + $.now(),
                 width: '420px',
                 height: '350px',
                 success: function(iframeId){

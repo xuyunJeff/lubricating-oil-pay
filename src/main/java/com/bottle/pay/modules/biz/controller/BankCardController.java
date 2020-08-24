@@ -27,7 +27,7 @@ import tk.mybatis.mapper.util.Assert;
 
 
 @RestController
-@RequestMapping("apiV1/bankCard")
+@RequestMapping("/bankCard")
 @Slf4j
 public class BankCardController extends AbstractController {
 

@@ -13,9 +13,9 @@
     <div class="col-md-8" style="width: 12%;">
         <div class="btn-toolbar pull-right">
             <div class="btn-group">
-                <a v-if="hasPermission('bankCard:list')" class="btn btn-default" onclick="reload();"><i class="fa fa-refresh" title="刷新"></i>&nbsp;</a>
-                <a v-if="hasPermission('bankCard:save')" class="btn btn-default" \@click="save"><i class="fa fa-plus" title="新增"></i>&nbsp;</a>
-                <a v-if="hasPermission('bankCard:remove')" class="btn btn-default" \@click="remove(false)"><i class="fa fa-trash-o" title="删除"></i>&nbsp;</a>
+                <a class="btn btn-default" onclick="reload();"><i class="fa fa-refresh" title="刷新"></i>&nbsp;</a>
+                <a class="btn btn-default" \@click="save"><i class="fa fa-plus" title="新增"></i>&nbsp;</a>
+                <a class="btn btn-default" \@click="remove(false)"><i class="fa fa-trash-o" title="删除"></i>&nbsp;</a>
             </div>
         </div>
     </div>

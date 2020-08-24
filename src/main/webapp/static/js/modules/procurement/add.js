@@ -23,7 +23,7 @@ var vm = new Vue({
             }
         })
         $.AjaxFormNoMsg({
-            url: '../../apiV1/bankCard/listForSelect?_' + $.now(),
+            url: '../../bankCard/listForSelect?_' + $.now(),
             success: function(data) {
                 bankCards = data.rows
             }
@@ -34,7 +34,7 @@ var vm = new Vue({
 			if (!$('#form').Validform()) {
 		        return false;
 		    }
-		    vm.outBusinessId = vm.
+//		    vm.outBusinessId = vm.
 		    $.SaveForm({
 		    	url: '../../balance/procurement/save?_' + $.now(),
 		    	param: vm.balanceProcurement,

@@ -117,13 +117,16 @@ public class BalanceProcurementService extends BottleBaseService<BalanceProcurem
                 if (!result) {
                     throw new RRException("调度失败，出款卡余额不足");
                 }
-                outBankCard = bankCardService.selectOne(outBankCard);
+                BankCardEntity query = new BankCardEntity();
+                query.setId(outBankCard.getId());
+                outBankCard = bankCardService.selectOne(query);
                 BigDecimal outAfter = outBankCard.getBalance();
 
                 //开始入款
                 BigDecimal inBefore = inBankCard.getBalance();
                 result = bankCardService.addBalance(inBankCard.getBusinessId(), inBankCard.getBankCardNo(), procurement.getPrice());
-                inBankCard = bankCardService.selectOne(inBankCard);
+                query.setId(inBankCard.getId());
+                inBankCard = bankCardService.selectOne(query);
                 BigDecimal inAfter = inBankCard.getBalance();
 
                 //添加调度记录

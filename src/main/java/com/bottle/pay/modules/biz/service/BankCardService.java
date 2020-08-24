@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
@@ -20,6 +21,7 @@ import com.bottle.pay.modules.api.service.BalanceService;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.biz.dao.BankCardMapper;
 import com.bottle.pay.modules.biz.entity.BankCardEntity;
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -183,50 +185,28 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
      * @param entity
      * @return
      */
-    @Transactional
     public R bindCard(BankCardEntity entity) {
+        SysUserEntity businessUser = ShiroUtils.getUserEntity();
+        if(businessUser.getRoleId().longValue() != SystemConstant.RoleEnum.CustomerService.getCode().longValue()){
+            throw new RRException("只能出款专员才能绑定银行卡");
+        }
         //判断是否绑定过
         existBankCard(entity);
-        int num = 0;
         RedisLock redisLock = new RedisLock(stringRedisTemplate, "card" + entity.getBusinessId());
         if (redisLock.lock()) {
             try {
-                //查询有没有开通余额账户
-                BalanceEntity balanceQuery = new BalanceEntity();
-                balanceQuery.setUserId(entity.getBusinessId());
-                BalanceEntity balanceEntity = balanceService.selectOne(balanceQuery);
-                if (balanceEntity == null) {
-                    balanceEntity = balanceService.createBalanceAccount(entity.getBusinessId());
-                }
-                long orgId = balanceEntity.getOrgId();
-                entity.setOrgId(orgId);
-                entity.setOrgName(balanceEntity.getOrgName());
+                entity.setBusinessId(businessUser.getUserId());
+                entity.setBusinessName(businessUser.getUsername());
+                entity.setOrgId(businessUser.getOrgId());
+                entity.setOrgName(businessUser.getOrgName());
                 entity.setBalance(Optional.ofNullable(entity.getBalance()).orElse(BigDecimal.ZERO));
-                entity.setCardStatus(Optional.ofNullable(entity.getCardStatus()).orElse(0));
+                entity.setCardStatus(Optional.ofNullable(entity.getCardStatus()).orElse(1));
                 entity.setEnable(false);
                 entity.setCreateTime(new Date());
                 entity.setLastUpdate(entity.getCreateTime());
-                num = mapper.save(entity);
+                int num = mapper.save(entity);
                 log.info("userId:{}绑定银行卡:{},结果:{}", entity.getBusinessId(), entity.getBankCardNo(), num > 0);
-                if (num > 0 && entity.getBalance().compareTo(BigDecimal.ZERO) > 0) {
-                    log.info("userId:{}绑定银行卡成功开始更新对应余额:{}", entity.getBusinessId(), entity.getBalance());
-                    BalanceEntity update = new BalanceEntity();
-                    update.setUserId(entity.getBusinessId());
-                    update.setId(balanceEntity.getId());
-                    update.setLastUpdate(new Date());
-                    //增加账户可用余额 或者 冻结余额
-                    BigDecimal balance = null;
-                    BigDecimal frozen = null;
-                    if (entity.getCardStatus() == 1) {
-                        //可用余额
-                        balance = entity.getBalance();
-                    } else {
-                        //冻结余额
-                        frozen = entity.getBalance();
-                    }
-                    boolean count = balanceService.updateBalance(balanceEntity.getUserId(), balance, frozen, null);
-                    log.info("userId:{}绑定银行卡成功更新对应余额:{}结果:{}", entity.getBusinessId(), entity.getBalance(), count);
-                }
+                return CommonUtils.msg(num);
             } catch (Exception e) {
                 e.printStackTrace();
                 log.warn("businessId:{},card:{}绑定银行卡异常,{}", entity.getBusinessId(), entity.getBankCardNo(), e.getMessage());

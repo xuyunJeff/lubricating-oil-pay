@@ -23,7 +23,7 @@ var vm = new Vue({
                 }
             })
             $.AjaxFormNoMsg({
-                url: '../../apiV1/bankCard/listForSelect?_' + $.now(),
+                url: '../../bankCard/listForSelect?_' + $.now(),
                 success: function(data) {
                     bankCards = data.rows
                 }
