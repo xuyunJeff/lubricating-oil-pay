@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50730
 File Encoding         : 65001
 
-Date: 2020-08-20 16:53:56
+Date: 2020-08-24 16:38:40
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -31,7 +31,7 @@ CREATE TABLE `sys_menu` (
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=94 DEFAULT CHARSET=utf8 COMMENT='菜单管理';
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COMMENT='菜单管理';
 
 -- ----------------------------
 -- Records of sys_menu
@@ -97,12 +97,11 @@ INSERT INTO `sys_menu` VALUES ('63', '47', '更多', null, 'quartz:job:more', '1
 INSERT INTO `sys_menu` VALUES ('64', '1', '接口管理', 'swagger-ui.html', null, '1', 'fa fa-support', '7', '2017-09-10 17:01:59', '2017-09-10 17:02:19');
 INSERT INTO `sys_menu` VALUES ('66', '0', '交易', null, null, '0', 'fa fa-circle-o', '2', '2020-08-09 21:02:33', '2020-08-09 21:25:28');
 INSERT INTO `sys_menu` VALUES ('67', '66', '代付订单', 'modules/billOut/list.html', null, '1', 'fa fa-circle-o', '1', '2020-08-09 21:03:34', '2020-08-13 01:50:36');
-INSERT INTO `sys_menu` VALUES ('68', '66', '商户充值', 'base/user/list.html', null, '1', 'fa fa-circle-o', '0', '2020-08-09 21:06:24', '2020-08-09 21:29:22');
-INSERT INTO `sys_menu` VALUES ('69', '66', '资金调度', null, null, '1', 'fa fa-circle-o', '4', '2020-08-09 21:07:06', '2020-08-09 21:24:36');
+INSERT INTO `sys_menu` VALUES ('68', '66', '商户充值', 'modules/billIn/list.html', null, '1', 'fa fa-circle-o', '0', '2020-08-09 21:06:24', '2020-08-24 16:20:54');
+INSERT INTO `sys_menu` VALUES ('69', '66', '资金调度', 'modules/procurement/list.html', null, '1', 'fa fa-circle-o', '4', '2020-08-09 21:07:06', '2020-08-20 23:45:18');
 INSERT INTO `sys_menu` VALUES ('70', '66', '商户冻结', null, null, '1', 'fa fa-circle-o', '3', '2020-08-09 21:07:33', '2020-08-09 21:24:24');
 INSERT INTO `sys_menu` VALUES ('71', '0', '银行卡管理', null, null, '0', 'fa fa-circle-o', '3', '2020-08-09 21:08:51', '2020-08-09 21:25:51');
 INSERT INTO `sys_menu` VALUES ('72', '71', '专员付款卡', 'modules/bankCard/list.html', null, '1', 'fa fa-circle-o', '0', '2020-08-09 21:09:17', '2020-08-19 21:12:40');
-INSERT INTO `sys_menu` VALUES ('73', '71', '机构银行卡', null, null, '1', 'fa fa-circle-o', '1', '2020-08-09 21:09:41', '2020-08-09 21:28:19');
 INSERT INTO `sys_menu` VALUES ('74', '0', '报表', null, null, '0', 'fa fa-circle-o', '4', '2020-08-09 21:12:45', '2020-08-09 21:26:04');
 INSERT INTO `sys_menu` VALUES ('75', '74', '代付日报表', null, null, '1', 'fa fa-circle-o', '0', '2020-08-09 21:14:00', null);
 INSERT INTO `sys_menu` VALUES ('76', '74', '专员付款日报表', null, null, '1', 'fa fa-circle-o', '1', '2020-08-09 21:16:40', '2020-08-09 21:28:30');
@@ -123,3 +122,10 @@ INSERT INTO `sys_menu` VALUES ('90', '72', '启用', null, 'bankCard:enable', '2
 INSERT INTO `sys_menu` VALUES ('91', '72', '禁用', null, 'bankCard:disable', '2', 'fa fa-circle-o', '0', '2020-08-19 21:15:34', null);
 INSERT INTO `sys_menu` VALUES ('92', '72', '删除', null, 'bankCard:remove', '2', 'fa fa-circle-o', '0', '2020-08-19 21:16:02', null);
 INSERT INTO `sys_menu` VALUES ('93', '72', '增加', null, 'bankCard:save', '2', 'fa fa-circle-o', '0', '2020-08-19 21:16:35', null);
+INSERT INTO `sys_menu` VALUES ('94', '66', '增加', null, 'procurement:save', '8', 'fa fa-circle-o', null, null, null);
+INSERT INTO `sys_menu` VALUES ('95', '66', '增加：代理', null, 'procurement:save:agent', '8', 'fa fa-circle-o', null, null, null);
+INSERT INTO `sys_menu` VALUES ('96', '66', '刷新', null, 'procurement:list', '8', 'fa fa-circle-o', null, null, null);
+INSERT INTO `sys_menu` VALUES ('97', '68', '刷新', null, 'merchant:charge:list', '2', 'fa fa-circle-o', '0', '2020-08-24 16:22:35', null);
+INSERT INTO `sys_menu` VALUES ('98', '68', '添加充值订单', null, 'merchant:charge:success', '2', 'fa fa-circle-o', '0', '2020-08-24 16:23:07', null);
+INSERT INTO `sys_menu` VALUES ('99', '68', '确认充值成功', null, 'merchant:charge:save', '2', 'fa fa-circle-o', '0', '2020-08-24 16:24:37', null);
+INSERT INTO `sys_menu` VALUES ('100', '68', '确认充值失败', null, 'merchant:charge:fail', '2', 'fa fa-circle-o', '0', '2020-08-24 16:25:25', null);
