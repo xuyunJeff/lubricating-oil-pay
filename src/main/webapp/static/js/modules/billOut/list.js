@@ -134,7 +134,7 @@ var vm = new Vue({
         },
         billFailed:function (billId) {
             $.ConfirmAjax({
-                msg : "回退订单到机构？",
+                msg : "确定作废订单？",
                 url: '../../apiV1/billOut/bill/failed?billId='+billId+'&_' + $.now(),
                 success: function(data) {
                     vm.load();
@@ -143,7 +143,7 @@ var vm = new Vue({
         },
         billGoBackOrg: function(billId){
             $.ConfirmAjax({
-                msg : "确定作废订单？",
+                msg : "回退订单到机构？",
                 url: '../../apiV1/billOut/bill/goBackOrg?billId='+billId+'&_' + $.now(),
                 success: function(data) {
                     vm.load();
