@@ -60,11 +60,6 @@ public class OnlineBusinessEntity extends BottleBaseEntity {
     @Transient
     private String bankAccountName;
 
-    @Transient
-    public Date createTime;
-
-    @Transient
-    public Date lastUpdate;
 
     public OnlineBusinessEntity(Long businessId) {
         this.businessId = businessId;

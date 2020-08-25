@@ -31,7 +31,7 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
 
     public OnlineBusinessEntity getNextBusiness(Long orgId) {
         String redisKey = BusinessConstant.BusinessRedisKey.onlinePosition(orgId);
-        OnlineBusinessEntity currentBusiness = (OnlineBusinessEntity) redisCacheManager.get(redisKey);
+        OnlineBusinessEntity currentBusiness = redisCacheManager.getBean(redisKey,OnlineBusinessEntity.class);
         if (null != currentBusiness) {
             OnlineBusinessEntity nextOnlineBusiness = mapper.nextOnlineBusiness(orgId, currentBusiness.getPosition());
             if (nextOnlineBusiness != null) {

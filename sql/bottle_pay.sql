@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50730
 File Encoding         : 65001
 
-Date: 2020-08-25 20:40:28
+Date: 2020-08-26 00:31:11
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -41,7 +41,7 @@ CREATE TABLE `balance` (
 -- ----------------------------
 -- Records of balance
 -- ----------------------------
-INSERT INTO `balance` VALUES ('1', '106', '4', '10000.0000', '0.0000', '0.0000', '2020-08-18 03:37:14', '2020-08-18 03:37:14', '2', 'DaXiong', '3', '商户', '3000.0000');
+INSERT INTO `balance` VALUES ('1', '106', '4', '70000.0000', '0.0000', '0.0000', '2020-08-26 00:25:47', '2020-08-25 16:25:47', '2', 'DaXiong', '3', '商户', '3000.0000');
 
 -- ----------------------------
 -- Table structure for balance_procurement
@@ -67,12 +67,13 @@ CREATE TABLE `balance_procurement` (
   `out_after_balance` decimal(13,4) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `index` (`out_business_id`,`out_business_name`,`in_business_name`,`in_business_id`,`create_time`,`org_id`,`in_bank_card_no`,`in_bank_name`,`out_bank_card_no`,`out_bank_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of balance_procurement
 -- ----------------------------
 INSERT INTO `balance_procurement` VALUES ('1', '1', '1', '1', '1', '1.0000', '2020-08-21 20:52:13', '2020-08-21 20:52:15', '1', '1', '1', '1', '1', '1.0000', '1.0000', '1.0000', '1.0000');
+INSERT INTO `balance_procurement` VALUES ('2', '8', 'mighty', 'adrian', '9', '10000.0000', '2020-08-25 16:26:06', '2020-08-25 16:26:06', '2', '874456312254', '北京银行', '8745631456987', '海南银行', '0.0000', '20000.0000', '10000.0000', '10000.0000');
 
 -- ----------------------------
 -- Table structure for bank
@@ -138,12 +139,15 @@ CREATE TABLE `bank_card` (
   `enable` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 禁用 1 启用',
   `balance_daily_limit` decimal(13,4) NOT NULL DEFAULT '50000.0000',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of bank_card
 -- ----------------------------
 INSERT INTO `bank_card` VALUES ('1', '2020-08-20 23:03:37', '2020-08-20 15:43:35', 'Allen', '6', '8888888888888888888', '中国银行', '习近平', '3', '106', '0.0000', '1', '0', '50000.0000');
+INSERT INTO `bank_card` VALUES ('2', '2020-08-26 00:26:06', '2020-08-25 16:26:06', 'mighty', '8', '8745631456987', '海南银行', '大宝', '2', 'DaXiong', '10000.0000', '1', '1', '50000.0000');
+INSERT INTO `bank_card` VALUES ('3', '2020-08-26 00:25:38', '2020-08-25 16:25:39', 'mighty', '8', '49413188444', '上海银行', '小雨', '2', 'DaXiong', '40000.0000', '1', '0', '50000.0000');
+INSERT INTO `bank_card` VALUES ('4', '2020-08-26 00:26:06', '2020-08-25 16:26:06', 'adrian', '9', '874456312254', '北京银行', 'adrian', '2', 'DaXiong', '10000.0000', '1', '0', '50000.0000');
 
 -- ----------------------------
 -- Table structure for bill_in
@@ -173,11 +177,13 @@ CREATE TABLE `bill_in` (
   KEY `index_merchant` (`create_time`,`last_update`,`merchant_name`,`org_id`),
   KEY `index_type` (`bank_card_no`,`bank_account_name`,`org_id`),
   KEY `index_business` (`create_time`,`last_update`,`business_name`,`business_id`,`org_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of bill_in
 -- ----------------------------
+INSERT INTO `bill_in` VALUES ('1', '2020-08-26 00:25:47', '2020-08-25 16:25:47', '106', '4', '42020082600001', '12356666', '0:0:0:0:0:0:0:1', 'mighty', '8', '2', '20000.0000', '8745631456987', '海南银行', '大宝', '2', 'DaXiong', '106');
+INSERT INTO `bill_in` VALUES ('2', '2020-08-26 00:25:38', '2020-08-25 16:25:39', '106', '4', '42020082600002', '451884756', '0:0:0:0:0:0:0:1', 'mighty', '8', '2', '40000.0000', '49413188444', '上海银行', '小雨', '2', 'DaXiong', '106');
 
 -- ----------------------------
 -- Table structure for bill_out
@@ -263,11 +269,12 @@ CREATE TABLE `frozen_detail` (
   `business_id` bigint(20) NOT NULL COMMENT '付款专员ID',
   PRIMARY KEY (`id`),
   KEY `index_agent` (`org_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of frozen_detail
 -- ----------------------------
+INSERT INTO `frozen_detail` VALUES ('1', '106', '4', '10000.0000', '10000.0000', '8745631456987', '海南银行', '大宝', '2020-08-26 00:08:08', '2020-08-26 00:08:08', '2', 'DaXiong', 'mighty', '8');
 
 -- ----------------------------
 -- Table structure for ip_limit
@@ -301,11 +308,12 @@ CREATE TABLE `online_business` (
   `business_id` bigint(20) NOT NULL COMMENT '付款专员ID',
   `position` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of online_business
 -- ----------------------------
+INSERT INTO `online_business` VALUES ('1', '2', 'DaXiong', 'mighty', '8', '1');
 
 -- ----------------------------
 -- Table structure for qrtz_calendars
@@ -422,7 +430,7 @@ CREATE TABLE `qrtz_scheduler_state` (
 -- ----------------------------
 -- Records of qrtz_scheduler_state
 -- ----------------------------
-INSERT INTO `qrtz_scheduler_state` VALUES ('quartzScheduler', 'DESKTOP-N9NLQH51598345346106', '1598359224615', '15000');
+INSERT INTO `qrtz_scheduler_state` VALUES ('quartzScheduler', 'DESKTOP-N9NLQH51598372283379', '1598373067047', '15000');
 
 -- ----------------------------
 -- Table structure for qrtz_triggers
@@ -4053,7 +4061,7 @@ CREATE TABLE `sys_log` (
   `ip` varchar(64) DEFAULT NULL COMMENT 'IP地址',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=248 DEFAULT CHARSET=utf8 COMMENT='系统日志';
+) ENGINE=InnoDB AUTO_INCREMENT=294 DEFAULT CHARSET=utf8 COMMENT='系统日志';
 
 -- ----------------------------
 -- Records of sys_log
@@ -4132,6 +4140,52 @@ INSERT INTO `sys_log` VALUES ('244', '-1', '获取用户信息为空', '登录',
 INSERT INTO `sys_log` VALUES ('245', '3', 'lynn', '登录', '8', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '192.168.31.96', '2020-08-25 16:42:52');
 INSERT INTO `sys_log` VALUES ('246', '1', 'admin', '登录', '11', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 16:52:30');
 INSERT INTO `sys_log` VALUES ('247', '1', 'admin', '登录', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 18:14:15');
+INSERT INTO `sys_log` VALUES ('248', '1', 'admin', '登录', '17', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 23:52:18');
+INSERT INTO `sys_log` VALUES ('249', '-1', null, '退出系统', '6', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-25 23:52:31');
+INSERT INTO `sys_log` VALUES ('250', '1', 'admin', '登录', '5', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 23:52:50');
+INSERT INTO `sys_log` VALUES ('251', '1', 'admin', '新增用户', '16', 'com.bottle.pay.modules.sys.controller.SysUserController.save()', '{\"userId\":7,\"orgId\":2,\"orgName\":\"DaXiong\",\"username\":\"106Admin\",\"password\":\"73dc64cef667e1428c2162e219b86f6c\",\"email\":null,\"mobile\":null,\"status\":1,\"userIdCreate\":1,\"remark\":null,\"gmtCreate\":null,\"gmtModified\":null,\"roleIdList\":[4],\"roleNameList\":null,\"roleId\":4,\"roleName\":null}', '0:0:0:0:0:0:0:1', '2020-08-25 23:53:16');
+INSERT INTO `sys_log` VALUES ('252', '-1', null, '退出系统', '3', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-25 23:53:21');
+INSERT INTO `sys_log` VALUES ('253', '7', '106Admin', '登录', '8', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 23:53:27');
+INSERT INTO `sys_log` VALUES ('254', '-1', null, '退出系统', '3', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-25 23:53:56');
+INSERT INTO `sys_log` VALUES ('255', '7', '106Admin', '登录', '4', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 23:53:58');
+INSERT INTO `sys_log` VALUES ('256', '-1', null, '退出系统', '1', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-25 23:55:54');
+INSERT INTO `sys_log` VALUES ('257', '-1', '获取用户信息为空', '登录', '10', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{\"errorMsg\":\"账号已被锁定，请联系管理员\"}', '0:0:0:0:0:0:0:1', '2020-08-25 23:55:59');
+INSERT INTO `sys_log` VALUES ('258', '1', 'admin', '登录', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 23:56:10');
+INSERT INTO `sys_log` VALUES ('259', '1', 'admin', '新增用户', '15', 'com.bottle.pay.modules.sys.controller.SysUserController.save()', '{\"userId\":8,\"orgId\":2,\"orgName\":\"DaXiong\",\"username\":\"mighty\",\"password\":\"34f1ddb08e18047804d27f00ceef4c24\",\"email\":null,\"mobile\":null,\"status\":1,\"userIdCreate\":1,\"remark\":null,\"gmtCreate\":null,\"gmtModified\":null,\"roleIdList\":[2],\"roleNameList\":null,\"roleId\":2,\"roleName\":null}', '0:0:0:0:0:0:0:1', '2020-08-25 23:56:32');
+INSERT INTO `sys_log` VALUES ('260', '-1', null, '退出系统', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-25 23:56:36');
+INSERT INTO `sys_log` VALUES ('261', '-1', '获取用户信息为空', '登录', '10', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{\"errorMsg\":\"密码不正确\"}', '0:0:0:0:0:0:0:1', '2020-08-25 23:56:42');
+INSERT INTO `sys_log` VALUES ('262', '8', 'mighty', '登录', '3', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 23:56:48');
+INSERT INTO `sys_log` VALUES ('263', '8', 'mighty', '新增', '38', 'com.bottle.pay.modules.biz.controller.BankCardController.save()', '{\"id\":0,\"createTime\":1598371037395,\"lastUpdate\":1598371037395,\"orgId\":2,\"orgName\":\"DaXiong\",\"startTime\":null,\"endTime\":null,\"businessName\":\"mighty\",\"businessId\":8,\"bankCardNo\":\"8745631456987\",\"bankName\":\"海南银行\",\"bankAccountName\":\"大宝\",\"balance\":0,\"cardStatus\":1,\"enable\":false,\"balanceDailyLimit\":50000}', '0:0:0:0:0:0:0:1', '2020-08-25 23:57:17');
+INSERT INTO `sys_log` VALUES ('264', '7', '106Admin', '登录', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-25 23:57:37');
+INSERT INTO `sys_log` VALUES ('265', '-1', null, '退出系统', '3', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:00:03');
+INSERT INTO `sys_log` VALUES ('266', '4', '106', '登录', '10', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:00:08');
+INSERT INTO `sys_log` VALUES ('267', '4', '106', '新增', '35', 'com.bottle.pay.modules.biz.controller.BillInController.save()', '{\"id\":0,\"createTime\":1598371228486,\"lastUpdate\":1598371228486,\"orgId\":2,\"orgName\":\"DaXiong\",\"startTime\":null,\"endTime\":null,\"merchantName\":\"106\",\"merchantId\":4,\"billId\":\"42020082600001\",\"thirdBillId\":\"12356666\",\"ip\":\"0:0:0:0:0:0:0:1\",\"businessName\":\"mighty\",\"businessId\":8,\"billStatus\":1,\"price\":20000,\"bankCardNo\":\"8745631456987\",\"bankName\":\"海南银行\",\"bankAccountName\":\"大宝\",\"comment\":\"106\"}', '0:0:0:0:0:0:0:1', '2020-08-26 00:00:28');
+INSERT INTO `sys_log` VALUES ('268', '-1', null, '退出系统', '1', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:00:48');
+INSERT INTO `sys_log` VALUES ('269', '7', '106Admin', '登录', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:00:51');
+INSERT INTO `sys_log` VALUES ('270', '7', '106Admin', '新增', '34', 'com.bottle.pay.modules.biz.controller.FrozenDetailController.save()', '{\"id\":null,\"createTime\":1598371266107,\"lastUpdate\":1598371266107,\"orgId\":2,\"orgName\":\"DaXiong\",\"startTime\":null,\"endTime\":null,\"merchantName\":\"106\",\"merchantId\":4,\"balanceFrozen\":10000,\"balanceUnfrozen\":0,\"bankCardNo\":\"8745631456987\",\"bankName\":\"海南银行\",\"bankAccountName\":\"大宝\",\"businessName\":\"mighty\",\"businessId\":8}', '0:0:0:0:0:0:0:1', '2020-08-26 00:01:06');
+INSERT INTO `sys_log` VALUES ('271', '7', '106Admin', '解冻', '17', 'com.bottle.pay.modules.biz.controller.FrozenDetailController.update()', '1', '0:0:0:0:0:0:0:1', '2020-08-26 00:03:01');
+INSERT INTO `sys_log` VALUES ('272', '-1', null, '退出系统', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:04:45');
+INSERT INTO `sys_log` VALUES ('273', '8', 'mighty', '登录', '4', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:04:48');
+INSERT INTO `sys_log` VALUES ('274', '8', 'mighty', '新增', '12', 'com.bottle.pay.modules.biz.controller.BankCardController.save()', '{\"id\":0,\"createTime\":1598371513097,\"lastUpdate\":1598371513097,\"orgId\":2,\"orgName\":\"DaXiong\",\"startTime\":null,\"endTime\":null,\"businessName\":\"mighty\",\"businessId\":8,\"bankCardNo\":\"49413188444\",\"bankName\":\"上海银行\",\"bankAccountName\":\"小雨\",\"balance\":0,\"cardStatus\":1,\"enable\":false,\"balanceDailyLimit\":50000}', '0:0:0:0:0:0:0:1', '2020-08-26 00:05:13');
+INSERT INTO `sys_log` VALUES ('275', '7', '106Admin', '解冻', '14', 'com.bottle.pay.modules.biz.controller.FrozenDetailController.update()', '1', '0:0:0:0:0:0:0:1', '2020-08-26 00:08:08');
+INSERT INTO `sys_log` VALUES ('276', '-1', null, '退出系统', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:09:30');
+INSERT INTO `sys_log` VALUES ('277', '7', '106Admin', '登录', '3', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:09:34');
+INSERT INTO `sys_log` VALUES ('278', '7', '106Admin', '新增用户', '21', 'com.bottle.pay.modules.sys.controller.SysUserController.save()', '{\"userId\":9,\"orgId\":2,\"orgName\":\"DaXiong\",\"username\":\"adrian\",\"password\":\"ce60ec109a00d553da35735d7c7a8bef\",\"email\":null,\"mobile\":null,\"status\":1,\"userIdCreate\":7,\"remark\":null,\"gmtCreate\":null,\"gmtModified\":null,\"roleIdList\":[2],\"roleNameList\":null,\"roleId\":2,\"roleName\":null}', '0:0:0:0:0:0:0:1', '2020-08-26 00:22:40');
+INSERT INTO `sys_log` VALUES ('279', '-1', null, '退出系统', '7', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:22:45');
+INSERT INTO `sys_log` VALUES ('280', '9', 'adrian', '登录', '29', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:22:53');
+INSERT INTO `sys_log` VALUES ('281', '9', 'adrian', '新增', '30', 'com.bottle.pay.modules.biz.controller.BankCardController.save()', '{\"id\":0,\"createTime\":1598372603450,\"lastUpdate\":1598372603450,\"orgId\":2,\"orgName\":\"DaXiong\",\"startTime\":null,\"endTime\":null,\"businessName\":\"adrian\",\"businessId\":9,\"bankCardNo\":\"874456312254\",\"bankName\":\"北京银行\",\"bankAccountName\":\"adrian\",\"balance\":0,\"cardStatus\":1,\"enable\":false,\"balanceDailyLimit\":50000}', '0:0:0:0:0:0:0:1', '2020-08-26 00:23:23');
+INSERT INTO `sys_log` VALUES ('282', '-1', null, '退出系统', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:23:38');
+INSERT INTO `sys_log` VALUES ('283', '7', '106Admin', '登录', '3', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:23:41');
+INSERT INTO `sys_log` VALUES ('284', '-1', null, '退出系统', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:24:02');
+INSERT INTO `sys_log` VALUES ('285', '4', '106', '登录', '4', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:24:10');
+INSERT INTO `sys_log` VALUES ('286', '4', '106', '新增', '30', 'com.bottle.pay.modules.biz.controller.BillInController.save()', '{\"id\":0,\"createTime\":1598372692507,\"lastUpdate\":1598372692507,\"orgId\":2,\"orgName\":\"DaXiong\",\"startTime\":null,\"endTime\":null,\"merchantName\":\"106\",\"merchantId\":4,\"billId\":\"42020082600002\",\"thirdBillId\":\"451884756\",\"ip\":\"0:0:0:0:0:0:0:1\",\"businessName\":\"mighty\",\"businessId\":8,\"billStatus\":1,\"price\":40000,\"bankCardNo\":\"49413188444\",\"bankName\":\"上海银行\",\"bankAccountName\":\"小雨\",\"comment\":\"106\"}', '0:0:0:0:0:0:0:1', '2020-08-26 00:24:52');
+INSERT INTO `sys_log` VALUES ('287', '-1', null, '退出系统', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:24:59');
+INSERT INTO `sys_log` VALUES ('288', '8', 'mighty', '登录', '4', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:25:05');
+INSERT INTO `sys_log` VALUES ('289', '-1', null, '退出系统', '2', 'com.bottle.pay.modules.sys.controller.SysLoginController.logout()', null, '0:0:0:0:0:0:0:1', '2020-08-26 00:25:18');
+INSERT INTO `sys_log` VALUES ('290', '7', '106Admin', '登录', '3', 'com.bottle.pay.modules.sys.controller.SysLoginController.login()', '{}', '0:0:0:0:0:0:0:1', '2020-08-26 00:25:22');
+INSERT INTO `sys_log` VALUES ('291', '7', '106Admin', '确认成功', '50', 'com.bottle.pay.modules.biz.controller.BillInController.confirmSuccess()', '\"42020082600002\"', '0:0:0:0:0:0:0:1', '2020-08-26 00:25:38');
+INSERT INTO `sys_log` VALUES ('292', '7', '106Admin', '确认成功', '18', 'com.bottle.pay.modules.biz.controller.BillInController.confirmSuccess()', '\"42020082600001\"', '0:0:0:0:0:0:0:1', '2020-08-26 00:25:47');
+INSERT INTO `sys_log` VALUES ('293', '7', '106Admin', '新增', '24', 'com.bottle.pay.modules.biz.controller.BalanceProcurementController.save()', '{\"id\":0,\"createTime\":1598372766133,\"lastUpdate\":1598372766133,\"orgId\":2,\"orgName\":\"DaXiong\",\"startTime\":null,\"endTime\":null,\"outBusinessId\":8,\"outBusinessName\":\"mighty\",\"inBusinessName\":\"adrian\",\"inBusinessId\":9,\"price\":10000,\"inBankCardNo\":\"874456312254\",\"inBankName\":\"北京银行\",\"outBankCardNo\":\"8745631456987\",\"outBankName\":\"海南银行\",\"inBeforeBalance\":0.0000,\"outBeforeBalance\":20000.0000,\"inAfterBalance\":10000.0000,\"outAfterBalance\":10000.0000}', '0:0:0:0:0:0:0:1', '2020-08-26 00:26:06');
 
 -- ----------------------------
 -- Table structure for sys_macro
@@ -4327,7 +4381,7 @@ CREATE TABLE `sys_role_menu` (
   `role_id` bigint(20) DEFAULT NULL COMMENT '角色ID',
   `menu_id` bigint(20) DEFAULT NULL COMMENT '菜单ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=179 DEFAULT CHARSET=utf8 COMMENT='角色与菜单对应关系';
+) ENGINE=InnoDB AUTO_INCREMENT=230 DEFAULT CHARSET=utf8 COMMENT='角色与菜单对应关系';
 
 -- ----------------------------
 -- Records of sys_role_menu
@@ -4443,6 +4497,57 @@ INSERT INTO `sys_role_menu` VALUES ('175', '4', '92');
 INSERT INTO `sys_role_menu` VALUES ('176', '1', '94');
 INSERT INTO `sys_role_menu` VALUES ('177', '1', '95');
 INSERT INTO `sys_role_menu` VALUES ('178', '1', '96');
+INSERT INTO `sys_role_menu` VALUES ('179', '3', '66');
+INSERT INTO `sys_role_menu` VALUES ('180', '3', '68');
+INSERT INTO `sys_role_menu` VALUES ('181', '3', '97');
+INSERT INTO `sys_role_menu` VALUES ('182', '3', '98');
+INSERT INTO `sys_role_menu` VALUES ('183', '3', '99');
+INSERT INTO `sys_role_menu` VALUES ('184', '3', '100');
+INSERT INTO `sys_role_menu` VALUES ('185', '3', '79');
+INSERT INTO `sys_role_menu` VALUES ('186', '4', '79');
+INSERT INTO `sys_role_menu` VALUES ('187', '3', '67');
+INSERT INTO `sys_role_menu` VALUES ('188', '4', '67');
+INSERT INTO `sys_role_menu` VALUES ('189', '3', '80');
+INSERT INTO `sys_role_menu` VALUES ('190', '4', '80');
+INSERT INTO `sys_role_menu` VALUES ('191', '3', '81');
+INSERT INTO `sys_role_menu` VALUES ('192', '4', '81');
+INSERT INTO `sys_role_menu` VALUES ('193', '3', '82');
+INSERT INTO `sys_role_menu` VALUES ('194', '4', '82');
+INSERT INTO `sys_role_menu` VALUES ('195', '3', '83');
+INSERT INTO `sys_role_menu` VALUES ('196', '4', '83');
+INSERT INTO `sys_role_menu` VALUES ('197', '3', '84');
+INSERT INTO `sys_role_menu` VALUES ('198', '4', '84');
+INSERT INTO `sys_role_menu` VALUES ('199', '3', '85');
+INSERT INTO `sys_role_menu` VALUES ('200', '4', '85');
+INSERT INTO `sys_role_menu` VALUES ('201', '3', '86');
+INSERT INTO `sys_role_menu` VALUES ('202', '4', '86');
+INSERT INTO `sys_role_menu` VALUES ('203', '4', '66');
+INSERT INTO `sys_role_menu` VALUES ('204', '4', '70');
+INSERT INTO `sys_role_menu` VALUES ('205', '3', '70');
+INSERT INTO `sys_role_menu` VALUES ('206', '4', '68');
+INSERT INTO `sys_role_menu` VALUES ('207', '3', '68');
+INSERT INTO `sys_role_menu` VALUES ('208', '4', '97');
+INSERT INTO `sys_role_menu` VALUES ('209', '3', '97');
+INSERT INTO `sys_role_menu` VALUES ('210', '4', '98');
+INSERT INTO `sys_role_menu` VALUES ('211', '3', '98');
+INSERT INTO `sys_role_menu` VALUES ('212', '4', '99');
+INSERT INTO `sys_role_menu` VALUES ('213', '3', '99');
+INSERT INTO `sys_role_menu` VALUES ('214', '4', '100');
+INSERT INTO `sys_role_menu` VALUES ('215', '3', '100');
+INSERT INTO `sys_role_menu` VALUES ('216', '4', '69');
+INSERT INTO `sys_role_menu` VALUES ('217', '3', '69');
+INSERT INTO `sys_role_menu` VALUES ('218', '2', '69');
+INSERT INTO `sys_role_menu` VALUES ('219', '4', '6');
+INSERT INTO `sys_role_menu` VALUES ('220', '4', '3');
+INSERT INTO `sys_role_menu` VALUES ('221', '4', '11');
+INSERT INTO `sys_role_menu` VALUES ('222', '4', '12');
+INSERT INTO `sys_role_menu` VALUES ('223', '4', '13');
+INSERT INTO `sys_role_menu` VALUES ('224', '4', '14');
+INSERT INTO `sys_role_menu` VALUES ('225', '4', '24');
+INSERT INTO `sys_role_menu` VALUES ('226', '4', '25');
+INSERT INTO `sys_role_menu` VALUES ('227', '4', '26');
+INSERT INTO `sys_role_menu` VALUES ('228', '4', '36');
+INSERT INTO `sys_role_menu` VALUES ('229', '4', '42');
 
 -- ----------------------------
 -- Table structure for sys_role_org
@@ -4478,7 +4583,7 @@ CREATE TABLE `sys_user` (
   `gmt_modified` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `uniq_username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='系统用户';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='系统用户';
 
 -- ----------------------------
 -- Records of sys_user
@@ -4489,6 +4594,9 @@ INSERT INTO `sys_user` VALUES ('3', '3', 'lynn', '88f6abf53883a2a640202bfca985b7
 INSERT INTO `sys_user` VALUES ('4', '2', '106', '7463cb8010e452217859ec619236c397', null, null, '1', null, '1', '2020-08-13 23:16:39', null);
 INSERT INTO `sys_user` VALUES ('5', '3', 'Becky', 'a32e9f38514e6db10b4298608c6d9939', null, null, '1', null, '1', '2020-08-19 01:10:00', null);
 INSERT INTO `sys_user` VALUES ('6', '3', 'Allen', 'f1ab5d145e018210e7aaa036e08b0112', null, null, '1', null, '1', '2020-08-19 01:14:43', null);
+INSERT INTO `sys_user` VALUES ('7', '2', '106Admin', '73dc64cef667e1428c2162e219b86f6c', null, null, '1', null, '1', '2020-08-25 23:53:16', null);
+INSERT INTO `sys_user` VALUES ('8', '2', 'mighty', '34f1ddb08e18047804d27f00ceef4c24', null, null, '1', null, '1', '2020-08-25 23:56:32', null);
+INSERT INTO `sys_user` VALUES ('9', '2', 'adrian', 'ce60ec109a00d553da35735d7c7a8bef', null, null, '1', null, '7', '2020-08-26 00:22:40', null);
 
 -- ----------------------------
 -- Table structure for sys_user_role
@@ -4499,7 +4607,7 @@ CREATE TABLE `sys_user_role` (
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户ID',
   `role_id` bigint(20) DEFAULT NULL COMMENT '角色ID',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='用户与角色对应关系';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='用户与角色对应关系';
 
 -- ----------------------------
 -- Records of sys_user_role
@@ -4510,6 +4618,9 @@ INSERT INTO `sys_user_role` VALUES ('4', '3', '2');
 INSERT INTO `sys_user_role` VALUES ('5', '4', '3');
 INSERT INTO `sys_user_role` VALUES ('6', '5', '2');
 INSERT INTO `sys_user_role` VALUES ('7', '6', '2');
+INSERT INTO `sys_user_role` VALUES ('8', '7', '4');
+INSERT INTO `sys_user_role` VALUES ('9', '8', '2');
+INSERT INTO `sys_user_role` VALUES ('10', '9', '2');
 
 -- ----------------------------
 -- Table structure for sys_user_token

@@ -24,6 +24,7 @@
         FROM
         sys_user u
         <where>
+            1=1
             <if test="userIdCreate != null">
                 AND u.user_id_create = #{userIdCreate}
             </if>
@@ -31,6 +32,9 @@
                 AND u.username LIKE concat('%',#{username},'%')
                 OR u.email LIKE concat('%',#{username},'%')
                 OR u.mobile LIKE concat('%',#{username},'%')
+            </if>
+            <if test="orgId != null">
+                AND u.org_id = #{orgId}
             </if>
         </where>
         ORDER BY
