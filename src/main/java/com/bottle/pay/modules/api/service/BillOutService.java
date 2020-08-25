@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
+import static com.bottle.pay.common.constant.SystemConstant.BIG_DECIMAL_HUNDRED;
+
 
 @Service("billOutService")
 @Slf4j
@@ -79,14 +81,16 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         Map<OnlineBusinessEntity, BigDecimal> businessOnline = null;
         OnlineBusinessEntity onlineBusinessEntity = null;
         BigDecimal free;
+        int tryTimes = 0 ;
+        int onloneAll =  onlineBusinessService.count();
         do {
             Map<OnlineBusinessEntity, BigDecimal>   businessOnlineNext = getBusinessFreeBalance(entity);
-            if(businessOnlineNext.equals(businessOnline)){
-                break;
-            }
+            if(businessOnlineNext.equals(businessOnline)) break;
             businessOnline = businessOnlineNext;
             free = businessOnline.values().stream().findFirst().get();
             onlineBusinessEntity = businessOnline.keySet().stream().findFirst().get();
+            tryTimes ++ ;
+            if(tryTimes == onloneAll) break ;
         } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
         if(onlineBusinessEntity == null) {
             throw new RRException("系统错误不存在在线出款员");
@@ -105,6 +109,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @return
      */
     public BillOutEntity billsOutBusinessByHuman(BillOutEntity entity, OnlineBusinessEntity onlineBusinessEntity) {
+        entity.setBillType(BillConstant.BillTypeEnum.ByHuman.getCode());
         entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
         incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(), entity.getPrice());
         return entity;
@@ -215,7 +220,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     private BigDecimal getBusinessFreeBalance(BigDecimal businessTotalBalance, OnlineBusinessEntity businessOnline) {
         BigDecimal businessPayingBalance = getBusinessBillOutBalance(businessOnline.getBusinessId());
-        return businessTotalBalance.subtract(businessPayingBalance);
+        return businessTotalBalance.subtract(businessPayingBalance.divide(BIG_DECIMAL_HUNDRED));
     }
 
     /**
@@ -262,7 +267,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
             if(businessPaying == null) {
                 businessPaying =BigDecimal.ZERO;
             }
-            businessPaying = businessPaying.multiply(SystemConstant.BIG_DECIMAL_HUNDRED);
+            businessPaying = businessPaying.multiply(BIG_DECIMAL_HUNDRED);
             redisCacheManager.set(redisKey, businessPaying);
             return businessPaying;
         }

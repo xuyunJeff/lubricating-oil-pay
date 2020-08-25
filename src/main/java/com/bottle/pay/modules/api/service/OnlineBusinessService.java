@@ -99,4 +99,8 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
         }
         return false;
     }
+
+    public int count() {
+        return mapper.selectCount(null);
+    }
 }
