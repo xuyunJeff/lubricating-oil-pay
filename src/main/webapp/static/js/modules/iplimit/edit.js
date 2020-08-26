@@ -8,15 +8,21 @@ var vm = new Vue({
 			id: 0
 		}
 	},
+//    data: {
+//		balance: {
+//			id: 0
+//		}
+//	},
 	methods : {
 		setForm: function() {
-			$.SetForm({
-				url: '../../merchant/ip/info?_' + $.now(),
-		    	param: vm.ipLimit.id,
-		    	success: function(data) {
-		    		vm.ipLimit = data;
-		    	}
-			});
+//			$.SetForm({
+//				url: '../../merchant/ip/info?_' + $.now(),
+//		    	param: vm.ipLimit.id,
+//		    	success: function(data) {
+//		    		ipLimit = data
+//		    	}
+
+//			});
 		},
 		acceptClick: function() {
 			if (!$('#form').Validform()) {

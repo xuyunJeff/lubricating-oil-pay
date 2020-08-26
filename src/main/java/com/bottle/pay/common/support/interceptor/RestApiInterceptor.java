@@ -13,15 +13,12 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -119,7 +116,7 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
             WebUtils.write(response, JSONUtils.beanToJson(RestApiConstant.TokenErrorEnum.USER_DISABLE.getResp()));
             return false;
         }
-        String key = IPConstant.getIpWhiteListCacheKey(sysUserEntity.getUserId(), IPConstant.MerchantIPEnum.ADMIN.getCode());
+        String key = IPConstant.getClientIpWhiteListCacheKey(sysUserEntity.getUserId(), IPConstant.MerchantIPEnum.ADMIN.getCode());
         List<Object> ipList = redisCacheManager.lGet(key, 0, -1);
         //IP 白名单
         String ipAddr = WebUtils.getIpAddr();

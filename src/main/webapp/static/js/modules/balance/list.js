@@ -41,13 +41,25 @@ function getGrid() {
             {field : "billOutLimit", title : "自动出款额度", width : "100px"},
             {field : "mobile", title : "手机", width : "100px"},
             {field : "email", title : "邮箱", width : "100px"},
+            {field : "ipList", title : "ip", width : "100px",formatter:function(value){
+                var _html_1 = '商户对应服务器:';
+                var _html_2 = '商户登录后台:';
+                for(var ip in value){
+                    if(ip.type == 1){
+                        _html_1 += ip.ipList;
+                    }else if(ip.type == 2){
+                        _html_2 += ip.ipList;
+                    }
+                }
+                return _html_1 + '</br>' + _html_2;
+            }},
             {title : "操作", formatter : function(value, row, index) {
                     var _html = '';
 //                    if (hasPermission('apiV1:balance:edit')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="查看IP"><i class="fa fa-pencil">IP查看</i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.ipList+'\')" title="修改IP"><i class="fa fa-pencil">修改IP</i></a>';
 //                    }
 //                    if (hasPermission('apiV1:balance:remove')) {
-                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="修改IP"><i class="fa fa-trash-o">IP修改</i></a>';
+//                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="修改IP"><i class="fa fa-trash-o">IP修改</i></a>';
 //                    }
 
                     return _html;
@@ -77,15 +89,15 @@ var vm = new Vue({
 				},
 			});
 		},
-		edit: function(id) {
+		edit: function(ipList) {
             dialogOpen({
                 title: '编辑',
                 url: 'modules/iplimit/edit.html?_' + $.now(),
                 width: '420px',
                 height: '350px',
                 success: function(iframeId){
-                    top.frames[iframeId].vm.balance.id = id;
-                    top.frames[iframeId].vm.setForm();
+                    top.frames[iframeId].vm.ipList = ipList;
+//                    top.frames[iframeId].vm.setForm();
                 },
                 yes: function(iframeId){
                     top.frames[iframeId].vm.acceptClick();

@@ -1,5 +1,6 @@
 package com.bottle.pay.modules.biz.view;
 
+import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -38,7 +39,7 @@ public class MerchantView {
     /**
      * Ip白名单
      */
-    private List<String> ipList;
+    private List<IpLimitEntity> ipList;
     /**
      * 手机
      */
@@ -68,4 +69,17 @@ public class MerchantView {
     private BigDecimal balancePaying;
 
     private Date createTime;
+
+    public void setIpList(List<IpLimitEntity> list){
+        if(list != null){
+            list.stream().forEach(e->{
+                e.setCreateTime(null);
+                e.setLastUpdate(null);
+                e.setOrgId(null);
+                e.setOrgName(null);
+            });
+            this.ipList=list;
+        }
+    }
+
 }

@@ -7,18 +7,30 @@ import lombok.Getter;
  */
 public class IPConstant {
 
-    public static final String IP_KEY = "ip:%s:%s";
+    private static final String C_IP_KEY = "ip:c:%s:%s";
+    private static final String S_IP_KEY = "ip:s:%s:%s";
 
 
     /**
-     * 根据商户ID,以及IP类型获取商户白名单
+     * 根据商户ID,以及IP类型获取商户管理登陆白名单
      *
      * @param merchantId
      * @param type
      * @return
      */
-    public static String getIpWhiteListCacheKey(long merchantId, int type) {
-        return String.format(IP_KEY, merchantId, type);
+    public static String getClientIpWhiteListCacheKey(long merchantId, int type) {
+        return String.format(C_IP_KEY, merchantId, type);
+    }
+
+    /**
+     *  根据商户ID,以及IP类型获取商户服务器白名单
+     *
+     * @param merchantId
+     * @param type
+     * @return
+             */
+    public static String getServerIpWhiteListCacheKey(long merchantId, int type) {
+        return String.format(S_IP_KEY, merchantId, type);
     }
 
     @Getter

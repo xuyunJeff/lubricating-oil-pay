@@ -8,9 +8,12 @@ import com.bottle.pay.common.utils.ShiroUtils;
 import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.dao.BalanceMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
+import com.bottle.pay.modules.biz.entity.IpLimitEntity;
+import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.biz.view.MerchantView;
 import com.bottle.pay.modules.sys.dao.SysUserMapper;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -29,6 +33,9 @@ public class MerchantService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private IpLimitService ipLimitService;
 
 
 
@@ -50,11 +57,16 @@ public class MerchantService {
         List<BalanceEntity> list = page.getRows();
         if(list != null){
             for(BalanceEntity balance : list){
-                SysUserEntity user = sysUserMapper.getObjectById(balance.getUserId());
                 MerchantView view = new MerchantView();
                 view.setBizType(balance.getRoleName());
+                SysUserEntity user = sysUserMapper.getObjectById(balance.getUserId());
                 BeanUtils.copyProperties(balance, view);
                 BeanUtils.copyProperties(user, view);
+
+                IpLimitEntity ipLimitEntity = new IpLimitEntity();
+                ipLimitEntity.setUserId(balance.getUserId());
+                Optional.ofNullable(ipLimitService.select(ipLimitEntity))
+                        .ifPresent(ips->view.setIpList(ips));
                 result.getRows().add(view);
             }
         }

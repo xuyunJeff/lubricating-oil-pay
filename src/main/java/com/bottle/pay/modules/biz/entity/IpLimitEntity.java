@@ -4,6 +4,7 @@ import com.bottle.pay.common.entity.BottleBaseEntity;
 import lombok.Data;
 
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 /**
@@ -33,4 +34,17 @@ public class IpLimitEntity extends BottleBaseEntity {
      * 1:商户对应服务器 2 商户登录后台的电脑
      */
     private Integer type;
+
+    /**
+     * 商户对应服务器
+     */
+    @Transient
+    private String serverIp;
+
+    /**
+     * 商户登录后台的电脑
+     */
+    @Transient
+    private String clientIp;
+
 }

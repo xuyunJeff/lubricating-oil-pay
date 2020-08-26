@@ -12,6 +12,7 @@ import com.bottle.pay.modules.biz.dao.IpLimitMapper;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +64,7 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
             num = mapper.save(ipLimit);
             log.info("商户白名单添加成功");
             String ipList = ipLimit.getIpList();
-            String key = IPConstant.getIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
+            String key = IPConstant.getClientIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
             redisCacheManager.lSet(key, Arrays.asList(ipList.split("#")));
         }
         return CommonUtils.msg(num);
@@ -73,14 +74,36 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
         SysUserEntity userEntity = super.getCurrentUser();
         boolean isMerchant = SystemConstant.RoleEnum.BillOutMerchant.getCode().equals(userEntity.getRoleId())
                 && ipLimit.getOrgId().equals(userEntity.getOrgId());
+        if (!isMerchant) {
+            throw new RRException("不是商户不能修改ip");
+        }
+        IpLimitEntity update = new IpLimitEntity();
+        update.setId(ipLimit.getId());
         int num = 0;
-        if (isMerchant) {
-            num = mapper.update(ipLimit);
-            log.info("商户:{}修改Ip:{}", userEntity.getUserId(), ipLimit.getIpList());
-            String key = IPConstant.getIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
-            redisCacheManager.lSet(key, Arrays.asList(ipLimit.getIpList().split("#")));
+
+        if(StringUtils.isNotEmpty(ipLimit.getServerIp())){
+            update.setType(1);
+            update.setIpList(ipLimit.getServerIp());
+            int count = mapper.update(ipLimit);
+            log.info("商户:{},修改type=1的Ip:{},结果:{}", userEntity.getUserId(), ipLimit.getServerIp(),count>0);
+            if(count>1){
+                num=1;
+                String key = IPConstant.getServerIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
+                redisCacheManager.lSet(key, Arrays.asList(ipLimit.getIpList().split("#")));
+            }
         }
 
+        if(StringUtils.isNotEmpty(ipLimit.getClientIp())){
+            update.setType(2);
+            update.setIpList(ipLimit.getClientIp());
+            int count = mapper.update(ipLimit);
+            log.info("商户:{},修改type=2的Ip:{},结果:{}", userEntity.getUserId(), ipLimit.getServerIp(),count>0);
+            if(count>1){
+                num=1;
+                String key = IPConstant.getClientIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
+                redisCacheManager.lSet(key, Arrays.asList(ipLimit.getIpList().split("#")));
+            }
+        }
         return CommonUtils.msg(num);
     }
 }
