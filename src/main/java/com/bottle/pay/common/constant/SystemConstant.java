@@ -26,7 +26,7 @@ public class SystemConstant {
 
     @AllArgsConstructor
     public enum RoleEnum {
-        CustomerService(2L, "出款员"), BillOutMerchant(3L, "代付商户"), Organization(4L, "机构管理员"), BillInMerchant(5L, "代收商户");
+        CustomerService(2L, "出款员"), BillOutMerchant(3L, "代付商户"), Organization(4L, "机构管理员"), BillInMerchant(5L, "代收商户"),BullOutMerchantServer(6L,"代付商户服务器");
 
         private final Long code;
         private final String msg;

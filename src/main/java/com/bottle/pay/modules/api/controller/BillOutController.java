@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.constant.SystemConstant;
+import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.entity.BillOutView;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
@@ -61,15 +62,14 @@ public class BillOutController extends AbstractController {
     }
 
 
-    @SysLog("后端派单")
+    @SysLog("后台管端派单")
     @RequestMapping("/push/order")
     public R pushOrder(@RequestBody BillOutView billOutView, HttpServletRequest request) {
         SysUserEntity userEntity = getUser();
-        //FIXME 使用系统的  WebUtils.getIpAddr()
-        String ip = request.getRemoteAddr();
+        String ip = WebUtils.getIpAddr();
+        if(!userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())) return R.error("角色越权");
         // 第一步保存订单,派单给机构
         BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, userEntity);
-        // FIXME 判断银行卡是否在黑名单内 @mighty
         if (existBlockCard(billOutView.getBankCardNo(), userEntity.getOrgId())) {
             return R.error("银行卡已被拉黑");
         }
@@ -79,6 +79,27 @@ public class BillOutController extends AbstractController {
         }
         return R.ok().put("price", bill.getPrice()).put("orderNo", bill.getThirdBillId()).put("billOutId", bill.getBillId());
     }
+
+
+    @SysLog("商户服务器管端派单")
+    @RequestMapping("/push/order/server")
+    public R pushOrderServer(@RequestBody BillOutView billOutView, HttpServletRequest request) {
+        SysUserEntity userEntity = getUser();
+        String ip = WebUtils.getIpAddr();
+        if(!userEntity.getRoleId().equals(SystemConstant.RoleEnum.BullOutMerchantServer.getCode())) return R.error("角色越权");
+        // 第一步保存订单,派单给机构
+        BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, userEntity);
+        if (existBlockCard(billOutView.getBankCardNo(), userEntity.getOrgId())) {
+            return R.error("银行卡已被拉黑");
+        }
+        if (bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())) {
+            // 自动派单给出款员
+            billOutService.billsOutBusiness(bill);
+        }
+        return R.ok().put("price", bill.getPrice()).put("orderNo", bill.getThirdBillId()).put("billOutId", bill.getBillId());
+    }
+
+
 
     @SysLog("人工派单接口")
     @RequestMapping("/appoint/human")
