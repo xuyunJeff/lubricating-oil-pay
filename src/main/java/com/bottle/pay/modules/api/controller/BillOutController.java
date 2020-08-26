@@ -93,6 +93,7 @@ public class BillOutController extends AbstractController {
         // 判断出款员是否在线
         OnlineBusinessEntity onlineBusinessEntity = onlineBusinessService.getOnlineBusiness(businessId, userEntity.getOrgId());
         if (null == onlineBusinessEntity) return R.error("所选出款员不在线");
+
         billOutService.billsOutBusinessByHuman(bill, onlineBusinessEntity);
         return R.ok("人工派单成功->" + onlineBusinessEntity.getBusinessName());
     }

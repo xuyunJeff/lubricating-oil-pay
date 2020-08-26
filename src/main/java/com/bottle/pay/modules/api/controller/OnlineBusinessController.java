@@ -59,7 +59,7 @@ public class OnlineBusinessController extends AbstractController {
             if(enableBankCard != null) {
                 it.setBankAccountName(enableBankCard.getBankAccountName());
                 it.setBankName(enableBankCard.getBankName());
-                it.setBankName(enableBankCard.getBankName());
+                it.setBankCardNo(enableBankCard.getBankCardNo());
             }
             onlineBusinessEntities.add(it);
         });

@@ -29,6 +29,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
+import static com.bottle.pay.common.constant.SystemConstant.BIG_DECIMAL_HUNDRED;
+
 
 @Service("billOutService")
 @Slf4j
@@ -77,13 +79,22 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     @Async
     public BillOutEntity billsOutBusiness(BillOutEntity entity) {
         Map<OnlineBusinessEntity, BigDecimal> businessOnline = null;
-        OnlineBusinessEntity onlineBusinessEntity;
+        OnlineBusinessEntity onlineBusinessEntity = null;
         BigDecimal free;
+        int tryTimes = 0 ;
+        int onloneAll =  onlineBusinessService.count();
         do {
-            businessOnline = getBusinessFreeBalance(entity);
+            Map<OnlineBusinessEntity, BigDecimal>   businessOnlineNext = getBusinessFreeBalance(entity);
+            if(businessOnlineNext.equals(businessOnline)) break;
+            businessOnline = businessOnlineNext;
             free = businessOnline.values().stream().findFirst().get();
             onlineBusinessEntity = businessOnline.keySet().stream().findFirst().get();
+            tryTimes ++ ;
+            if(tryTimes == onloneAll) break ;
         } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
+        if(onlineBusinessEntity == null) {
+            throw new RRException("系统错误不存在在线出款员");
+        }
         // 第三步派单给出款员(事务)，付款银行卡默认为当前开启的银行卡
         entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
         // 第四步增加出款员代付中余额，扣除可用余额
@@ -98,6 +109,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @return
      */
     public BillOutEntity billsOutBusinessByHuman(BillOutEntity entity, OnlineBusinessEntity onlineBusinessEntity) {
+        entity.setBillType(BillConstant.BillTypeEnum.ByHuman.getCode());
         entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
         incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(), entity.getPrice());
         return entity;
@@ -194,7 +206,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 第一步获取在线的出款员
         OnlineBusinessEntity businessOnline = onlineBusinessService.getNextBusiness(entity.getOrgId());
         // 第二步判断出款员余额是否够出款
-        BigDecimal businessTotalBalance = bankCardService.getAllCardsBalanceWithoutFrozen(entity.getBusinessId());
+        BigDecimal businessTotalBalance = bankCardService.getAllCardsBalanceWithoutFrozen(businessOnline.getBusinessId());
         BigDecimal businessFreeBalance = getBusinessFreeBalance(businessTotalBalance, businessOnline);
         return Collections.singletonMap(businessOnline, businessFreeBalance);
     }
@@ -208,7 +220,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     private BigDecimal getBusinessFreeBalance(BigDecimal businessTotalBalance, OnlineBusinessEntity businessOnline) {
         BigDecimal businessPayingBalance = getBusinessBillOutBalance(businessOnline.getBusinessId());
-        return businessTotalBalance.subtract(businessPayingBalance);
+        return businessTotalBalance.subtract(businessPayingBalance.divide(BIG_DECIMAL_HUNDRED));
     }
 
     /**
@@ -255,7 +267,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
             if(businessPaying == null) {
                 businessPaying =BigDecimal.ZERO;
             }
-            businessPaying = businessPaying.multiply(SystemConstant.BIG_DECIMAL_HUNDRED);
+            businessPaying = businessPaying.multiply(BIG_DECIMAL_HUNDRED);
             redisCacheManager.set(redisKey, businessPaying);
             return businessPaying;
         }
@@ -278,7 +290,14 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @return
      */
     public BillOutEntity saveNewBillOut(String merchantName, Long merchantId, String thirdBillId, String ip, Long agentId, String agentName, BigDecimal price, String bankCardNo, String bankName, String bankAccountName) {
+        // 验证第三方订单号是否存在
+
         BillOutEntity entity = new BillOutEntity();
+        entity.setThirdBillId(thirdBillId);
+        int count = mapper.selectCount(entity);
+        if(count !=0 ) {
+            throw new RRException("订单号已存在，orderNo = "+ thirdBillId);
+        }
         entity.setCreateTime(new Date());
         entity.setMerchantName(merchantName);
         entity.setMerchantId(merchantId);

@@ -60,6 +60,7 @@ public class OnlineBusinessEntity extends BottleBaseEntity {
     @Transient
     private String bankAccountName;
 
+
     public OnlineBusinessEntity(Long businessId) {
         this.businessId = businessId;
     }

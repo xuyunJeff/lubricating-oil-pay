@@ -5,6 +5,8 @@ import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author ZhouChenglin<yczclcn@163.com>
  */
@@ -18,4 +20,7 @@ public interface OnlineBusinessMapper extends BottleBaseMapper<OnlineBusinessEnt
     int online(OnlineBusinessEntity entity);
 
     int offline(Long userId);
+
+    @Override
+    List<OnlineBusinessEntity> select(OnlineBusinessEntity entity);
 }

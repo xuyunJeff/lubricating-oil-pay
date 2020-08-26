@@ -187,7 +187,10 @@
             <if test="businessId != null">`business_id` = #{businessId},</if>
             <if test="billStatus != null">`bill_status` = #{billStatus},</if>
             <if test="billType != null">`bill_type` = #{billType},</if>
-            <if test="position != null">`position` = #{position}</if>
+            <if test="position != null">`position` = #{position},</if>
+            <if test="businessBankCardNo != null">`business_bank_card_no` = #{businessBankCardNo},</if>
+            <if test="businessBankName != null">`business_bank_name` = #{businessBankName},</if>
+            <if test="businessBankAccountName != null">`business_bank_account_name` = #{businessBankAccountName}</if>
         </set>
         WHERE
         bill_id = #{billId}

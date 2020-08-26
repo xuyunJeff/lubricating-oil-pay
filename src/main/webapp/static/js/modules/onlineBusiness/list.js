@@ -37,9 +37,9 @@ function getGrid() {
             {field : "businessId", title : "付款专员ID", width : "100px",visible : false},
             {field : "payingBalance", title : "代付中余额", width : "100px"},
             {field : "balance", title : "余额", width : "100px"},
-            {field : "businessBankCardNo", title : "付款卡号", width : "100px"},
-            {field : "businessBankName", title : "付款银行", width : "100px"},
-            {field : "businessBankAccountName", title : "付款卡姓名", width : "100px"},
+            {field : "bankCardNo", title : "付款卡号", width : "100px"},
+            {field : "bankName", title : "付款银行", width : "100px"},
+            {field : "bankAccountName", title : "付款卡姓名", width : "100px"},
             {field : "position", title : "位置", width : "100px"}
 		]
 	})
