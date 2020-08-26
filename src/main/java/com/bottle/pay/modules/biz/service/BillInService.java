@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author ZhouChenglin<yczclcn@163.com>
@@ -221,7 +222,8 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
         String today = DateUtils.format(new Date(), DateUtils.DATE_PATTERN_1);
         String redisKey = BillConstant.BillRedisKey.billInId(merchantId, today);
         long incrId = redisCacheManager.incr(redisKey, 1L, 24L);
-        String billId = merchantId + today + new DecimalFormat("00000").format(incrId);
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        String billId =random.nextInt(10,99)+merchantId + today + new DecimalFormat("00000").format(incrId)+ random.nextInt(10,99);
         log.info("redis自增 billId" + billId);
         return billId;
     }
