@@ -165,7 +165,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 扣除出款员代付中
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中,增加可用余额
-        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getBusinessId());
+        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
         // TODO 回调商户
         billOutNotifySercice.billsOutPaidFailedNotify(entity);
         BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());
