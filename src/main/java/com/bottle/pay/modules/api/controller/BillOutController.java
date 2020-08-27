@@ -11,6 +11,7 @@ import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
 import com.bottle.pay.modules.biz.service.BlockBankCardService;
+import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,9 @@ public class BillOutController extends AbstractController {
 
     @Autowired
     private BlockBankCardService blockBankCardService;
+
+    @Autowired
+    private IpLimitService ipLimitService;
 
     /**
      * 列表
@@ -86,6 +90,8 @@ public class BillOutController extends AbstractController {
     public R pushOrderServer(@RequestBody BillOutView billOutView, HttpServletRequest request) {
         SysUserEntity userEntity = getUser();
         String ip = WebUtils.getIpAddr();
+        Boolean isWhite = ipLimitService.isWhiteIp(ip,userEntity.getUserId(),userEntity.getOrgId());
+        if(!isWhite) return R.error("ip未加白");
         if(!userEntity.getRoleId().equals(SystemConstant.RoleEnum.BullOutMerchantServer.getCode())) return R.error("角色越权");
         // 第一步保存订单,派单给机构
         BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, userEntity);
