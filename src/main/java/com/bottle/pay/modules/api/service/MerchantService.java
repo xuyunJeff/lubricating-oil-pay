@@ -48,7 +48,7 @@ public class MerchantService {
         SysUserEntity userEntity = ShiroUtils.getUserEntity();
         if(!(SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId()) || SystemConstant.RoleEnum.BillInMerchant.getCode().equals(userEntity.getRoleId()))){
             log.warn("userId:{}-{},不是机构管理员或商户无权限查看此页面",userEntity.getUserId(), WebUtils.getIpAddr());
-            throw new RRException("不是机构管理员无权限查看此页面");
+            throw new RRException("不是机构管理员或商户无权限查看此页面无权限查看此页面");
         }
         Query query = new Query(params);
         Page<BalanceEntity> page = new Page<>(query);
@@ -64,7 +64,8 @@ public class MerchantService {
                 BeanUtils.copyProperties(user, view);
 
                 IpLimitEntity ipLimitEntity = new IpLimitEntity();
-                ipLimitEntity.setUserId(balance.getUserId());
+                // TODO @might 这里你看看
+                ipLimitEntity.setMerchantId(balance.getUserId());
                 Optional.ofNullable(ipLimitService.select(ipLimitEntity))
                         .ifPresent(ips->view.setIpList(ips));
                 result.getRows().add(view);

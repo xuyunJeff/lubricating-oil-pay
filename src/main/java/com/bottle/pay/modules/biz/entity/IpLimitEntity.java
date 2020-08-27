@@ -17,6 +17,7 @@ public class IpLimitEntity extends BottleBaseEntity {
     /**
      * 商户ID
      */
+    @Transient
     private Long userId;
 
     /**
@@ -46,5 +47,9 @@ public class IpLimitEntity extends BottleBaseEntity {
      */
     @Transient
     private String clientIp;
+
+    private Long merchantId;
+
+    private String merchantName;
 
 }
