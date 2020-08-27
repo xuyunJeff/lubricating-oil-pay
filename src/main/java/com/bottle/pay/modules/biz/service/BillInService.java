@@ -108,6 +108,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
             try {
                 Date date = new Date();
                 params.setBillId(generateBillInBillId(String.valueOf(userEntity.getUserId())));
+                params.setThirdBillId("third"+params.getBillId());
                 params.setBillStatus(BillConstant.BillStatusEnum.UnPay.getCode());
                 params.setCreateTime(date);
                 params.setLastUpdate(date);

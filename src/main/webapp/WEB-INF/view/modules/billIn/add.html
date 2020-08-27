@@ -1,18 +1,18 @@
 @layout("../../system/layout.html", {title: ""}){
 <table class="form" id="form">
-    <tr>
-        <td class="formTitle">第三方订单号<font face="宋体">*</font></td>
-        <td class="formValue">
-            <input type="text" class="form-control" placeholder="第三方订单号" v-model="billIn.thirdBillId" isvalid="yes" checkexpession="NotNull">
-        </td>
-    </tr>
+    <!--<tr>-->
+        <!--<td class="formTitle">第三方订单号</td>-->
+        <!--<td class="formValue">-->
+            <!--<input type="text" class="form-control" placeholder="第三方订单号" v-model="billIn.thirdBillId" isvalid="yes">-->
+        <!--</td>-->
+    <!--</tr>-->
 
-    <tr>
-        <td class="formTitle">第三方订单服务器ip<font face="宋体">*</font></td>
-        <td class="formValue">
-            <input type="text" class="form-control" placeholder="第三方订单派发服务器ip" v-model="billIn.ip" isvalid="yes" checkexpession="NotNull">
-        </td>
-    </tr>
+    <!--<tr>-->
+        <!--<td class="formTitle">第三方订单服务器ip<font face="宋体">*</font></td>-->
+        <!--<td class="formValue">-->
+            <!--<input type="text" class="form-control" placeholder="第三方订单派发服务器ip" v-model="billIn.ip" isvalid="yes" checkexpession="NotNull">-->
+        <!--</td>-->
+    <!--</tr>-->
     <tr>
         <td class="formTitle">充值金额<font face="宋体">*</font></td>
         <td class="formValue">
@@ -22,9 +22,9 @@
 
 
     <tr>
-        <td class="formTitle">备注<font face="宋体">*</font></td>
+        <td class="formTitle">备注</td>
         <td class="formValue">
-            <input type="text" class="form-control" placeholder="" v-model="billIn.comment" isvalid="yes" checkexpession="NotNull">
+            <input type="text" class="form-control" placeholder="" v-model="billIn.comment" isvalid="yes">
         </td>
     </tr>
 

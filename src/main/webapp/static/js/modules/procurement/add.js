@@ -46,7 +46,7 @@ var vm = new Vue({
         outBankCard:function () {
             var outBankCard = $('#outBankCard')
 			var outBusiness =$('#outBusiness').val()
-            outBankCard.empty()
+            outBankCard.empty().append('<option value="-1"> 请选择</option>')
             for (var i = 0; i < bankCards.length; i++) {
 				if(bankCards[i].businessId == outBusiness){
                     outBankCard.append('<option value="'+bankCards[i].bankCardNo+'"> '+bankCards[i].bankAccountName+'-'+bankCards[i].bankCardNo+'-'+bankCards[i].bankName+'</option>')
@@ -56,7 +56,7 @@ var vm = new Vue({
         inBankCard:function () {
             var inBankCard = $('#inBankCard')
             var inBusiness =$('#inBusiness').val()
-            inBankCard.empty()
+            inBankCard.empty().append('<option value="-1"> 请选择</option>')
             for (var i = 0; i < bankCards.length; i++) {
                 if(bankCards[i].businessId == inBusiness){
                     inBankCard.append('<option value="'+bankCards[i].bankCardNo+'"> '+bankCards[i].bankAccountName+'-'+bankCards[i].bankCardNo+'-'+bankCards[i].bankName+'</option>')

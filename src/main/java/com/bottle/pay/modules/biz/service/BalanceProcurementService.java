@@ -6,6 +6,7 @@ import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.common.utils.CommonUtils;
+import com.bottle.pay.common.utils.GsonUtil;
 import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.biz.dao.BalanceProcurementMapper;
 import com.bottle.pay.modules.biz.entity.BalanceProcurementEntity;
@@ -46,6 +47,12 @@ public class BalanceProcurementService extends BottleBaseService<BalanceProcurem
      */
     @Transactional
     public R balanceProcure(BalanceProcurementEntity procurement) {
+        if(procurement.getOutBankCardNo().equals(procurement.getInBankCardNo())){
+            throw new RRException("调度卡不能是同一张卡");
+        }
+        if(procurement.getPrice().compareTo(BigDecimal.ZERO)<=0){
+            throw new RRException("调度金额不能小于0");
+        }
         SysUserEntity user = super.getCurrentUser();
         BankCardEntity outBankCard = null;
         BankCardEntity inBankCard = null;
@@ -56,6 +63,7 @@ public class BalanceProcurementService extends BottleBaseService<BalanceProcurem
                     BankCardEntity query = new BankCardEntity();
                     query.setBusinessId(procurement.getOutBusinessId());
                     query.setBankCardNo(procurement.getOutBankCardNo());
+//                    query.setOrgId(user.getOrgId());
                     outBankCard = bankCardService.selectOne(query);
                     if (outBankCard == null || outBankCard.getCardStatus() == 2 || !user.getOrgId().equals(outBankCard.getOrgId())) {
                         log.warn("出款专员:{}出款卡:{}没找到或者冻结了或者不不属于当前机构:{}", procurement.getOutBusinessId(), procurement.getOutBankCardNo(), user.getOrgId());
@@ -69,38 +77,33 @@ public class BalanceProcurementService extends BottleBaseService<BalanceProcurem
                     query = new BankCardEntity();
                     query.setBankCardNo(procurement.getInBankCardNo());
                     query.setBusinessId(procurement.getInBusinessId());
+//                    query.setOrgId(user.getOrgId());
                     inBankCard = bankCardService.selectOne(query);
                     if (inBankCard == null || inBankCard.getCardStatus() == 2 || !user.getOrgId().equals(inBankCard.getOrgId())) {
                         log.warn("入款专员:{}入款卡:{}没找到或者冻结了或者不不属于当前机构:{}", procurement.getInBusinessId(), procurement.getInBankCardNo(), user.getOrgId());
                         throw new RRException("入款卡没找到或者冻结了或者不不属于当前机构");
                     }
-
                 } else {
+                    //不是超级管理员时，只能是专员内部银行卡
+                    if(!procurement.getOutBusinessId().equals(procurement.getInBusinessId()) ){
+                        throw new RRException("不是管理员，只能自己内部转账!");
+                    }
                     //普通的出款专员
-                    List<BankCardEntity> list = bankCardService.getCardListByBusinessId(user.getUserId());
+                    List<BankCardEntity> list = bankCardService.getCardListByBusinessId(procurement.getOutBusinessId());
                     if (list == null || list.isEmpty()) {
                         log.warn("专员:{}调度失败，没有找到银行卡", user.getUserId());
                         throw new RRException("专员余额调度失败，没有找到银行卡");
                     }
-                    List<String> cards = Lists.newArrayList(procurement.getInBankCardNo(), procurement.getOutBankCardNo());
-                    List<String> userCards = list.stream().map(BankCardEntity::getBankCardNo).collect(Collectors.toList());
-                    cards.retainAll(userCards);
-                    if (!cards.isEmpty()) {
-                        log.warn("专员:{},不能调度他人银行卡:{}余额", user.getUserId(), cards);
-                        throw new RRException("专员不能调度他人银行卡余额");
-                    }
-                    cards = Lists.newArrayList(procurement.getInBankCardNo(), procurement.getOutBankCardNo());
-                    //获取冻结银行卡号
-                    List<String> frozenList = list.stream().filter(bc -> bc.getCardStatus() == 2)
-                            .map(BankCardEntity::getBankCardNo)
-                            .collect(Collectors.toList());
-                    if (cards.retainAll(frozenList)) {
-                        log.warn("专员:{}存在冻结的银行卡:{}不能调度", user.getUserId(), cards);
-                        throw new RRException("冻结的银行卡不能调度");
-                    }
                     outBankCard = list.stream()
                             .filter(bc -> bc.getBankCardNo().equals(procurement.getOutBankCardNo()))
                             .findFirst().get();
+                    if(outBankCard == null){
+                        throw new RRException("专员出款卡没找到");
+                    }
+                    log.info("专员调度出款卡:{}", GsonUtil.GsonString(outBankCard));
+                    if(outBankCard.getCardStatus() == 2){
+                        throw new RRException("出款卡被冻结不能调度");
+                    }
                     if (outBankCard.getBalance().compareTo(procurement.getPrice()) < 0) {
                         log.warn("专员:{}出款卡:{}余额:{}小于调度金额{}", outBankCard.getBusinessId(), outBankCard.getBankCardNo(), outBankCard.getBalance(), procurement.getPrice());
                         throw new RRException("专员出款卡余额小于调度金额");
@@ -109,13 +112,21 @@ public class BalanceProcurementService extends BottleBaseService<BalanceProcurem
                     inBankCard = list.stream()
                             .filter(bc -> bc.getBankCardNo().equals(procurement.getInBankCardNo()))
                             .findFirst().get();
+                    if(inBankCard == null){
+                        throw new RRException("专员入款卡没找到");
+                    }
+                    if(inBankCard.getCardStatus() == 2){
+                        throw new RRException("入款卡被冻结不能调度");
+                    }
+                    log.info("专员调度入款卡:{}", GsonUtil.GsonString(inBankCard));
                 }
 
                 //开始出款
                 BigDecimal outBefore = outBankCard.getBalance();
                 boolean result = bankCardService.minusBalance(outBankCard.getBusinessId(), outBankCard.getBankCardNo(), procurement.getPrice());
                 if (!result) {
-                    throw new RRException("调度失败，出款卡余额不足");
+                    log.warn("调度出款失败");
+                    throw new RRException("调度出款失败");
                 }
                 BankCardEntity query = new BankCardEntity();
                 query.setId(outBankCard.getId());
@@ -125,6 +136,10 @@ public class BalanceProcurementService extends BottleBaseService<BalanceProcurem
                 //开始入款
                 BigDecimal inBefore = inBankCard.getBalance();
                 result = bankCardService.addBalance(inBankCard.getBusinessId(), inBankCard.getBankCardNo(), procurement.getPrice());
+                if (!result) {
+                    log.warn("调度入款失败");
+                    throw new RRException("调度入款失败");
+                }
                 query.setId(inBankCard.getId());
                 inBankCard = bankCardService.selectOne(query);
                 BigDecimal inAfter = inBankCard.getBalance();

@@ -55,22 +55,23 @@ public class BalanceProcurementController extends AbstractController {
     @SysLog("新增")
     @RequestMapping("/save")
     public R save(@RequestBody BalanceProcurementEntity balanceProcurement) {
-        SysUserEntity userEntity = getUser();
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
-            // 出款员查把自己的余额调出
-            balanceProcurement.setOutBusinessId(userEntity.getUserId());
-            balanceProcurement.setOutBusinessName(userEntity.getUsername());
-            balanceProcurement.setOrgId(userEntity.getOrgId());
-            balanceProcurement.setOrgName(userEntity.getOrgName());
-            return balanceProcurementService.balanceProcure(balanceProcurement);
-        }
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
-            // 机构管理员可以调度别人的余额
-            balanceProcurement.setOrgId(userEntity.getOrgId());
-            balanceProcurement.setOrgName(userEntity.getOrgName());
-            return balanceProcurementService.balanceProcure(balanceProcurement);
-        }
-       return R.error("只有出款员和机构管理员可以调度银行卡余额");
+//        SysUserEntity userEntity = getUser();
+//        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+//            // 出款员查把自己的余额调出
+//            balanceProcurement.setOutBusinessId(userEntity.getUserId());
+//            balanceProcurement.setOutBusinessName(userEntity.getUsername());
+//            balanceProcurement.setOrgId(userEntity.getOrgId());
+//            balanceProcurement.setOrgName(userEntity.getOrgName());
+//            return balanceProcurementService.balanceProcure(balanceProcurement);
+//        }
+//        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+//            // 机构管理员可以调度别人的余额
+//            balanceProcurement.setOrgId(userEntity.getOrgId());
+//            balanceProcurement.setOrgName(userEntity.getOrgName());
+//            return balanceProcurementService.balanceProcure(balanceProcurement);
+//        }
+//       return R.error("只有出款员和机构管理员可以调度银行卡余额");
+        return balanceProcurementService.balanceProcure(balanceProcurement);
     }
 
     /**
