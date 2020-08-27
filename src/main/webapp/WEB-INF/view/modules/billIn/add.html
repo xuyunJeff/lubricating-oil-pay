@@ -32,7 +32,7 @@
     <tr>
         <td class="formTitle" style="width: 100px;">出款专员<font face="宋体">*</font></td>
         <td class="formValue" style="width: 350px;">
-            <select  style="width: 130px;"  v-model="billIn.businessId" id="businessId"  class="form-control" >
+            <select  style="width: 130px;"  v-model="billIn.businessId" id="businessId"  class="form-control" \@change="bankCard()">
                 <option value="-1"  style="display:none">请选择</option>
             </select>
         </td>
@@ -40,7 +40,7 @@
     <tr>
         <td class="formTitle" style="width: 100px;">出款银行卡<font face="宋体">*</font></td>
         <td class="formValue" style="width: 350px;">
-            <select  style="width: 200px;" v-model="billIn.bankCardNo" id="bankCardNo"  class="form-control" \@click="bankCard()"  >
+            <select  style="width: 200px;" v-model="billIn.bankCardNo" id="bankCardNo"  class="form-control"   >
                 <option value="-1"  style="display:none">请选择</option>
             </select>
         </td>
