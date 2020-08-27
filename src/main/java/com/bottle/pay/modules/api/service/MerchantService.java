@@ -46,8 +46,8 @@ public class MerchantService {
      */
     public Page<MerchantView> merchantList(Map<String, Object> params){
         SysUserEntity userEntity = ShiroUtils.getUserEntity();
-        if(SystemConstant.RoleEnum.Organization.getCode() != userEntity.getRoleId()){
-            log.warn("userId:{}-{},不是机构管理员无权限查看此页面",userEntity.getUserId(), WebUtils.getIpAddr());
+        if(!(SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId()) || SystemConstant.RoleEnum.BillInMerchant.getCode().equals(userEntity.getRoleId()))){
+            log.warn("userId:{}-{},不是机构管理员或商户无权限查看此页面",userEntity.getUserId(), WebUtils.getIpAddr());
             throw new RRException("不是机构管理员无权限查看此页面");
         }
         Query query = new Query(params);

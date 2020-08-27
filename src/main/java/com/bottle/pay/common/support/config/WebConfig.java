@@ -1,5 +1,6 @@
 package com.bottle.pay.common.support.config;
 
+import com.bottle.pay.common.support.interceptor.AuthorizationInterceptor;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
 import com.bottle.pay.common.support.interceptor.RestApiInterceptor;
@@ -35,6 +36,9 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     @Autowired
     GlobalProperties globalProperties;
 
+    @Autowired
+    private AuthorizationInterceptor authorizationInterceptor;
+
     /**
      * 文件上传路径虚拟映射
      *
@@ -67,6 +71,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册rest拦截器
         registry.addInterceptor(new RestApiInterceptor()).addPathPatterns("/rest/**");
+        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/apiV1/billOut/push/order/server");
     }
 
     /**

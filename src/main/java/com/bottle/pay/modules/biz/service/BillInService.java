@@ -66,6 +66,9 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
         if(super.isOrgAdmin() || super.isOutMerchant()){
             params.put("businessId", null);
         }
+        if(super.isOutMerchant()){
+            params.put("merchantId", userEntity.getUserId());
+        }
         try {
             int count = mapper.selectCountForPage(params);
             List<BillInEntity> list = mapper.selectPage(params);
