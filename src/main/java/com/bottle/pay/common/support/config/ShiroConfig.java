@@ -156,6 +156,7 @@ public class ShiroConfig {
         filterMap.put("/captcha.jpg", "anon");
         filterMap.put("/rest/**", "anon");
         filterMap.put("/test/**", "anon");
+        filterMap.put("/apiV1/billOut/push/order/server", "anon");
         //TODO 添加匿名访问
         return filterMap;
     }
