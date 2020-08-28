@@ -45,8 +45,11 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     @Autowired
     private BankCardService bankCardService;
 
+<<<<<<< HEAD
     @Autowired
     BillOutNotifyService billOutNotifySercice;
+=======
+>>>>>>> 56daf70026ac4fd6fb37c7506d2736f70d64f6c6
 
     /**
      * 派单给机构
@@ -144,11 +147,10 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中
         balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-        // TODO 回调商户
-        billOutNotifySercice.billsOutPaidSuccessNotify(entity);
         BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
         successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
         mapper.updateBillOutByBillId(successEntity);
+        bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice());
         return entity;
     }
 
@@ -164,8 +166,6 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中,增加可用余额
         balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-        // TODO 回调商户
-        billOutNotifySercice.billsOutPaidFailedNotify(entity);
         BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());
         failedEntity.setBillStatus(BillConstant.BillStatusEnum.Failed.getCode());
         mapper.updateBillOutByBillId(failedEntity);

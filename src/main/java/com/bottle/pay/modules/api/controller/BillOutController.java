@@ -10,6 +10,7 @@ import com.bottle.pay.modules.api.entity.BillOutView;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
+import com.bottle.pay.modules.biz.service.BankCardService;
 import com.bottle.pay.modules.biz.service.BlockBankCardService;
 import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
@@ -43,6 +44,8 @@ public class BillOutController extends AbstractController {
     @Autowired
     private IpLimitService ipLimitService;
 
+    @Autowired
+    private BankCardService bankCardService;
     /**
      * 列表
      * TODO 查询时要判断角色还有机构 @rmi
@@ -144,7 +147,8 @@ public class BillOutController extends AbstractController {
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("订单无需确认");
         bill = billOutService.billsOutPaidSuccess(bill);
-        // TODO @mighty 银行卡余额变动
+        // @TODO 通知商户 @mighty
+
         return R.ok("订单确认成功，会员银行卡名：" + bill.getBankAccountName());
     }
 
@@ -156,7 +160,7 @@ public class BillOutController extends AbstractController {
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("订单无需作废");
         billOutService.billsOutPaidFailed(bill);
-        // TODO @mighty 银行卡余额变动
+        // @TODO 通知商户 @mighty
         return R.ok("订单作废，会员银行卡名：" + bill.getBankAccountName());
     }
 
