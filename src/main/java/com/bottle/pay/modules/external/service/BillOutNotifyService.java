@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
  * 出款成功回调接口
  */
 
-public class BillOutNotifySercice {
+public class BillOutNotifyService {
 
     BillOutService billOutService;
 
