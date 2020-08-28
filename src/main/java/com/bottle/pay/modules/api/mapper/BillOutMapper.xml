@@ -52,7 +52,7 @@
             <if test="position != null">  and `position` = #{position}</if>
         </where>
         ORDER BY
-        id DESC
+        create_time DESC
     </select>
 
     <insert id="save">

@@ -27,10 +27,27 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
     @Autowired
     private RedisCacheManager redisCacheManager;
 
-
-    public Boolean isWhiteIp(String ip,Long merchantId,Long orgId){
-        // TODO @mighty
+    /**
+     *
+     * @param ip
+     * @param merchantId
+     * @param orgId
+     * @param type 1 商户对应服务器 2 商户登录后台的电脑
+     *
+     * @return
+     */
+    public Boolean isWhiteIp(String ip,Long merchantId,Long orgId,Integer type){
         IpLimitEntity ipLimitEntity = new IpLimitEntity();
+        ipLimitEntity.setMerchantId(merchantId);
+        ipLimitEntity.setOrgId(orgId);
+        ipLimitEntity.setType(type);
+        List<IpLimitEntity> ipList=mapper.select(ipLimitEntity);
+        if(ipList.isEmpty()) return false;
+        for(IpLimitEntity ipEntity : ipList){
+            if(ipEntity.getIpList().contains(ip)){
+                return true;
+            }
+        }
         return false;
     }
     /**

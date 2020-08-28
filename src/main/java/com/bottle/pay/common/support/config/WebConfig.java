@@ -17,11 +17,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -36,8 +38,11 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     @Autowired
     GlobalProperties globalProperties;
 
+//    @Autowired
+//    private AuthorizationInterceptor authorizationInterceptor;
+
     @Autowired
-    private AuthorizationInterceptor authorizationInterceptor;
+    private BillOutMethodArgumentResolver billOutMethodArgumentResolver;
 
     /**
      * 文件上传路径虚拟映射
@@ -62,6 +67,11 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(billOutMethodArgumentResolver);
+    }
+
     /**
      * 配置拦截器
      *
@@ -71,7 +81,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册rest拦截器
         registry.addInterceptor(new RestApiInterceptor()).addPathPatterns("/rest/**").excludePathPatterns("/apiV1/billOut/push/order/server");
-        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/apiV1/billOut/push/order/server");
+//        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/apiV1/billOut/push/order/server");
     }
 
     /**

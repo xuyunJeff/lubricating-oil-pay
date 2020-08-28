@@ -45,11 +45,9 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     @Autowired
     private BankCardService bankCardService;
 
-<<<<<<< HEAD
     @Autowired
     BillOutNotifyService billOutNotifySercice;
-=======
->>>>>>> 56daf70026ac4fd6fb37c7506d2736f70d64f6c6
+
 
     /**
      * 派单给机构

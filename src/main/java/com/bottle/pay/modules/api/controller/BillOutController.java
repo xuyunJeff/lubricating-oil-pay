@@ -3,6 +3,7 @@ package com.bottle.pay.modules.api.controller;
 import java.util.Map;
 import java.util.Optional;
 
+import com.bottle.pay.common.annotation.BillOut;
 import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.utils.WebUtils;
@@ -14,6 +15,7 @@ import com.bottle.pay.modules.biz.service.BankCardService;
 import com.bottle.pay.modules.biz.service.BlockBankCardService;
 import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
+import com.bottle.pay.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +47,7 @@ public class BillOutController extends AbstractController {
     private IpLimitService ipLimitService;
 
     @Autowired
-    private BankCardService bankCardService;
+    private SysUserService userService;
     /**
      * 列表
      * TODO 查询时要判断角色还有机构 @rmi
@@ -90,15 +92,14 @@ public class BillOutController extends AbstractController {
 
     @SysLog("商户服务器管端派单")
     @RequestMapping("/push/order/server")
-    public R pushOrderServer(@RequestBody BillOutView billOutView) {
-        SysUserEntity userEntity = getUser();
+    public R pushOrderServer(@BillOut BillOutView billOutView) {
         String ip = WebUtils.getIpAddr();
-        Boolean isWhite = ipLimitService.isWhiteIp(ip,userEntity.getUserId(),userEntity.getOrgId());
+        SysUserEntity merchant = userService.getUserEntityById(billOutView.getMerchantId());
+        Boolean isWhite = ipLimitService.isWhiteIp(ip,billOutView.getMerchantId(),merchant.getOrgId(),BillConstant.WHITE_IP_TYPE_SERVER);
         if(!isWhite) return R.error("ip未加白");
-        if(!userEntity.getRoleId().equals(SystemConstant.RoleEnum.BullOutMerchantServer.getCode())) return R.error("角色越权");
         // 第一步保存订单,派单给机构
-        BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, userEntity);
-        if (existBlockCard(billOutView.getBankCardNo(), userEntity.getOrgId())) {
+        BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, merchant);
+        if (existBlockCard(billOutView.getBankCardNo(), merchant.getOrgId())) {
             return R.error("银行卡已被拉黑");
         }
         if (bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())) {

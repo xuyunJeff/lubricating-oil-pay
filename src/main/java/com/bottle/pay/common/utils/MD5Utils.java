@@ -35,8 +35,7 @@ public class MD5Utils {
      * @return
      */
     public static String encrypt(String username, String pswd) {
-        String newPassword = new SimpleHash(ALGORITH_NAME, pswd, ByteSource.Util.bytes(username + SALT), HASH_ITERATIONS).toHex();
-        return newPassword;
+        return new SimpleHash(ALGORITH_NAME, pswd, ByteSource.Util.bytes(username + SALT), HASH_ITERATIONS).toHex();
     }
 
 }

@@ -10,6 +10,10 @@ public class BillConstant {
     // 代付中余额
     public static final String BILL_OUT_BUSINESS_BALANCE = "bill:out:balance";
 
+    public static final Integer WHITE_IP_TYPE_SERVER  =1;
+
+    public static final Integer WHITE_IP_TYPE_ADMIN  =2;
+
     public interface BillRedisKey {
         static String billOutBusinessBalance(String businessId) {
             return BILL_OUT_BUSINESS_BALANCE + ":" + businessId;

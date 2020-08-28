@@ -5,7 +5,6 @@ import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.modules.api.entity.BillOutView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -69,17 +68,13 @@ public class AESUtil {
         try {
             String pwd =content.substring(content.length()-13,content.length());
             byte[] codes =parseHexStr2Byte(content.substring(0,content.length()-13));
-            //获取密码器
             byte[] schemaByte = AESUtil.decrypt(codes,pwd);
             String schema = new String(schemaByte);
-            /*if(new Date().getTime() - Long.valueOf(pwd) > OUT_TIME*3600000){
-                return "201";
-            }*/
             return  schema.substring(0,schema.length()-13) ;
         }catch (Exception e){
             log.info(e.getMessage());
-            log.error("schemaName error");
-            throw new RRException("schemaName error");
+            log.error("第一步解密错误");
+            throw new RRException("第一步解密错误");
         }
     }
 
@@ -91,9 +86,14 @@ public class AESUtil {
             return  new String(schemaByte);
         }catch (Exception e){
             log.info(e.getMessage());
-            log.error("schemaName error");
-            throw new RRException("schemaName error");
+            log.error("第一步解密错误");
+            throw new RRException("第一步解密错误");
         }
+    }
+
+    public static String encryptBillOutView(BillOutView billOutView,String pwd,String username) throws Exception {
+        String value = AESUtil.encrypt1(GsonUtil.GsonString(billOutView),pwd)+"&"+username;
+        return AESUtil.encrypt2(value);
     }
 
 
@@ -107,21 +107,23 @@ public class AESUtil {
         billOutView.setMerchantId(4L);
         billOutView.setOrderNo("12316545233");
         billOutView.setPrice(SystemConstant.BIG_DECIMAL_HUNDRED);
-        billOutView.setBankAccountName("1233");
+        billOutView.setBankAccountName("服务器派单测试");
         billOutView.setBankCardNo("1234566344333");
         billOutView.setBankName("中国银行");
-        String pwd = "bb4ab7fd864d900a33906049dfba77de";
-        // 第一步加密用数据库密码
-        String value = AESUtil.encrypt1(GsonUtil.GsonString(billOutView),pwd)+"&"+pwd;
-        // 第二步加密用时间，并把时间放在结尾
-        String value2 = AESUtil.encrypt2(value);
-        System.out.println("value2 ======  "+value2);
-        System.out.println(value.equals(AESUtil.decrypt2(value2)));
-//        System.out.println(value);
-//        String[] valueMap = value.split("&");
+//        String pwd = "bb4ab7fd864d900a33906049dfba77de";
+//        // 第一步加密用数据库密码
+//        String value = AESUtil.encrypt1(GsonUtil.GsonString(billOutView),pwd)+"&"+pwd;
+//        System.out.println("value ======  "+value);
+//        // 第二步加密用时间，并把时间放在结尾
+//        String value2 = AESUtil.encrypt2(value);
+//        System.out.println("value2 ======  "+value2);
+//        System.out.println(value.equals(AESUtil.decrypt2(value2)));
+//        String[] valueMap = AESUtil.decrypt2(value2).split("&");
 //        System.out.println(Arrays.toString(valueMap));
 //        BillOutView billOut =GsonUtil.GsonToBean(AESUtil.decrypt1(valueMap[0],valueMap[1]),BillOutView.class);
 //        System.out.println(billOut);
+         String param =AESUtil.encryptBillOutView(billOutView,"0fc87f4157c67bbe47dd596d9ac63355","106Server");
+        System.out.println(param);
     }
     /**
      * 解密
