@@ -25,27 +25,3 @@ spring:
       test-on-return: false
       max-wait-millis: 60000
       time-between-eviction-runs-millis: 30000
-        enabled: true
-        url-pattern: /druid/*
-        #login-username: admin
-        #login-password: admin
-      filter:
-        stat:
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: true
-        wall:
-          config:
-            multi-statement-allow: true
-  reids:
-    host: 127.0.0.1
-    port: 6379
-    password:
-    database: 0
-    timeout: 1000
-    jedis:
-      pool:
-        max-active: 6000
-        max-wait: 1000
-        max-idle: 400
-

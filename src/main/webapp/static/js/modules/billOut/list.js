@@ -56,23 +56,30 @@ function getGrid() {
             {field : "billId", title : "订单号", width : "100px"},
             {field : "thirdBillId", title : "第三方订单号", width : "100px"},
             {field : "ip", title : "ip", width : "100px"},
-            {field : "businessName", title : "付款专员姓名", width : "100px"},
+            {field : "businessName", title : "付款专员姓名", width : "100px",formatter:function (index,row) {
+                    if(row.businessName == row.orgName) {
+                        return  "<div style='color: #8B6914'>"+row.businessName+"-机构</div>"
+                    }else {
+                        return  row.businessName
+                    }
+
+                }},
             {field : "businessId", title : "付款专员ID", width : "100px",visible:false},
             //：  1未支付 2 成功 3 失败
             {field : "billStatus", title : "订单状态", width : "60px",formatter:function (index,row) {
-                     if(row.billStatus == 1) {return  "未支付"}
-                     if(row.billStatus ==2) {return "成功"}
-                     if(row.billStatus ==3) {return "失败"}
+                     if(row.billStatus == 1) {return  "<div style='color: #8B6914'>未支付</div>"}
+                     if(row.billStatus ==2) {return "<div style='color: green'>成功</div>"}
+                     if(row.billStatus ==3) {return "<div style='color: blue'>失败</div>"}
                 }},
             //：1未通知 2 已通知 3 失败
             {field : "notice", title : "通知", width : "80px",formatter:function (index,row) {
-                    if(row.notice == 1) {return  "未通知"}
-                    if(row.notice ==2) {return "已通知"}
-                    if(row.notice ==3) {return "<div style='color: red'>通知失败</div>"}
+                    if(row.notice == 1) {return  "<div style='color: #8B6914'>未通知</div>"}
+                    if(row.notice ==2) {return "<div style='color: green'>已通知</div>"}
+                    if(row.notice ==3) {return "<div style='color: blue'>通知失败</div>"}
                 }},
             {field : "price", title : "账单金额", width : "100px"},
-            {field : "bankAccountName", title : "会员名", width : "100px",formatter:function (index,row) {
-                    return '<div style="color: red">'+row.bankAccountName +  '</div><a href="javascript:;" onclick="vm.copyValue(\''+row.bankAccountName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
+            {field : "bankAccountName", title : "会员名", width : "110px",formatter:function (index,row) {
+                    return row.bankAccountName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankAccountName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             {field : "bankCardNo", title : "会员银行卡号", width : "180px",formatter:function (index,row) {
                     return row.bankCardNo + '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankCardNo+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
@@ -82,10 +89,10 @@ function getGrid() {
                 }},
             //1 手动 2 自动 3 大额 4 订单退回机构
             {field : "billType", title : "派单", width : "120px",formatter:function (index,row) {
-                    if(row.billType == 1) {return  "手动"}
-                    if(row.billType ==2) {return "自动"}
+                    if(row.billType == 1) {return  "<div style='color: #8B6914'>手动</div>"}
+                    if(row.billType ==2) {return "<div style='color: green'>自动</div>"}
                     if(row.billType ==3) {return "<div style='color: red'>大额</div>"}
-                    if(row.billType ==4) {return "<div style='color: red'>订单退回机构</div>"}
+                    if(row.billType ==4) {return "<div style='color: #8B6914'>订单退回机构</div>"}
             }
             },
             {field : "agentId", title : "代理商id", width : "100px",visible:false},
@@ -95,7 +102,12 @@ function getGrid() {
             {field : "businessBankName", title : "付款银行", width : "100px",visible:false},
             {field : "businessBankAccountName", title : "付款卡姓名", width : "100px",visible:false},
             {field : "businessBank", title : "付款银行卡", width : "160px",formatter:function (index,row) {
-                    return row.businessBankAccountName +"</br>"+row.businessBankCardNo + "</br>"+row.businessBankName
+                    if(row.businessName == row.orgName) {
+                        return  ""
+                    }else {
+                        return row.businessBankAccountName +"</br>"+row.businessBankCardNo + "</br>"+row.businessBankName
+                    }
+
                 }
             }
 		]

@@ -90,7 +90,7 @@ public class BillOutController extends AbstractController {
 
     @SysLog("商户服务器管端派单")
     @RequestMapping("/push/order/server")
-    public R pushOrderServer(@RequestBody BillOutView billOutView, HttpServletRequest request) {
+    public R pushOrderServer(@RequestBody BillOutView billOutView) {
         SysUserEntity userEntity = getUser();
         String ip = WebUtils.getIpAddr();
         Boolean isWhite = ipLimitService.isWhiteIp(ip,userEntity.getUserId(),userEntity.getOrgId());
@@ -107,7 +107,6 @@ public class BillOutController extends AbstractController {
         }
         return R.ok().put("price", bill.getPrice()).put("orderNo", bill.getThirdBillId()).put("billOutId", bill.getBillId());
     }
-
 
 
     @SysLog("人工派单接口")
