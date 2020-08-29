@@ -67,13 +67,13 @@ function getGrid() {
             {field : "businessId", title : "付款专员ID", width : "100px",visible:false},
             //：  1未支付 2 成功 3 失败
             {field : "billStatus", title : "订单状态", width : "60px",formatter:function (index,row) {
-                     if(row.billStatus == 1) {return  "<div style='color: #8B6914'>未支付</div>"}
+                     if(row.billStatus == 1) {return  "<div style='color: #FFA500'>未支付</div>"}
                      if(row.billStatus ==2) {return "<div style='color: green'>成功</div>"}
                      if(row.billStatus ==3) {return "<div style='color: blue'>失败</div>"}
                 }},
             //：1未通知 2 已通知 3 失败
             {field : "notice", title : "通知", width : "80px",formatter:function (index,row) {
-                    if(row.notice == 1) {return  "<div style='color: #8B6914'>未通知</div>"}
+                    if(row.notice == 1) {return  "<div style='color: #FFA500'>未通知</div>"}
                     if(row.notice ==2) {return "<div style='color: green'>已通知</div>"}
                     if(row.notice ==3) {return "<div style='color: blue'>通知失败</div>"}
                 }},
@@ -89,10 +89,10 @@ function getGrid() {
                 }},
             //1 手动 2 自动 3 大额 4 订单退回机构
             {field : "billType", title : "派单", width : "120px",formatter:function (index,row) {
-                    if(row.billType == 1) {return  "<div style='color: #8B6914'>手动</div>"}
+                    if(row.billType == 1) {return  "<div style='color: #FFA500'>手动</div>"}
                     if(row.billType ==2) {return "<div style='color: green'>自动</div>"}
                     if(row.billType ==3) {return "<div style='color: red'>大额</div>"}
-                    if(row.billType ==4) {return "<div style='color: #8B6914'>订单退回机构</div>"}
+                    if(row.billType ==4) {return "<div style='color: #FFA500'>订单退回机构</div>"}
             }
             },
             {field : "agentId", title : "代理商id", width : "100px",visible:false},
