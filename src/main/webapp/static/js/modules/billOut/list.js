@@ -58,7 +58,7 @@ function getGrid() {
             {field : "ip", title : "ip", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px",formatter:function (index,row) {
                     if(row.businessName == row.orgName) {
-                        return  "<div style='color: #8B6914'>"+row.businessName+"-机构</div>"
+                        return  "<div style='color: #FFA500'>"+row.businessName+"-机构</div>"
                     }else {
                         return  row.businessName
                     }
