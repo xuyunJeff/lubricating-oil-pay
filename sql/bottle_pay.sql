@@ -15,6 +15,21 @@ Date: 2020-08-26 12:37:19
 
 SET FOREIGN_KEY_CHECKS=0;
 
+
+DROP TABLE IF EXISTS `merchant_notice_config`;
+CREATE TABLE `merchant_notice_config` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `create_time` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `last_update` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `org_id` bigint NOT NULL COMMENT '代理商id',
+  `merchant_name` varchar(64) NOT NULL COMMENT '商户名',
+  `merchant_id` bigint NOT NULL COMMENT '商户ID',
+  `notice_url` varchar(64) NOT NULL COMMENT '回调地址',
+  `notice_params` varchar(256) NOT NULL COMMENT '回调参数，多个用逗号隔开',
+  PRIMARY KEY (`id`),
+  KEY `index_merchant` (`merchant_id`,`org_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
 -- ----------------------------
 -- Table structure for balance
 -- ----------------------------

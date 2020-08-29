@@ -17,7 +17,7 @@ import java.util.Map;
  *
  * @author zcl<yczclcn@163.com>
  */
-@Service("quartzJobLogService")
+//@Service("quartzJobLogService")
 public class QuartzJobLogServiceImpl implements QuartzJobLogService {
 
     @Autowired

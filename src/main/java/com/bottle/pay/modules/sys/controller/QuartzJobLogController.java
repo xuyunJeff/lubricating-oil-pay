@@ -18,8 +18,8 @@ import com.bottle.pay.modules.sys.service.QuartzJobLogService;
  *
  * @author zcl<yczclcn@163.com>
  */
-@RestController
-@RequestMapping("/quartz/job/log")
+//@RestController
+//@RequestMapping("/quartz/job/log")
 public class QuartzJobLogController {
 
     @Autowired

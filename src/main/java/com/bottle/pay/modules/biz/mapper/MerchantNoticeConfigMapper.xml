@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bottle.pay.modules.biz.entity.MerchantNoticeConfigEntity">
+	
+	<select id="listForPage" resultType="com.bottle.pay.modules.biz.entity.MerchantNoticeConfigEntity">
+		SELECT
+			`id`, 
+			`create_time`, 
+			`last_update`, 
+			`org_id`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`notice_url`, 
+			`notice_params`
+		FROM
+			merchant_notice_config
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO merchant_notice_config (
+			`create_time`, 
+			`last_update`, 
+			`org_id`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`notice_url`, 
+			`notice_params`
+		)
+		VALUES (
+			#{createTime}, 
+			#{lastUpdate}, 
+			#{orgId}, 
+			#{merchantName}, 
+			#{merchantId}, 
+			#{noticeUrl}, 
+			#{noticeParams}
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="com.bottle.pay.modules.biz.entity.MerchantNoticeConfigEntity">
+		SELECT
+			`id`, 
+			`create_time`, 
+			`last_update`, 
+			`org_id`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`notice_url`, 
+			`notice_params`
+		FROM
+			merchant_notice_config
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE merchant_notice_config
+	 	<set>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
+			<if test="orgId != null">`org_id` = #{orgId}, </if>
+			<if test="merchantName != null">`merchant_name` = #{merchantName}, </if>
+			<if test="merchantId != null">`merchant_id` = #{merchantId}, </if>
+			<if test="noticeUrl != null">`notice_url` = #{noticeUrl}, </if>
+			<if test="noticeParams != null">`notice_params` = #{noticeParams}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			merchant_notice_config
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

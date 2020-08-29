@@ -23,7 +23,7 @@ import com.bottle.pay.modules.sys.entity.QuartzJobLogEntity;
  *
  * @author zcl<yczclcn@163.com>
  */
-@DependsOn("springContextUtils")
+//@DependsOn("springContextUtils")
 public class ScheduleJob extends QuartzJobBean {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

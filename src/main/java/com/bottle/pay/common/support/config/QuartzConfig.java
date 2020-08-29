@@ -12,10 +12,10 @@ import java.util.Properties;
  *
  * @author zcl<yczclcn@163.com>
  */
-@Configuration
+//@Configuration
 public class QuartzConfig {
 
-    @Bean("scheduler")
+//    @Bean("scheduler")
     public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource) {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         factory.setDataSource(dataSource);
