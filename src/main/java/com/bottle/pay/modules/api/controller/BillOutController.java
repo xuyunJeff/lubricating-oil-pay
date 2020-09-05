@@ -166,8 +166,7 @@ public class BillOutController extends AbstractController {
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("订单无需确认");
         bill = billOutService.billsOutPaidSuccess(bill);
-        // @TODO 通知商户 @mighty
-
+        merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
         return R.ok("订单确认成功，会员银行卡名：" + bill.getBankAccountName());
     }
 
