@@ -13,6 +13,13 @@
         `position`
         FROM
         online_business
+        where 1=1
+        <if test="orgId != null"> and `org_id` = #{orgId}</if>
+        <if test="orgName != null"> and `org_name` = #{orgName},</if>
+        <if test="businessName != null"> and `business_name` = #{businessName}</if>
+        <if test="businessId != null"> and `business_id` = #{businessId}</if>
+        <if test="position != null"> and `position` = #{position}</if>
+
         ORDER BY
         id DESC
     </select>
