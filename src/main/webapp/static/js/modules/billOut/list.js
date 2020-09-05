@@ -45,6 +45,9 @@ function getGrid() {
                     if (hasPermission('apiV1:billOut:appoint:people')) {
                         _html += '<a href="javascript:;" onclick="vm.appointHuman(\''+row.billId+'\')" title="指定"><i class="fa fa-hand-pointer-o"></i></a>';
                     }
+                    if (hasPermission('apiV1:billOut:notice')) {
+                        _html += '<a href="javascript:;" onclick="vm.notice(\''+row.billId+'\')" title="通知"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>';
+                    }
                     return _html;
                 }
             },
@@ -181,6 +184,15 @@ var vm = new Vue({
             console.log(oInput.value)
             document.execCommand("Copy",false);
             oInput.remove()
+        },
+        notice: function (billId) {
+            $.ConfirmAjax({
+                msg : "再次通知？",
+                url: '../../apiV1/billOut/bill/notice?billId='+billId+'&_' + $.now(),
+                success: function(data) {
+                    vm.load();
+                }
+            });
         },
         auto: function () {
             // TODO 自动派单开关 @rmi
