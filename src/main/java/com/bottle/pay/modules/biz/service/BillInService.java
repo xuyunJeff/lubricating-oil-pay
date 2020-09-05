@@ -215,6 +215,8 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
         log.warn("商户:{}确认充值订单失败，未获取分布式锁",userEntity.getUserId());
         throw new RRException("确认充值订单失败，请稍后在操作。");
     }
+
+
     /**
      * 生成充值id
      * 订单号：商户id+ yyyyMMDD + 自增

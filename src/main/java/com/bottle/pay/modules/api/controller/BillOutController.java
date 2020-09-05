@@ -17,6 +17,7 @@ import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.bottle.pay.common.annotation.SysLog;
@@ -68,6 +69,17 @@ public class BillOutController extends AbstractController {
             params.put("businessId",userEntity.getUserId());
         }
         return billOutService.listEntity(params);
+    }
+
+    @SysLog("商户服务器查询订单")
+    @RequestMapping("/get/order")
+    public R getOrder(@RequestParam(name = "orderNo") String orderNo) {
+        if(StringUtils.isEmpty(orderNo)) return R.error(500,"orderNo不可为空");
+        BillOutEntity e = new BillOutEntity();
+        e.setThirdBillId(orderNo);
+        e = billOutService.selectOne(e);
+        if(e == null ) return R.error(-1,"订单不存在");
+        return R.ok().put("price", e.getPrice()).put("orderNo", e.getThirdBillId()).put("billOutId", e.getBillId()).put("billStatus",e.getBillStatus());
     }
 
 

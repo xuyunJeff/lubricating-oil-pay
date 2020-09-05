@@ -80,7 +80,8 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册rest拦截器
-        registry.addInterceptor(new RestApiInterceptor()).addPathPatterns("/rest/**").excludePathPatterns("/apiV1/billOut/push/order/server");
+        registry.addInterceptor(new RestApiInterceptor()).addPathPatterns("/rest/**").excludePathPatterns("/apiV1/billOut/push/order/server")
+                .excludePathPatterns("/apiV1/billOut/get/order");
 //        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/apiV1/billOut/push/order/server");
     }
 

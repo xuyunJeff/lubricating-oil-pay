@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static com.bottle.pay.common.constant.SystemConstant.BIG_DECIMAL_HUNDRED;
 
@@ -341,7 +342,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
 
     /**
      * 生成代付id
-     * 订单号：商户id+ yyyyMMDD + 自增
+     * 订单号：商户id+ yyyyMMDD + 随机数 + 自增
      * 最长20位
      *
      * @return
@@ -351,7 +352,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         String redisKey = BillConstant.BillRedisKey.billOutId(merchantId, today);
         long incrId = redisCacheManager.incr(redisKey, 1L, 24L);
         log.info("redis自增" + incrId);
+        ThreadLocalRandom random = ThreadLocalRandom.current();
         DecimalFormat df = new DecimalFormat("00000");//五位序列号
-        return merchantId + today + df.format(incrId);
+        return merchantId + today + random.nextInt(10,99)+ df.format(incrId);
     }
 }

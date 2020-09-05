@@ -2,7 +2,7 @@
 server:
   tomcat:
     uri-encoding: UTF-8
-  port: 7999
+  port: 16000
   servlet:
     context-path: /
 
