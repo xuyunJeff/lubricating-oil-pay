@@ -22,6 +22,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 
@@ -39,7 +40,7 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
 //    @Autowired
 //    private RestTemplate restTemplate;
 
-    @Async
+//    @Async
     public boolean sendNotice(Long orgId, Long merchantId,String billId) {
         /**
          * 1。根据机构Id和商户ID拿到商户的回调配置  还有出款订单
@@ -67,6 +68,7 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
         MerchantNoticeConfigEntity entity = new MerchantNoticeConfigEntity();
         entity.setMerchantId(merchantId);
         entity.setOrgId(orgId);
+        entity.setCreateTime(null);
         MerchantNoticeConfigEntity config = mapper.selectOne(entity);
         if(config == null){
             log.warn("orgId:{},merchantId:{} 没有找到回调配置",orgId,merchantId);
@@ -80,7 +82,8 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
         for(int i=0; i<param.length; i++){
             try {
                 Field field = ReflectionUtils.findField(billOutEntity.getClass(),param[i]);
-                Object val = ReflectionUtils.getField(field,billOutEntity);
+                Method m = billOutEntity.getClass().getMethod("get" + field.getName().substring(0,1).toUpperCase()+field.getName().substring(1,field.getName().length()));
+                Object val =  m.invoke(billOutEntity);
                 map.put(param[i],val);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@Table(name = "")
+@Table(name = "merchant_notice_config")
 @ToString
 @NoArgsConstructor
 public class MerchantNoticeConfigEntity extends BottleBaseEntity {
 
-	public static final String[] DEFAULT_PARAMS = {"billId","price"};
+	public static final String[] DEFAULT_PARAMS = {"billId","price","billStatus","merchantId"};
 
 	public static final String SPLIT_CHAR = ",";
 	
@@ -35,7 +35,7 @@ public class MerchantNoticeConfigEntity extends BottleBaseEntity {
 	 */
 	private String noticeUrl;
 	
-	/**
+	/**bill_out
 	 * 回调参数，多个用逗号隔开
 	 */
 	private String noticeParams;

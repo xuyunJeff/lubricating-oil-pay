@@ -78,10 +78,12 @@ public class BillOutController extends AbstractController {
 
     @SysLog("商户服务器查询订单")
     @RequestMapping("/get/order")
-    public R getOrder(@RequestParam(name = "orderNo") String orderNo) {
-        if(StringUtils.isEmpty(orderNo)) return R.error(500,"orderNo不可为空");
+    public R getOrder(@RequestParam(name = "orderNo",required = false) String orderNo,@RequestParam(name = "merchantId",required = false) Long merchantId) {
+        if(StringUtils.isEmpty(orderNo)) return R.error(400,"orderNo不可为空");
+        if(StringUtils.isEmpty(merchantId)) return R.error(400,"merchantId不可为空");
         BillOutEntity e = new BillOutEntity();
         e.setThirdBillId(orderNo);
+        e.setMerchantId(merchantId);
         e = billOutService.selectOne(e);
         if(e == null ) return R.error(-1,"订单不存在");
         return R.ok().put("price", e.getPrice()).put("orderNo", e.getThirdBillId()).put("billOutId", e.getBillId()).put("billStatus",e.getBillStatus());
@@ -175,7 +177,7 @@ public class BillOutController extends AbstractController {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
-        if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("订单无需作废");
+        if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.Success.getCode())) return R.error("订单无需作废");
         billOutService.billsOutPaidFailed(bill);
         merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
         return R.ok("订单作废，会员银行卡名：" + bill.getBankAccountName());
