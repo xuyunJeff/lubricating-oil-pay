@@ -50,11 +50,9 @@ public class FrozenDetailService extends BottleBaseService<FrozenDetailMapper, F
      */
     public Page<FrozenDetailEntity> pageList(Map<String, Object> params) {
         SysUserEntity sysUserEntity = super.getCurrentUser();
-        if (!super.isOrgAdmin()
-//                && sysUserEntity.getRoleId() != SystemConstant.RoleEnum.BillOutMerchant.getCode()
-                ) {
+        if ( !(super.isOrgAdmin() || sysUserEntity.getRoleId() .equals(SystemConstant.RoleEnum.BillOutMerchant.getCode()))) {
             log.warn("userId:{}-{}不是机构管理无法查看机构商户冻结记录", ShiroUtils.getUserId(), WebUtils.getIpAddr());
-            throw new RRException("不是机构管理无法查看机构商户冻结记录");
+            throw new RRException("不是机构管理或商户无法查看机构商户冻结记录");
         }
 
         int pageNo = Integer.valueOf(params.get("pageNumber").toString());
@@ -62,7 +60,9 @@ public class FrozenDetailService extends BottleBaseService<FrozenDetailMapper, F
         Page<FrozenDetailEntity> page = new Page<>(pageNo, pageSize);
         params.put("offSet", page.getOffset());
         params.put("orgId", sysUserEntity.getOrgId());
-
+        if(sysUserEntity.getRoleId() .equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
+            params.put("merchantId", sysUserEntity.getUserId());
+        }
         try {
             int count = mapper.selectCountForPage(params);
             List<FrozenDetailEntity> list = mapper.selectPage(params);
