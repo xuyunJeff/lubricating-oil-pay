@@ -21,6 +21,14 @@
         `bill_out_limit`
         FROM
         balance
+        where 1=1
+        <if test="userName != null"> and `user_name` = #{userName}</if>
+        <if test="userId != null"> and `user_id` = #{userId}</if>
+        <if test="orgId != null"> and `org_id` = #{orgId}</if>
+        <if test="orgName != null"> and `org_name` = #{orgName}</if>
+        <if test="roleId != null"> and `role_id` = #{roleId}</if>
+        <if test="roleName != null"> and `role_name` = #{roleName}</if>
+        <if test="billOutLimit != null"> and `bill_out_limit` = #{billOutLimit}</if>
         ORDER BY
         id DESC
     </select>

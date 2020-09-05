@@ -67,13 +67,21 @@ public class BillOutController extends AbstractController {
         if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
             // 机构管理员查询机构下的所有数据
             params.put("orgId",userEntity.getOrgId());
+            return billOutService.listEntity(params);
         }
         if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
             // 出款员查看自己的数据的所有数据
             params.put("orgId",userEntity.getOrgId());
             params.put("businessId",userEntity.getUserId());
+            return billOutService.listEntity(params);
         }
-        return billOutService.listEntity(params);
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
+            // 出款员查看自己的数据的所有数据
+            params.put("orgId",userEntity.getOrgId());
+            params.put("merchantId",userEntity.getUserId());
+            return billOutService.listEntity(params);
+        }
+        return new Page<>();
     }
 
     @SysLog("商户服务器查询订单")

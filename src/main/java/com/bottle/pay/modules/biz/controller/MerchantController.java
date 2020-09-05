@@ -3,12 +3,14 @@ package com.bottle.pay.modules.biz.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.utils.CommonUtils;
 import com.bottle.pay.modules.api.service.MerchantService;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.biz.view.MerchantView;
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +34,18 @@ public class MerchantController extends AbstractController {
 
     @RequestMapping("/list")
     public Page<MerchantView>  merchantList(@RequestBody Map<String,Object> params){
-        return merchantService.merchantList(params);
+        SysUserEntity userEntity = getUser();
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
+            params.put("orgId",userEntity.getOrgId());
+            params.put("userId",userEntity.getUserId());
+            return merchantService.merchantList(params);
+        }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            params.put("orgId",userEntity.getOrgId());
+            return merchantService.merchantList(params);
+        }
+
+        return new Page<>();
     }
 
     /**

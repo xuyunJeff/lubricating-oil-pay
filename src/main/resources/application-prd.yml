@@ -12,7 +12,7 @@ spring:
         shutdown-timeout: 100   # 关闭超时时间
     database: 0
   datasource:
-    url: jdbc:mysql://47.114.41.69:13245/bottle_pay?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://172.16.106.160:13245/bottle_pay?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
     username: bottle_pay
     password: hAPYxiAia25fRSsT
     dbcp2:
