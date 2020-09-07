@@ -80,14 +80,16 @@ function getGrid() {
                     if(row.notice ==2) {return "<div style='color: green'>已通知</div>"}
                     if(row.notice ==3) {return "<div style='color: blue'>通知失败</div>"}
                 }},
-            {field : "price", title : "账单金额", width : "100px"},
-            {field : "bankAccountName", title : "会员名", width : "110px",formatter:function (index,row) {
+            {field : "price",cellStyle: vm.border, title : "账单金额", width : "100px",formatter:function (index,row) {
+                    return row.price +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.price+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
+                }},
+            {field : "bankAccountName",cellStyle: vm.border, title : "会员名", width : "110px",formatter:function (index,row) {
                     return row.bankAccountName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankAccountName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
-            {field : "bankCardNo", title : "会员银行卡号", width : "180px",formatter:function (index,row) {
+            {field : "bankCardNo",cellStyle: vm.border, title : "会员银行卡号", width : "180px",formatter:function (index,row) {
                     return row.bankCardNo + '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankCardNo+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
-            {field : "bankName", title : "银行名称", width : "100px",formatter:function (index,row) {
+            {field : "bankName",cellStyle: vm.border, title : "银行名称", width : "100px",formatter:function (index,row) {
                 return row.bankName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             //1 手动 2 自动 3 大额 4 订单退回机构
@@ -196,6 +198,9 @@ var vm = new Vue({
         },
         auto: function () {
             // TODO 自动派单开关 @rmi
+        },
+       border: function () {
+            return { css:{"border-color":"red red red red"} }
         }
 	}
 })
