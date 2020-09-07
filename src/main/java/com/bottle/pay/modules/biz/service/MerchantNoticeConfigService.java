@@ -89,13 +89,14 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
                 e.printStackTrace();
             }
         }
+        map.put("orderNo",billOutEntity.getThirdBillId());
         int times =3;
         BillOutEntity update = new BillOutEntity();
         update.setId(billOutEntity.getId());
         do{
             try {
                 HttpResult result = httpAPIService.doPost(config.getNoticeUrl(),map);
-                log.info("回调请求{},结果:{}",config.getNoticeUrl(),result.getBody());
+                log.info("回调请求{},参数{},结果:{}",config.getNoticeUrl(),map,result.getBody());
                 if(result.getCode() == HttpStatus.SC_OK){
                     update.setNotice(BillConstant.BillNoticeEnum.Noticed.getCode());
                     int num = billOutMapper.updateByPrimaryKeySelective(update);
