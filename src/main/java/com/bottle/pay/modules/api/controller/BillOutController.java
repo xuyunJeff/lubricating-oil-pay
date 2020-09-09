@@ -73,10 +73,11 @@ public class BillOutController extends AbstractController {
             // 出款员查看自己的数据的所有数据
             params.put("orgId",userEntity.getOrgId());
             params.put("businessId",userEntity.getUserId());
+            params.put("position",BillConstant.BillPostionEnum.Business.getCode());
             return billOutService.listEntity(params);
         }
         if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
-            // 出款员查看自己的数据的所有数据
+            // 代付商户查看自己的数据的所有数据
             params.put("orgId",userEntity.getOrgId());
             params.put("merchantId",userEntity.getUserId());
             return billOutService.listEntity(params);
@@ -161,7 +162,7 @@ public class BillOutController extends AbstractController {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
-        if (!bill.getPosition().equals(BillConstant.BillPostionEnum.Business.getCode())) return R.error("订单无需退回");
+        if (bill.getPosition().equals(BillConstant.BillPostionEnum.Agent.getCode())) return R.error("订单无需退回,该订单已经在机构");
         bill = billOutService.billsOutBusinessGoBack(bill);
         return R.ok("订单回退成功，机构：" + bill.getOrgName());
     }

@@ -22,6 +22,8 @@ import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import lombok.extern.slf4j.Slf4j;
 
+import static com.bottle.pay.common.constant.SystemConstant.BIG_DECIMAL_HUNDRED;
+
 /**
  * @author ZhouChenglin<yczclcn@163.com>
  */
@@ -52,7 +54,7 @@ public class OnlineBusinessController extends AbstractController {
         List<OnlineBusinessEntity> entities = page.getRows();
         List<OnlineBusinessEntity> onlineBusinessEntities = new ArrayList<>();
         entities.forEach(it->{
-            it.setPayingBalance(billOutService.getBusinessBillOutBalance(it.getBusinessId()));
+            it.setPayingBalance(billOutService.getBusinessBillOutBalance(it.getBusinessId()).divide(BIG_DECIMAL_HUNDRED));
             BigDecimal businessTotalBalance = bankCardService.getAllCardsBalanceWithoutFrozen(it.getBusinessId());
             BankCardEntity enableBankCard =bankCardService.getCardOpenedListByBusinessId(it.getBusinessId());
             it.setBalance(businessTotalBalance);

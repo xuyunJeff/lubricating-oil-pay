@@ -127,7 +127,7 @@ public class RedisCacheManager {
     }
 
     /**
-     * 普通缓存放入
+     * 普通缓存放入,存在30分钟
      *
      * @param key   键
      * @param value 值
@@ -135,7 +135,7 @@ public class RedisCacheManager {
      */
     public boolean set(String key, Object value) {
         try {
-            redisTemplate.opsForValue().set(key, GsonUtil.GsonString(value));
+            redisTemplate.opsForValue().set(key, GsonUtil.GsonString(value),30, TimeUnit.MINUTES);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -217,7 +217,7 @@ public class RedisCacheManager {
      */
     public Double incr(String key, double delta) {
         double incr = redisTemplate.opsForValue().increment(key, delta);
-        expireHours(key, -1);
+        expireHours(key, 1);
         return incr;
     }
 

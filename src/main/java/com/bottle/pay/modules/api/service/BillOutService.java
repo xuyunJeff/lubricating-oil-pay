@@ -115,8 +115,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     public BillOutEntity billsOutBusinessByHuman(BillOutEntity entity, OnlineBusinessEntity onlineBusinessEntity) {
         entity.setBillType(BillConstant.BillTypeEnum.ByHuman.getCode());
-        entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
         incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(), entity.getPrice());
+        entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
         return entity;
     }
 
