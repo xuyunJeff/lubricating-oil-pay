@@ -249,10 +249,13 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     public synchronized BigDecimal incrBusinessBillOutBalanceRedis(Long businessId, BigDecimal amount) {
         amount = amount.multiply(BigDecimal.valueOf(100));
         String redisKey = BillConstant.BillRedisKey.billOutBusinessBalance(businessId.toString());
-        BigDecimal balanceBefore = getBusinessBillOutBalance(businessId);
-        BigDecimal balanceAfter = BigDecimal.valueOf(redisCacheManager.incr(redisKey, Double.valueOf(amount.toString())));
-        log.info("代付余额变动，变动前余额：" + balanceBefore + "分,变动后余额：" + balanceAfter + "分,变动金额：" + amount + "分");
-        return balanceAfter.divide(BigDecimal.valueOf(100));
+        Object balance = redisCacheManager.get(redisKey);
+        if(!ObjectUtils.isEmpty(balance)) {
+            BigDecimal balanceAfter = BigDecimal.valueOf(redisCacheManager.incr(redisKey, Double.valueOf(amount.toString())));
+            log.info("代付余额变动，变动前余额：" + balance + "分,变动后余额：" + balanceAfter + "分,变动金额：" + amount + "分");
+            return balanceAfter.divide(BigDecimal.valueOf(100));
+        }
+        return getBusinessBillOutBalance(businessId);
     }
 
     /**
