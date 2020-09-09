@@ -56,12 +56,12 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
             log.warn("orgId:{},merchantId:{},订单ID:{} 没有找到出款订单", orgId, merchantId, billId);
             throw new RRException("没有找到出款订单");
         }
-        if (billOutEntity.getBillStatus() != BillConstant.BillStatusEnum.Success.getCode()) {
-            log.warn("orgId:{},merchantId:{},订单ID:{} 出款订单没有支付成功不能回调", orgId, merchantId, billId);
+        if(billOutEntity.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())){
+            log.warn("orgId:{},merchantId:{},订单ID:{} 出款订单没有支付成功不能回调",orgId,merchantId,billId);
             throw new RRException("出款订单没有支付成功不能回调");
         }
-        if (billOutEntity.getNotice() == BillConstant.BillNoticeEnum.Noticed.getCode()) {
-            log.warn("orgId:{},merchantId:{},订单ID:{} 出款订单已通知不能重复通知", orgId, merchantId, billId);
+        if(billOutEntity.getNotice().equals(BillConstant.BillNoticeEnum.Noticed.getCode())){
+            log.warn("orgId:{},merchantId:{},订单ID:{} 出款订单已通知不能重复通知",orgId,merchantId,billId);
             throw new RRException("出款订单已回调成功不能重复回调");
         }
         //查询商户配置

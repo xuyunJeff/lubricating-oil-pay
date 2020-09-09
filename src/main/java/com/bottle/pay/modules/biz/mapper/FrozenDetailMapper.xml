@@ -136,6 +136,8 @@
             )
         </if>
         <if test="orgId != null"> and org_id = #{orgId} </if>
+        <if test="merchantId != null"> and merchant_id = #{merchantId} </if>
+        <if test="orgId != null"> and org_id = #{orgId} </if>
     </select>
 
     <select id="selectPage" resultType="com.bottle.pay.modules.biz.entity.FrozenDetailEntity">

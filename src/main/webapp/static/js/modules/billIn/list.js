@@ -34,13 +34,13 @@ function getGrid() {
             {field : "businessId", title : "付款专员ID", width : "100px"},
             {field : "billStatus", title : "订单状态", width : "100px",formatter:function(value){
                 if(value==1){
-                    return '未支付';
+                    return '<div style=\'color: #FFA500\'>未支付</div>';
                 }
                 if(value ==2){
-                    return '成功';
+                    return '<div style=\'color: green\'>成功</div>';
                 }
                 if(value ==3){
-                    return '失败';
+                    return '<div style=\'color: blue\'>失败</div>';
                 }
             }},
             {field : "price", title : "账单金额", width : "100px"},
