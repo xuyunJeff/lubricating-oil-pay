@@ -4,6 +4,7 @@ import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
+import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.common.utils.DateUtils;
 import com.bottle.pay.modules.api.dao.BillOutMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
@@ -16,6 +17,7 @@ import com.bottle.pay.modules.external.service.BillOutNotifyService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +50,9 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
 
     @Autowired
     BillOutNotifyService billOutNotifySercice;
+
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
 
     /**

@@ -3,9 +3,11 @@ package com.bottle.pay.modules.biz.controller;
 import java.util.Map;
 
 import com.bottle.pay.common.constant.BillConstant;
+import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.modules.biz.entity.BillInEntity;
 import com.bottle.pay.modules.biz.service.BillInService;
+import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +37,18 @@ public class BillInController extends AbstractController {
      */
     @RequestMapping("/list")
     public Page<BillInEntity> list(@RequestBody  Map<String, Object> params) {
-        return billInService.selectForPage(params);
+        SysUserEntity userEntity = getUser();
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            // 机构管理员查询机构下的所有数据
+            params.put("orgId",userEntity.getOrgId());
+            return billInService.listEntity(params);
+        }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
+            params.put("orgId",userEntity.getOrgId());
+            params.put("merchantId",userEntity.getUserId());
+            return billInService.listEntity(params);
+        }
+        return new Page<>();
     }
 
     /**

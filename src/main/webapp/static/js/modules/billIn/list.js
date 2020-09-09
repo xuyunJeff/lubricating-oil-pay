@@ -18,12 +18,14 @@ function getGrid() {
 		url: '../../merchant/charge/list?_' + $.now(),
 		height: $(window).height()-56,
 		queryParams: function(params){
-			params.name = vm.keyword;
-			return params;
+            params.merchantName = $('#merchantName').val()
+            params.businessName = $('#businessName').val()
+            params.billId = $('#billId').val()
+			return removeEmptyField(params);
 		},
 		columns: [
 //			{checkbox: true},
-            {field : "createTime", title : "创建时间", width : "100px"},
+            {field : "createTime", title : "创建时间", width : "180px"},
 //            {field : "lastUpdate", title : "", width : "100px"},
             {field : "merchantName", title : "商户名", width : "100px"},
             {field : "merchantId", title : "商户ID", width : "100px"},
@@ -32,7 +34,7 @@ function getGrid() {
             {field : "ip", title : "第三方订单派发服务器ip", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px"},
             {field : "businessId", title : "付款专员ID", width : "100px"},
-            {field : "billStatus", title : "订单状态", width : "100px",formatter:function(value){
+            {field : "billStatus", title : "订单状态", width : "60px",formatter:function(value){
                 if(value==1){
                     return '<div style=\'color: #FFA500\'>未支付</div>';
                 }
@@ -60,8 +62,8 @@ function getGrid() {
 //                    }
 //                    if (hasPermission('merchant:charge:success')) {
                        if(row.billStatus==1){
-                            _html += '<a href="javascript:;" onclick="vm.success(\''+row.billId+'\')" title="充值成功"><i class="fa fa-pencil">确认成功</i></a>';
-                            _html += '<a href="javascript:;" onclick="vm.fail(\''+row.billId+'\')" title="充值失败"><i class="fa fa-pencil">确认失败</i></a>';
+                            _html += '<a href="javascript:;" onclick="vm.success(\''+row.billId+'\')" title="充值成功"><i class="fa fa fa-check"></i></a>';
+                            _html += '<a href="javascript:;" onclick="vm.fail(\''+row.billId+'\')" title="充值失败"><i class="fa fa-times"></i></a>';
                        }
 //                    }
                     return _html;

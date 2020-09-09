@@ -9,7 +9,10 @@ public class BillConstant {
     public static final String BILL_IN_ID = "bill:in";
     // 代付中余额
     public static final String BILL_OUT_BUSINESS_BALANCE = "bill:out:balance";
+
     public static final String BILL_OUT_MERCHANT_BALANCE_LOCAK ="bill:out:merchant:balanc:lock";
+
+    public static final String BILL_OUT_BUSINESS_BALANCE_LOCAK ="bill:out:business:balanc:lock";
 
     public static final Integer WHITE_IP_TYPE_SERVER  =1;
 

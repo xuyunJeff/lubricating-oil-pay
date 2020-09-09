@@ -174,6 +174,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                 update.setBillId(billId);
                 update.setBillStatus(statusEnum.getCode());
                 update.setLastUpdate(new Date());
+                update.setCreateTime(null);
                 if(StringUtils.isNotEmpty(comment)){
                     comment = Optional.ofNullable(billInEntity.getComment()).orElse("")
                             .concat("#" + comment);
