@@ -147,14 +147,15 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Transactional
     public BillOutEntity billsOutPaidSuccess(BillOutEntity entity) {
-        log.info("出款成功---,billId:"+entity.getBillId());
+        log.info("出款成功,billId{}",entity);
+        BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
+        successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
+        int i = mapper.updateBillOutByBillId(successEntity);
+        if( i == 0) throw new RRException("该订单支付状态已经是最终状态,无需确认订单");
         // 扣除出款员代付中
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中
         balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-        BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
-        successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
-        mapper.updateBillOutByBillId(successEntity);
         bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice());
         return entity;
     }
@@ -167,17 +168,15 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Transactional
     public BillOutEntity billsOutPaidFailed(BillOutEntity entity) {
+        log.info("出款作废,billId{}",entity);
         BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());
         failedEntity.setBillStatus(BillConstant.BillStatusEnum.Failed.getCode());
-        int i = mapper.updateBillOutByBillId(failedEntity);
-        if(i == 1) {
-            // 扣除出款员代付中-- redis
-            incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
-            // 扣除商户代付中--数据库
-            balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-            // 增加可用余额
-            balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-        }
+        int i = mapper.updateBillOutByBillIdForFailed(failedEntity);
+        if( i == 0) throw new RRException("该订单支付状态已经是最终状态不可作废");
+        // 扣除出款员代付中 -- redis
+        incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        // 增加可用余额,扣除代付中
+        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
         bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }

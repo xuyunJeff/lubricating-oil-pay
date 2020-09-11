@@ -40,7 +40,7 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
 //    @Autowired
 //    private RestTemplate restTemplate;
 
-    //    @Async
+    @Async
     public boolean sendNotice(Long orgId, Long merchantId, String billId) {
         /**
          * 1。根据机构Id和商户ID拿到商户的回调配置  还有出款订单
