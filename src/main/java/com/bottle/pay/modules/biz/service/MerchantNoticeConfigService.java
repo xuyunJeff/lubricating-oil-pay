@@ -100,7 +100,7 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
                 if (result.getCode() == HttpStatus.SC_OK) {
                     update.setNotice(BillConstant.BillNoticeEnum.Noticed.getCode());
                     int num = billOutMapper.updateByPrimaryKeySelective(update);
-                    log.info("出款订单:{}通知结果:{}", billOutEntity.getId(), num > 0);
+                    log.info("出款订单:{}通知结果:{}", billOutEntity.getBillId(), num > 0);
                     times = -1;
                     return true;
                 }

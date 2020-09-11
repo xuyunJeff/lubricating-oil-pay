@@ -17,6 +17,7 @@ import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.biz.service.MerchantNoticeConfigService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,7 @@ import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/apiV1/billOut")
+@Slf4j
 public class BillOutController extends AbstractController {
 
     @Autowired
@@ -175,7 +177,11 @@ public class BillOutController extends AbstractController {
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("订单无需确认");
         bill = billOutService.billsOutPaidSuccess(bill);
-        merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
+        try {
+            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
+        }catch (Exception e) {
+            log.error("通知订单回调异常，BillOutEntity {}",bill);
+        }
         return R.ok("订单确认成功，会员银行卡名：" + bill.getBankAccountName());
     }
 
@@ -187,7 +193,11 @@ public class BillOutController extends AbstractController {
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getNotice().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("该订单支付状态已经是最终状态不可作废");
         billOutService.billsOutPaidFailed(bill);
-        merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
+        try {
+            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
+        }catch (Exception e) {
+            log.error("出款员作废订单回调异常，BillOutEntity {}",bill);
+        }
         return R.ok("订单作废，会员银行卡名：" + bill.getBankAccountName());
     }
 
@@ -199,7 +209,11 @@ public class BillOutController extends AbstractController {
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.Success.getCode())) return R.error("该订单未支付");
         if (bill.getNotice().equals(BillConstant.BillNoticeEnum.Noticed.getCode())) return R.error("该订单已通知");
-        merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
+        try {
+            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
+        }catch (Exception e) {
+            log.error("通知订单回调异常，BillOutEntity {}",bill);
+        }
         return R.ok("通知成功，会员银行卡名：" + bill.getBankAccountName());
     }
     /**
