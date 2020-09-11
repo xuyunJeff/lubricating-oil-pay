@@ -167,15 +167,17 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Transactional
     public BillOutEntity billsOutPaidFailed(BillOutEntity entity) {
-        // 扣除出款员代付中-- redis
-        incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
-        // 扣除商户代付中--数据库
-        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-        // 增加可用余额
-        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
         BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());
         failedEntity.setBillStatus(BillConstant.BillStatusEnum.Failed.getCode());
-        mapper.updateBillOutByBillId(failedEntity);
+        int i = mapper.updateBillOutByBillId(failedEntity);
+        if(i == 1) {
+            // 扣除出款员代付中-- redis
+            incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+            // 扣除商户代付中--数据库
+            balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
+            // 增加可用余额
+            balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
+        }
         bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }
