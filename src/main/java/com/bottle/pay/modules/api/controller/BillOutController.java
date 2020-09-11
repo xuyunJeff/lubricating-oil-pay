@@ -207,7 +207,7 @@ public class BillOutController extends AbstractController {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
-        if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.Success.getCode())) return R.error("该订单未支付");
+        if (bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("该订单未支付");
         if (bill.getNotice().equals(BillConstant.BillNoticeEnum.Noticed.getCode())) return R.error("该订单已通知");
         try {
             merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
