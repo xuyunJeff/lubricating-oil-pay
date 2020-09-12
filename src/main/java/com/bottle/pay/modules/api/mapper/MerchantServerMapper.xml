@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bottle.pay.modules.api.dao.MerchantServerMapper">
+	
+	<select id="listForPage" resultType="com.bottle.pay.modules.api.entity.MerchantServerEntity">
+		SELECT
+			`id`, 
+			`create_time`, 
+			`last_update`, 
+			`org_id`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`org_name`, 
+			`sever_name`, 
+			`server_id`
+		FROM
+			merchant_server
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO merchant_server (
+			`create_time`, 
+			`last_update`, 
+			`org_id`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`org_name`, 
+			`sever_name`, 
+			`server_id`
+		)
+		VALUES (
+			#{createTime}, 
+			#{lastUpdate}, 
+			#{orgId}, 
+			#{merchantName}, 
+			#{merchantId}, 
+			#{orgName}, 
+			#{severName}, 
+			#{serverId}
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.MerchantServerEntity">
+		SELECT
+			`id`, 
+			`create_time`, 
+			`last_update`, 
+			`org_id`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`org_name`, 
+			`sever_name`, 
+			`server_id`
+		FROM
+			merchant_server
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE merchant_server
+	 	<set>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
+			<if test="orgId != null">`org_id` = #{orgId}, </if>
+			<if test="merchantName != null">`merchant_name` = #{merchantName}, </if>
+			<if test="merchantId != null">`merchant_id` = #{merchantId}, </if>
+			<if test="orgName != null">`org_name` = #{orgName}, </if>
+			<if test="severName != null">`sever_name` = #{severName}, </if>
+			<if test="serverId != null">`server_id` = #{serverId}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			merchant_server
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
