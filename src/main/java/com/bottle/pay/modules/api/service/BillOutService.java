@@ -1,11 +1,10 @@
 package com.bottle.pay.modules.api.service;
 
 import com.bottle.pay.common.constant.BillConstant;
-import com.bottle.pay.common.exception.NoOnlineBUsinessException;
+import com.bottle.pay.common.exception.NoOnlineBusinessException;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
-import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.common.utils.DateUtils;
 import com.bottle.pay.modules.api.dao.BillOutMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
@@ -100,7 +99,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
                 tryTimes ++ ;
                 if(tryTimes == onlineAll) break ;
             } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
-        }catch (NoOnlineBUsinessException e) {
+        }catch (NoOnlineBusinessException e) {
             // 订单改为手动
             BillOutEntity update = new BillOutEntity(entity.getBillId());
             update.setBillType(BillConstant.BillTypeEnum.ByHuman.getCode());
