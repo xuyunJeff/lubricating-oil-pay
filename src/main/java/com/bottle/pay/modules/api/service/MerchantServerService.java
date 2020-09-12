@@ -25,7 +25,12 @@ public class MerchantServerService  extends BottleBaseService<MerchantServerMapp
   * 订单号里的商户号和商户服务器是否一致
   * @return
   */
- public Boolean billMerchangtAccordanceMerchant(){
-    return false;
+ public Boolean billMerchangtAccordanceMerchant(Long merchangtId,String merchantName,Long serverId){
+     MerchantServerEntity entity = new MerchantServerEntity();
+     entity.setMerchantId(merchangtId);
+     entity.setMerchantName(merchantName);
+     entity.setServerId(serverId);
+     int n =mapper.selectCount(entity);
+     return n == 1;
     }
 }

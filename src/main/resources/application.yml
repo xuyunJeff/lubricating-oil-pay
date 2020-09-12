@@ -85,3 +85,10 @@ http:
   socketTimeout: 10000
 #提交请求前测试连接是否可用
   staleConnectionCheckEnabled: true
+
+log:
+  level:
+    root: info
+    mylog: debug
+  file: ./pay.log
+  maxsize: 100MB

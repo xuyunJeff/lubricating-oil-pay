@@ -1,9 +1,11 @@
 package com.bottle.pay.common.support.config;
 
 import com.bottle.pay.common.annotation.BillOut;
+import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.utils.AESUtil;
 import com.bottle.pay.common.utils.GsonUtil;
 import com.bottle.pay.modules.api.entity.BillOutView;
+import com.bottle.pay.modules.api.service.MerchantServerService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class BillOutMethodArgumentResolver implements HandlerMethodArgumentResol
 
     @Autowired
     SysUserService userService;
+
+    @Autowired
+    MerchantServerService merchantServerService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -38,6 +43,11 @@ public class BillOutMethodArgumentResolver implements HandlerMethodArgumentResol
         String[] valueMap = decryptStep1.split("&");
         SysUserEntity user  =userService.getByUserName(valueMap[1]);
         String value = AESUtil.decrypt1(valueMap[0],user.getPassword());
-        return GsonUtil.GsonToBean(value,BillOutView.class);
+        BillOutView billOutView= GsonUtil.GsonToBean(value,BillOutView.class);
+        Boolean accordance=merchantServerService.billMerchangtAccordanceMerchant(billOutView.getMerchantId(),billOutView.getMerchantName(),user.getUserId());
+        if (accordance){
+            return billOutView;
+        }
+        throw new RRException("订单商户号和服务器不一致");
     }
 }

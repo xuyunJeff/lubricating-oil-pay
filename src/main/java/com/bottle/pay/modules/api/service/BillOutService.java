@@ -1,6 +1,7 @@
 package com.bottle.pay.modules.api.service;
 
 import com.bottle.pay.common.constant.BillConstant;
+import com.bottle.pay.common.exception.NoOnlineBUsinessException;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
@@ -71,6 +72,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
                 billOutView.getBankCardNo(), billOutView.getBankName(), billOutView.getBankAccountName());
         // TODO 去查询商户的发过来的订单是否存在？@mighty
         // 第二步 增加商户代付中余额，扣除商户可用余额
+        log.info("服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}",bill);
         billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice());
         return bill;
     }
@@ -88,22 +90,24 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         BigDecimal free;
         int tryTimes = 0 ;
         int onlineAll =  onlineBusinessService.count();
-        do {
-            Map<OnlineBusinessEntity, BigDecimal>   businessOnlineNext = getBusinessFreeBalance(entity);
-            if(businessOnlineNext.equals(businessOnline)) break;
-            businessOnline = businessOnlineNext;
-            free = businessOnline.values().stream().findFirst().get();
-            onlineBusinessEntity = businessOnline.keySet().stream().findFirst().get();
-            tryTimes ++ ;
-            if(tryTimes == onlineAll) break ;
-        } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
-        if(onlineBusinessEntity == null) {
+        try {
+            do {
+                Map<OnlineBusinessEntity, BigDecimal>   businessOnlineNext = getBusinessFreeBalance(entity);
+                if(businessOnlineNext.equals(businessOnline)) break;
+                businessOnline = businessOnlineNext;
+                free = businessOnline.values().stream().findFirst().get();
+                onlineBusinessEntity = businessOnline.keySet().stream().findFirst().get();
+                tryTimes ++ ;
+                if(tryTimes == onlineAll) break ;
+            } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
+        }catch (NoOnlineBUsinessException e) {
             // 订单改为手动
             BillOutEntity update = new BillOutEntity(entity.getBillId());
             update.setBillType(BillConstant.BillTypeEnum.ByHuman.getCode());
             mapper.updateBillOutByBillId(update);
             return entity;
         }
+
         // 第三步派单给出款员(事务)，付款银行卡默认为当前开启的银行卡
         entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
         // 第四步增加出款员代付中余额，扣除可用余额
@@ -337,6 +341,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         entity.setPosition(BillConstant.BillPostionEnum.Agent.getCode());
         entity.setLastUpdate(new Date());
         int i = mapper.insert(entity);
+        log.info("服务器订单 step 1 :保存，billOut{}",entity);
         if (i == 0) {
             log.error("订单保存错误 {}", entity.toString());
             throw new RRException("订单保存错误");

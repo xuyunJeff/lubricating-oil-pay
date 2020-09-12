@@ -18,6 +18,7 @@ import com.bottle.pay.common.utils.ShiroUtils;
 import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.dao.BalanceMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
+import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.BalanceService;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.biz.dao.BankCardMapper;
@@ -99,17 +100,23 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
         if (userId == null || StringUtils.isEmpty(cardNo)) {
             return CommonUtils.msg(null);
         }
+        OnlineBusinessEntity onlineBusinessEntity = new OnlineBusinessEntity();
+        onlineBusinessEntity.setBusinessId(userId);
+        List<OnlineBusinessEntity> onlineBusinessEntities=onlineBusinessService.select(onlineBusinessEntity);
+        if(onlineBusinessEntities.size() > 0 ) {
+            return R.error("该用户已经在线");
+        }
         BankCardEntity query = new BankCardEntity();
         query.setBusinessId(userId);
         query.setBankCardNo(cardNo);
         BankCardEntity entity = mapper.selectOne(query);
         if (entity == null) {
             log.warn("专员:{},银行卡:{} 没找到", userId, cardNo);
-            return CommonUtils.msg(null);
+            return R.error("专员没有银行卡");
         }
         if (entity.getCardStatus() == 2) {
             log.warn("专员:{},银行卡:{} 被冻结不能启用", userId, cardNo);
-            return CommonUtils.msg("被冻结不能启用");
+            return R.error("银行卡被冻结不能启用");
         }
         Date date = new Date();
         int num = 0;
