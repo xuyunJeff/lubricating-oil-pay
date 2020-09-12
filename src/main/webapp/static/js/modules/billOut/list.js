@@ -124,9 +124,15 @@ var vm = new Vue({
 	data: {
 		keyword: null
 	},
+    mounted: function () {
+        if(localStorage.getItem("userRoleName").indexOf("机构管理员") > -1 ){
+            $('#dataGrid').css("background-color","#FAEBD7")
+        }
+    },
 	methods : {
 		load: function() {
 			$('#dataGrid').bootstrapTable('refresh');
+
 		},
 		save: function() {
 			dialogOpen({

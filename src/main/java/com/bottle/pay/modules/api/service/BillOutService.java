@@ -87,7 +87,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         OnlineBusinessEntity onlineBusinessEntity = null;
         BigDecimal free;
         int tryTimes = 0 ;
-        int onloneAll =  onlineBusinessService.count();
+        int onlineAll =  onlineBusinessService.count();
         do {
             Map<OnlineBusinessEntity, BigDecimal>   businessOnlineNext = getBusinessFreeBalance(entity);
             if(businessOnlineNext.equals(businessOnline)) break;
@@ -95,10 +95,14 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
             free = businessOnline.values().stream().findFirst().get();
             onlineBusinessEntity = businessOnline.keySet().stream().findFirst().get();
             tryTimes ++ ;
-            if(tryTimes == onloneAll) break ;
+            if(tryTimes == onlineAll) break ;
         } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
         if(onlineBusinessEntity == null) {
-            throw new RRException("系统错误不存在在线出款员");
+            // 订单改为手动
+            BillOutEntity update = new BillOutEntity(entity.getBillId());
+            update.setBillType(BillConstant.BillTypeEnum.ByHuman.getCode());
+            mapper.updateBillOutByBillId(update);
+            return entity;
         }
         // 第三步派单给出款员(事务)，付款银行卡默认为当前开启的银行卡
         entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
@@ -134,8 +138,12 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         int i = mapper.updateByBillOutId(entity);
         if (i == 0) {
             log.error("订单保存错误 {}", entity.toString());
-            throw new RRException("订单保存错误");
+            return entity;
         }
+        // 扣除出款员付款中
+        incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        // 增加出款员可用余额
+        bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }
 

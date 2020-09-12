@@ -64,6 +64,7 @@ var vm = new Vue({
 		getUser : function() {
 			$.getJSON("sys/user/info?_" + $.now(), function(r) {
 				vm.user = r.user;
+				localStorage.setItem("userRoleName",r.user.roleName)
 			});
 		},
 		updatePassword : function() {
