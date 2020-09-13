@@ -125,6 +125,8 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
             entity.setLastUpdate(date);
             num = mapper.update(entity);
         }
+
+
         if (num > 0 || entity.getEnable()) {
             log.info("启用专员:{}银行卡:{}成功", userId, cardNo);
             //禁用其它卡
