@@ -27,7 +27,8 @@
         `position`,
         `business_bank_card_no`,
         `business_bank_name`,
-        `business_bank_account_name`
+        `business_bank_account_name`,
+        `notice_msg`
         FROM
         bill_out
         <where>

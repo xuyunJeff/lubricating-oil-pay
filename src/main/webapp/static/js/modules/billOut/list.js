@@ -31,7 +31,7 @@ function getGrid() {
 		},
 		columns: [
 			// {checkbox: true},
-            {title : "操作", width : "146px", formatter : function(value, row, index) {
+            {title : "操作", width : "106px", formatter : function(value, row, index) {
                     var _html = '';
                     if (hasPermission('apiV1:billOut:success')) {
                         _html += '<a href="javascript:;" onclick="vm.billSuccess(\''+row.billId+'\')" title="确认"><i class="fa fa fa-check"></i></a>  ';
@@ -53,11 +53,10 @@ function getGrid() {
             },
             {field : "id", title : "序号", width : "30px"},
             {field : "createTime", title : "时间", width : "180px"},
-            // {field : "lastUpdate", title : "", width : "100px"},
             {field : "merchantName", title : "商户名", width : "100px"},
             {field : "merchantId", title : "商户ID", width : "100px",visible:false},
-            {field : "billId", title : "订单号", width : "100px"},
             {field : "thirdBillId", title : "第三方订单号", width : "100px"},
+            {field : "billId", title : "订单号", width : "100px"},
             {field : "ip", title : "ip", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px",formatter:function (index,row) {
                     if(row.businessName == row.orgName) {
@@ -75,25 +74,33 @@ function getGrid() {
                      if(row.billStatus ==3) {return "<div style='color: blue'>失败</div>"}
                 }},
             //：1未通知 2 已通知 3 失败
-            {field : "notice", title : "通知", width : "80px",formatter:function (index,row) {
+            {field : "notice", title : "通知", width : "180px",formatter:function (index,row) {
+                    var noticeMsg =""
+                    if(row.noticeMsg && row.noticeMsg != null ){
+                        if(row.noticeMsg == "成功,已作废订单" || row.noticeMsg == "成功,已确认出款" ) {
+                            noticeMsg = ": " + row.noticeMsg
+                        }else {
+                            noticeMsg = ": <span style='color: blue'>" + row.noticeMsg+"</span>"
+                        }
+                    }
                     if(row.notice == 1) {return  "<div style='color: #FFA500'>未通知</div>"}
-                    if(row.notice ==2) {return "<div style='color: green'>已通知</div>"}
-                    if(row.notice ==3) {return "<div style='color: blue'>通知失败</div>"}
+                    if(row.notice ==2) {return "<div style='color: green'>已通知"+noticeMsg+"</div>"}
+                    if(row.notice ==3) {return "<div style='color: blue'>通知失败"+noticeMsg+"</div>"}
                 }},
             {field : "price",cellStyle: vm.border, title : "账单金额", width : "100px",formatter:function (index,row) {
                     return row.price +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.price+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
-            {field : "bankAccountName",cellStyle: vm.border, title : "会员名", width : "110px",formatter:function (index,row) {
+            {field : "bankAccountName",cellStyle: vm.border, title : "会员名", width : "82px",formatter:function (index,row) {
                     return row.bankAccountName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankAccountName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
-            {field : "bankCardNo",cellStyle: vm.border, title : "会员银行卡号", width : "180px",formatter:function (index,row) {
+            {field : "bankCardNo",cellStyle: vm.border, title : "会员银行卡号", width : "197px",formatter:function (index,row) {
                     return row.bankCardNo + '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankCardNo+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
-            {field : "bankName",cellStyle: vm.border, title : "银行名称", width : "100px",formatter:function (index,row) {
+            {field : "bankName",cellStyle: vm.border, title : "银行名称", width : "117px",formatter:function (index,row) {
                 return row.bankName +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.bankName+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             //1 手动 2 自动 3 大额 4 订单退回机构
-            {field : "billType", title : "派单", width : "120px",formatter:function (index,row) {
+            {field : "billType", title : "派单", width : "60px",formatter:function (index,row) {
                     if(row.billType == 1) {return  "<div style='color: #FFA500'>手动</div>"}
                     if(row.billType ==2) {return "<div style='color: green'>自动</div>"}
                     if(row.billType ==3) {return "<div style='color: red'>大额</div>"}
@@ -114,7 +121,8 @@ function getGrid() {
                     }
 
                 }
-            }
+            },
+            {field : "noticeMsg", title : "回调返回结果", width : "100px",visible:false}
 		]
 	})
 }

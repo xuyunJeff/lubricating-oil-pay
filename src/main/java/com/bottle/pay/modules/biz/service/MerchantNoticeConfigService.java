@@ -5,10 +5,12 @@ import com.bottle.pay.common.entity.HttpResult;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.httpclient.HttpAPIService;
+import com.bottle.pay.common.utils.GsonUtil;
 import com.bottle.pay.modules.api.dao.BillOutMapper;
 import com.bottle.pay.modules.api.entity.BillOutEntity;
 import com.bottle.pay.modules.biz.dao.MerchantNoticeConfigMapper;
 import com.bottle.pay.modules.biz.entity.MerchantNoticeConfigEntity;
+import com.bottle.pay.modules.biz.entity.NoticeResponse;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
@@ -104,16 +106,23 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
                     times = -1;
                     return true;
                 }else if(result.getCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR){
-                    times--;
+                    try {
+                        NoticeResponse response =   GsonUtil.fromJson(result.getBody(), NoticeResponse.class);
+                        update.setNoticeMsg(response.getMsg());
+                    }catch (Exception e){
+                        log.error("出款订单:{}通知结果:{},结果映射异常", billOutEntity.getBillId(), result.getBody());
+                    }
+                    update.setNotice(BillConstant.BillNoticeEnum.Noticed.getCode());
+                    int num = billOutMapper.updateByPrimaryKeySelective(update);
+                    times = -1;
+                    return true;
                 }
-
-
             } catch (Exception e) {
                 e.printStackTrace();
                 log.warn("回调请求:{}异常:{}", config.getNoticeUrl(), e.getMessage());
                 log.warn("连接超时异常，重复请求");
-                times--;
             }
+            times--;
         } while (times > 0);
         update.setNotice(BillConstant.BillNoticeEnum.NoticeFailed.getCode());
         int num = billOutMapper.updateByPrimaryKeySelective(update);

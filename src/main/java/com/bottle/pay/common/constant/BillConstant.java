@@ -101,5 +101,22 @@ public class BillConstant {
 
     }
 
+    @AllArgsConstructor
+    public enum BillNoticeResponse {
+        NotExists(-1, "订单不存在"), Success(0, "成功,已作废订单"), NoMtch(-2, "订单存在但金额不匹配"), Failed(500, "未知异常"),SuccessPaid(0, "成功,已确认出款");
+
+        private final Integer code;
+        private final String msg;
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+    }
+
 }
 

@@ -4,6 +4,7 @@ import com.bottle.pay.common.entity.BottleBaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "bill_out")
+@ToString
 public class BillOutEntity extends BottleBaseEntity {
 
     /**
@@ -112,34 +114,8 @@ public class BillOutEntity extends BottleBaseEntity {
      */
     private String businessBankAccountName;
 
+    // 回调通知的返回消息
+    private String noticeMsg;
 
-    /**
-     * BillOutEntity.toString()
-     */
-    @Override
-    public String toString() {
-        return "BillOutEntity{" +
-                "id='" + id + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", lastUpdate='" + lastUpdate + '\'' +
-                ", merchantName='" + merchantName + '\'' +
-                ", merchantId='" + merchantId + '\'' +
-                ", billId='" + billId + '\'' +
-                ", thirdBillId='" + thirdBillId + '\'' +
-                ", ip='" + ip + '\'' +
-                ", businessName='" + businessName + '\'' +
-                ", businessId='" + businessId + '\'' +
-                ", billStatus='" + billStatus + '\'' +
-                ", notice='" + notice + '\'' +
-                ", price='" + price + '\'' +
-                ", bankCardNo='" + bankCardNo + '\'' +
-                ", bankName='" + bankName + '\'' +
-                ", bankAccountName='" + bankAccountName + '\'' +
-                ", billType='" + billType + '\'' +
-                ", orgId='" + orgId + '\'' +
-                ", orgName='" + orgName + '\'' +
-                ", position='" + position + '\'' +
-                '}';
-    }
 
 }
