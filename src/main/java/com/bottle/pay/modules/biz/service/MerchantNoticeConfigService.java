@@ -103,7 +103,11 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
                     log.info("出款订单:{}通知结果:{}", billOutEntity.getBillId(), num > 0);
                     times = -1;
                     return true;
+                }else if(result.getCode() == HttpStatus.SC_INTERNAL_SERVER_ERROR){
+                    times--;
                 }
+
+
             } catch (Exception e) {
                 e.printStackTrace();
                 log.warn("回调请求:{}异常:{}", config.getNoticeUrl(), e.getMessage());

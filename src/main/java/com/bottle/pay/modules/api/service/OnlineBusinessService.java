@@ -1,7 +1,7 @@
 package com.bottle.pay.modules.api.service;
 
 import com.bottle.pay.common.constant.BusinessConstant;
-import com.bottle.pay.common.entity.R;
+import com.bottle.pay.common.exception.NoOnlineBusinessException;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
@@ -10,7 +10,6 @@ import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.sys.dao.SysUserMapper;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +44,7 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
             redisCacheManager.set(redisKey, firstOnlineBusiness);
             return firstOnlineBusiness;
         }
-        throw new RRException("无在线出款员，请联系管理员");
+        throw new NoOnlineBusinessException("无在线出款员，请联系管理员");
     }
 
     public OnlineBusinessEntity getOnlineBusiness(Long businessId, Long orgId) {

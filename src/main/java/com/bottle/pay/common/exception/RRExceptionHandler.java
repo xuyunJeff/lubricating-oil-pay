@@ -31,6 +31,17 @@ public class RRExceptionHandler {
     }
 
     /**
+     * 自定义异常
+     */
+    @ExceptionHandler(NoOnlineBusinessException.class)
+    public R handleNoOnlineBUsinessException(NoOnlineBusinessException e) {
+        R r = new R();
+        r.put("code", e.getCode());
+        r.put("msg", e.getMessage());
+        return r;
+    }
+
+    /**
      * 新增异常
      *
      * @param e
