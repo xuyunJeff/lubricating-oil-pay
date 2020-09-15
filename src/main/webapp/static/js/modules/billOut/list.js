@@ -87,7 +87,7 @@ function getGrid() {
                     if(row.notice ==2) {return "<div style='color: green'>已通知"+noticeMsg+"</div>"}
                     if(row.notice ==3) {return "<div style='color: blue'>通知失败"+noticeMsg+"</div>"}
                 }},
-            {field : "price",cellStyle: vm.border, title : "账单金额", width : "100px",formatter:function (index,row) {
+            {field : "price",cellStyle: vm.border, title : "账单金额", width : "82px",formatter:function (index,row) {
                     return row.price +  '<a href="javascript:;" onclick="vm.copyValue(\''+row.price+'\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }},
             {field : "bankAccountName",cellStyle: vm.border, title : "会员名", width : "82px",formatter:function (index,row) {

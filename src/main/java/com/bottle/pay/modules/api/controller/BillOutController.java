@@ -10,6 +10,7 @@ import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.entity.BillOutView;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
+import com.bottle.pay.modules.api.service.ReportBusinessService;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
 import com.bottle.pay.modules.biz.service.BankCardService;
 import com.bottle.pay.modules.biz.service.BlockBankCardService;
@@ -55,6 +56,9 @@ public class BillOutController extends AbstractController {
 
     @Autowired
     MerchantNoticeConfigService merchantNoticeConfigService;
+
+    @Autowired
+    ReportBusinessService reportBusinessService;
 
     /**
      * 列表
@@ -182,6 +186,12 @@ public class BillOutController extends AbstractController {
         }catch (Exception e) {
             log.error("通知订单回调异常，BillOutEntity {}",bill);
         }
+        try {
+            reportBusinessService.calculateReportBusiness(bill);
+        }catch (Exception e) {
+            log.error("出款员汇总异常，BillOutEntity {}",bill);
+        }
+
         return R.ok("订单确认成功，会员银行卡名：" + bill.getBankAccountName());
     }
 

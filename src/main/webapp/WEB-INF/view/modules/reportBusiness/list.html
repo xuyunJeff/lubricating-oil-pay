@@ -1,0 +1,23 @@
+@layout("../../system/layout.html", {title: ""}){
+<div class="row">
+    <div class="col-md-4 form-inline pull-left" style="width: 88%;">
+        <input  id="resultDate" \@keyup.enter="load"  class="form-control" type="date" style="width: 120px;"/>
+        <input id="businessName" \@keyup.enter="load" type="text" class="form-control" placeholder="付款专员姓名" style="width: 220px;" />
+
+        <div class="form-group">
+            <a class="btn btn-primary" \@click="load"><i class="fa fa-search"></i>&nbsp;查询</a>
+        </div>
+    </div>
+    <div class="col-md-8"  style="width: 12%;">
+        <div class="btn-toolbar pull-right">
+            <div class="btn-group">
+                <a v-if="hasPermission('report:business:list')" class="btn btn-default" onclick="reload();"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <table id="dataGrid"></table>
+</div>
+<script src="${ctxPath}/static/js/modules/reportBusiness/list.js"></script>
+@}

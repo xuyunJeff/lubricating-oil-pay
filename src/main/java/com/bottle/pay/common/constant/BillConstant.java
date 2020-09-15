@@ -14,6 +14,8 @@ public class BillConstant {
 
     public static final String BILL_OUT_BUSINESS_BALANCE_LOCAK ="bill:out:business:balanc:lock";
 
+    public static final String REPORT_BUSINESS ="report:business:lock";
+
     public static final Integer WHITE_IP_TYPE_SERVER  =1;
 
     public static final Integer WHITE_IP_TYPE_ADMIN  =2;
