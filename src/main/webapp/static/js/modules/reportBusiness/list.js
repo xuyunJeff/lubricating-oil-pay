@@ -18,8 +18,9 @@ function getGrid() {
 		url: '../../report/business/list?_' + $.now(),
 		height: $(window).height()-56,
 		queryParams: function(params){
-			params.name = vm.keyword;
-			return params;
+            params.businessName = $('#businessName').val()
+            params.resultDate = $('#resultDate').val()
+            return removeEmptyField(params);
 		},
 		columns: [
             {field : "createTime", title : "", width : "100px",visible : false},
