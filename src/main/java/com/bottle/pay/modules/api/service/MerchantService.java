@@ -37,8 +37,6 @@ public class MerchantService {
     @Autowired
     private IpLimitService ipLimitService;
 
-
-
     /**
      * 机构管理员分页查看商户
      *

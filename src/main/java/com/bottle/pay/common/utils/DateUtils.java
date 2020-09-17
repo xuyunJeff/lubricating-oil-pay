@@ -2,6 +2,7 @@ package com.bottle.pay.common.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 日期处理
@@ -10,6 +11,7 @@ import java.util.Date;
  */
 public class DateUtils {
 
+   private static final long time = 60*1000;//60秒
     /**
      * 时间格式(yyyy-MM-dd)
      */
@@ -47,4 +49,11 @@ public class DateUtils {
         return null;
     }
 
+    public static String formatUAT(Date date, String pattern) {
+        if (date != null) {
+            SimpleDateFormat df = new SimpleDateFormat(pattern);
+            return df.format(date.getTime() - 8*60*time);
+        }
+        return null;
+    }
 }
