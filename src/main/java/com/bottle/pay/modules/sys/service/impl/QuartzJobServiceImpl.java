@@ -23,8 +23,8 @@ import java.util.Map;
  *
  * @author zcl<yczclcn@163.com>
  */
-//@DependsOn("springContextUtils")
-//@Service("quartzJobService")
+@DependsOn("springContextUtils")
+@Service("quartzJobService")
 public class QuartzJobServiceImpl implements QuartzJobService {
 
     @Autowired

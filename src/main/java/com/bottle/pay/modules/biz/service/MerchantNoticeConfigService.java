@@ -112,8 +112,8 @@ public class MerchantNoticeConfigService extends BottleBaseService<MerchantNotic
                     }catch (Exception e){
                         log.error("出款订单:{}通知结果:{},结果映射异常", billOutEntity.getBillId(), result.getBody());
                     }
-                    update.setNotice(BillConstant.BillNoticeEnum.Noticed.getCode());
-                    int num = billOutMapper.updateByPrimaryKeySelective(update);
+                    update.setNotice(BillConstant.BillNoticeEnum.NoticeFailed.getCode());
+                    billOutMapper.updateByPrimaryKeySelective(update);
                     times = -1;
                     return true;
                 }
