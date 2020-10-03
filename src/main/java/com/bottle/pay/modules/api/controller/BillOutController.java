@@ -130,7 +130,10 @@ public class BillOutController extends AbstractController {
         String ip = WebUtils.getIpAddr();
         SysUserEntity merchant = userService.getUserEntityById(billOutView.getMerchantId());
         Boolean isWhite = ipLimitService.isWhiteIp(ip,billOutView.getMerchantId(),merchant.getOrgId(),BillConstant.WHITE_IP_TYPE_SERVER);
-        if(!isWhite) return R.error("ip未加白");
+        if(!isWhite) {
+            log.error("ip未加白:ip:"+ip);
+            return R.error("ip未加白");
+        }
         // 第一步保存订单,派单给机构
         BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, merchant);
         if (existBlockCard(billOutView.getBankCardNo(), merchant.getOrgId())) {

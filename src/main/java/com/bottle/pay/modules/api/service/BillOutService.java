@@ -109,8 +109,9 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
 
         // 第三步派单给出款员(事务)，付款银行卡默认为当前开启的银行卡
         entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
-        // 第四步增加出款员代付中余额，扣除可用余额
+        // 第四步增加出款员代付中余额，扣除可用余额 -- redis
         incrBusinessBillOutBalanceRedis(onlineBusinessEntity.getBusinessId(), entity.getPrice());
+        //第五步扣除可用余额 -mysql
         return entity;
     }
 
@@ -163,7 +164,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
         int i = mapper.updateBillOutByBillId(successEntity);
         if( i == 0) throw new RRException("该订单支付状态已经是最终状态,无需确认订单");
-        // 扣除出款员代付中
+        // 扣除出款员代付中 -- redis
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中
         balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
@@ -188,7 +189,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 增加可用余额,扣除代付中
         balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-        bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+     //   bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }
 

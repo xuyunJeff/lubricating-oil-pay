@@ -229,6 +229,8 @@ public class SysUserServiceImpl implements SysUserService {
         if (!CommonUtils.isIntThanZero(count)) {
             return R.error("原密码错误");
         }
+        String redisKey = SystemConstant.getUserLoginRedisKey(user.getUsername());
+        redisCacheManager.del(redisKey);
         return CommonUtils.msg(count);
     }
 
@@ -273,6 +275,9 @@ public class SysUserServiceImpl implements SysUserService {
         SysUserEntity currUser = sysUserMapper.getObjectById(user.getUserId());
         user.setPassword(MD5Utils.encrypt(currUser.getUsername(), user.getPassword()));
         int count = sysUserMapper.updatePswd(user);
+        // 删除Redis 缓存
+        String redisKey = SystemConstant.getUserLoginRedisKey(user.getUsername());
+        redisCacheManager.del(redisKey);
         return CommonUtils.msg(count);
     }
 

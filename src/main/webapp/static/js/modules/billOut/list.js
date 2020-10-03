@@ -55,8 +55,6 @@ function getGrid() {
             {field : "createTime", title : "时间", width : "180px"},
             {field : "merchantName", title : "商户名", width : "100px"},
             {field : "merchantId", title : "商户ID", width : "100px",visible:false},
-            {field : "thirdBillId", title : "第三方订单号", width : "100px"},
-            {field : "billId", title : "订单号", width : "100px"},
             {field : "ip", title : "ip", width : "100px"},
             {field : "businessName", title : "付款专员姓名", width : "100px",formatter:function (index,row) {
                     if(row.businessName == row.orgName) {
@@ -122,7 +120,9 @@ function getGrid() {
 
                 }
             },
-            {field : "noticeMsg", title : "回调返回结果", width : "100px",visible:false}
+            {field : "noticeMsg", title : "回调返回结果", width : "100px",visible:false},
+            {field : "thirdBillId", title : "第三方订单号", width : "100px"},
+            {field : "billId", title : "订单号", width : "100px"}
 		]
 	})
 }

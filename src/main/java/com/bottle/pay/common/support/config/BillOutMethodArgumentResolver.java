@@ -8,6 +8,7 @@ import com.bottle.pay.modules.api.entity.BillOutView;
 import com.bottle.pay.modules.api.service.MerchantServerService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Component
+@Slf4j
 public class BillOutMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Autowired
@@ -39,6 +41,7 @@ public class BillOutMethodArgumentResolver implements HandlerMethodArgumentResol
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer modelAndViewContainer, NativeWebRequest webRequest, WebDataBinderFactory webDataBinderFactory) throws Exception {
         String param = webRequest.getParameter("param").trim();
+        log.info("派单解密前:"+param);
         String decryptStep1 =  AESUtil.decrypt2(param);
         String[] valueMap = decryptStep1.split("&");
         SysUserEntity user  =userService.getByUserName(valueMap[1]);

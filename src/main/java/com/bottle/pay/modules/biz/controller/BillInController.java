@@ -48,6 +48,12 @@ public class BillInController extends AbstractController {
             params.put("merchantId",userEntity.getUserId());
             return billInService.listEntity(params);
         }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            // 出款员查看自己的数据的所有数据
+            params.put("orgId",userEntity.getOrgId());
+            params.put("businessId",userEntity.getUserId());
+            return billInService.listEntity(params);
+        }
         return new Page<>();
     }
 

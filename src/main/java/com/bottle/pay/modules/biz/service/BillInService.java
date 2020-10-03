@@ -151,9 +151,9 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
     @Transactional
     public R confirmBillIn(String billId,String comment, BillConstant.BillStatusEnum statusEnum){
         SysUserEntity userEntity = super.getCurrentUser();
-        if(!super.isOrgAdmin()){
-            log.warn("user:{}-{}不是机构管理员,不能确认订单",userEntity.getUserId(),WebUtils.getIpAddr());
-            throw new RRException("不是机构管理员,不能确认订单");
+        if(!(super.isOrgAdmin() || super.isBusiness())){
+            log.warn("user:{}-{}不是机构管理员或出款员,不能确认订单",userEntity.getUserId(),WebUtils.getIpAddr());
+            throw new RRException("不是机构管理员或出款员,不能确认订单");
         }
         BillInEntity query = new BillInEntity();
         query.setBillId(billId);
@@ -181,7 +181,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                     update.setComment(comment);
                 }
                 int num = mapper.updateByPrimaryKeySelective(update);
-                log.info("管理员:{}-{},确认订单:{}-{},结果:{}",userEntity.getUserId(),WebUtils.getIpAddr(),billId,statusEnum.getCode(),num>1);
+                log.info("管理员或出款员:{}-{},确认订单:{}-{},结果:{}",userEntity.getUserId(),WebUtils.getIpAddr(),billId,statusEnum.getCode(),num>1);
                 if(statusEnum == BillConstant.BillStatusEnum.Success){
                     //商户可用余额充值
                     BalanceEntity balance = balanceService.createBalanceAccount(billInEntity.getMerchantId());
