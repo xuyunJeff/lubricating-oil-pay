@@ -194,8 +194,8 @@ public class BillOutController extends AbstractController {
         }catch (Exception e) {
             log.error("出款员汇总异常，BillOutEntity {}",bill);
         }
-
-        return R.ok("订单确认成功，会员银行卡名：" + bill.getBankAccountName());
+        BillOutEntity billFinal = billOutService.selectOne(new BillOutEntity(billId));
+        return R.ok().put("bill",billFinal);
     }
 
     @SysLog("出款员作废订单")

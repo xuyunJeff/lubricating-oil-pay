@@ -34,7 +34,7 @@ function getGrid() {
             {title : "操作", width : "106px", formatter : function(value, row, index) {
                     var _html = '';
                     if (hasPermission('apiV1:billOut:success')) {
-                        _html += '<a href="javascript:;" onclick="vm.billSuccess(\''+row.billId+'\')" title="确认"><i class="fa fa fa-check"></i></a>  ';
+                        _html += '<a href="javascript:;" onclick="vm.billSuccess(\''+row.billId+'\',\''+index+'\')" title="确认"><i class="fa fa fa-check"></i></a>  ';
                     }
                     if (hasPermission('apiV1:billOut:failed')) {
                         _html += '<a href="javascript:;" onclick="vm.billFailed(\''+row.billId+'\')" title="作废"><i class="fa fa-times"></i></a>  ';
@@ -53,17 +53,7 @@ function getGrid() {
             },
             {field : "id", title : "序号", width : "30px"},
             {field : "createTime", title : "时间", width : "180px"},
-            {field : "merchantName", title : "商户名", width : "100px"},
-            {field : "merchantId", title : "商户ID", width : "100px",visible:false},
-            {field : "ip", title : "ip", width : "100px"},
-            {field : "businessName", title : "付款专员姓名", width : "100px",formatter:function (index,row) {
-                    if(row.businessName == row.orgName) {
-                        return  "<div style='color: #FFA500'>"+row.businessName+"-机构</div>"
-                    }else {
-                        return  row.businessName
-                    }
 
-                }},
             {field : "businessId", title : "付款专员ID", width : "100px",visible:false},
             //：  1未支付 2 成功 3 失败
             {field : "billStatus", title : "订单状态", width : "60px",formatter:function (index,row) {
@@ -122,7 +112,18 @@ function getGrid() {
             },
             {field : "noticeMsg", title : "回调返回结果", width : "100px",visible:false},
             {field : "thirdBillId", title : "第三方订单号", width : "100px"},
-            {field : "billId", title : "订单号", width : "100px"}
+            {field : "billId", title : "订单号", width : "100px"},
+            {field : "merchantName", title : "商户名", width : "100px"},
+            {field : "merchantId", title : "商户ID", width : "100px",visible:false},
+            {field : "ip", title : "ip", width : "100px"},
+            {field : "businessName", title : "付款专员姓名", width : "100px",formatter:function (index,row) {
+                    if(row.businessName == row.orgName) {
+                        return  "<div style='color: #FFA500'>"+row.businessName+"-机构</div>"
+                    }else {
+                        return  row.businessName
+                    }
+
+                }}
 		]
 	})
 }
@@ -153,13 +154,13 @@ var vm = new Vue({
 				}
 			});
 		},
-        billSuccess: function(billId) {
+        billSuccess: function(billId,index) {
             //"确定已经出款？</br>会员名："+bill.bankAccountName+" 金额:"+bill.price,
             $.ConfirmAjax({
                 msg : "确定已经出款？",
                 url: '../../apiV1/billOut/bill/success?billId='+billId+'&_' + $.now(),
                 success: function(data) {
-                    vm.load();
+                    $('#dataGrid').bootstrapTable('updateRow', {index: index, row: data.bill});
                 }
             });
         },
