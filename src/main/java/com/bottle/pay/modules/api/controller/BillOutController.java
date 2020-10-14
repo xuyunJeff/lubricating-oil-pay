@@ -1,7 +1,6 @@
 package com.bottle.pay.modules.api.controller;
 
 import java.util.Map;
-import java.util.Optional;
 
 import com.bottle.pay.common.annotation.BillOut;
 import com.bottle.pay.common.constant.BillConstant;
@@ -12,7 +11,6 @@ import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.api.service.ReportBusinessService;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
-import com.bottle.pay.modules.biz.service.BankCardService;
 import com.bottle.pay.modules.biz.service.BlockBankCardService;
 import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.biz.service.MerchantNoticeConfigService;
@@ -89,6 +87,21 @@ public class BillOutController extends AbstractController {
             return billOutService.listEntity(params);
         }
         return new Page<>();
+    }
+
+    @RequestMapping("/lastNewOrder")
+    public R lastNewOrder(@RequestParam(name = "id")  Long id ){
+        SysUserEntity userEntity = getUser();
+        int lastId  = 0 ;
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            // 机构管理员查询机构下的所有数据
+            lastId = billOutService.lastNewOrder(id,userEntity.getOrgId(),null);
+        }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            // 出款员查看自己的数据的所有数据
+            lastId = billOutService.lastNewOrder(id,userEntity.getOrgId(),userEntity.getUserId());
+        }
+        return R.ok().put("lastId",lastId);
     }
 
     @SysLog("商户服务器查询订单")

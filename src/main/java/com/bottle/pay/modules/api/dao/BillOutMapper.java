@@ -4,6 +4,7 @@ import com.bottle.pay.common.mapper.BottleBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.bottle.pay.modules.api.entity.BillOutEntity;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 
@@ -18,4 +19,6 @@ public interface BillOutMapper extends BottleBaseMapper<BillOutEntity> {
     public int updateBillOutByBillIdForFailed(BillOutEntity entity);
 
     public int updateByBillOutId(BillOutEntity entity);
+
+    public int lastNewOrder(@Param("id") Long id, @Param("orgId")  Long orgId, @Param("businessId")  Long businessId);
 }

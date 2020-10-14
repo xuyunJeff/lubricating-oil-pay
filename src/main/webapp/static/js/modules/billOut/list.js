@@ -180,12 +180,8 @@ function getGrid() {
 var vm = new Vue({
     el: '#dpLTE',
     data: {
-        keyword: null
-    },
-    mounted: function () {
-        if (localStorage.getItem("userRoleName").indexOf("机构管理员") > -1) {
-            $('#dataGrid').css("background-color", "#FAEBD7")
-        }
+        keyword: null,
+        lastOrderId : 0
     },
     methods: {
         load: function () {
@@ -266,5 +262,38 @@ var vm = new Vue({
         border: function () {
             return {css: {"border-color": "red red red red"}}
         }
+    },
+    lastOrder:function () {
+        alert("lastOrder")
+    },
+    mounted: function () {
+        if (localStorage.getItem("userRoleName").indexOf("机构管理员") > -1) {
+            $('#dataGrid').css("background-color", "#FAEBD7")
+        }
+        setInterval( function ()  {
+            $.ajax({
+                type : "GET",
+                url : '../../apiV1/billOut/lastNewOrder?id=' + vm.lastOrderId + '&_' + $.now(),
+                success : function(result) {
+                    if (result.code == 0) {
+                        if (vm.lastOrderId < result.lastId) {
+                            document.getElementById("reminder").play();
+                            vm.lastOrderId = result.lastId
+                        }
+                    } else {
+                        dialogAlert(result.msg, 'error');
+                    }
+                }
+            });
+            /*$.AjaxForm({
+                url: '../../apiV1/billOut/lastNewOrder?id=' + vm.lastOrderId + '&_' + $.now(),
+                success: function(data) {
+                    if (vm.lastOrderId < data.lastId) {
+                        document.getElementById("reminder").play();
+                        vm.lastOrderId = data.lastId
+                    }
+                }
+            });*/
+        }, 5000);
     }
 })

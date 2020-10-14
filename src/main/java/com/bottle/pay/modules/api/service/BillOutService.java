@@ -71,7 +71,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
                 billOutView.getBankCardNo(), billOutView.getBankName(), billOutView.getBankAccountName());
         // TODO 去查询商户的发过来的订单是否存在？@mighty
         // 第二步 增加商户代付中余额，扣除商户可用余额
-        log.info("服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}",bill);
+        log.info("服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
         billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice());
         return bill;
     }
@@ -87,19 +87,19 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         Map<OnlineBusinessEntity, BigDecimal> businessOnline = null;
         OnlineBusinessEntity onlineBusinessEntity = null;
         BigDecimal free;
-        int tryTimes = 0 ;
-        int onlineAll =  onlineBusinessService.count();
+        int tryTimes = 0;
+        int onlineAll = onlineBusinessService.count();
         try {
             do {
-                Map<OnlineBusinessEntity, BigDecimal>   businessOnlineNext = getBusinessFreeBalance(entity);
-                if(businessOnlineNext.equals(businessOnline)) break;
+                Map<OnlineBusinessEntity, BigDecimal> businessOnlineNext = getBusinessFreeBalance(entity);
+                if (businessOnlineNext.equals(businessOnline)) break;
                 businessOnline = businessOnlineNext;
                 free = businessOnline.values().stream().findFirst().get();
                 onlineBusinessEntity = businessOnline.keySet().stream().findFirst().get();
-                tryTimes ++ ;
-                if(tryTimes == onlineAll) break ;
+                tryTimes++;
+                if (tryTimes == onlineAll) break;
             } while (free.subtract(entity.getPrice()).compareTo(BigDecimal.ZERO) == -1);
-        }catch (NoOnlineBusinessException e) {
+        } catch (NoOnlineBusinessException e) {
             // 订单改为手动
             BillOutEntity update = new BillOutEntity(entity.getBillId());
             update.setBillType(BillConstant.BillTypeEnum.ByHuman.getCode());
@@ -147,7 +147,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 扣除出款员付款中
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 增加出款员可用余额
-        bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        bankCardService.minusBalance(entity.getBusinessId(), entity.getBusinessBankCardNo(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }
 
@@ -159,16 +159,16 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Transactional
     public BillOutEntity billsOutPaidSuccess(BillOutEntity entity) {
-        log.info("出款成功,billId{}",entity);
+        log.info("出款成功,billId{}", entity);
         BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
         successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
         int i = mapper.updateBillOutByBillId(successEntity);
-        if( i == 0) throw new RRException("该订单支付状态已经是最终状态,无需确认订单");
+        if (i == 0) throw new RRException("该订单支付状态已经是最终状态,无需确认订单");
         // 扣除出款员代付中 -- redis
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中
         balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-        bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice());
+        bankCardService.minusBalance(entity.getBusinessId(), entity.getBusinessBankCardNo(), entity.getPrice());
         return entity;
     }
 
@@ -180,16 +180,16 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Transactional
     public BillOutEntity billsOutPaidFailed(BillOutEntity entity) {
-        log.info("出款作废,billId{}",entity);
+        log.info("出款作废,billId{}", entity);
         BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());
         failedEntity.setBillStatus(BillConstant.BillStatusEnum.Failed.getCode());
         int i = mapper.updateBillOutByBillIdForFailed(failedEntity);
-        if( i == 0) throw new RRException("该订单支付状态已经是最终状态不可作废");
+        if (i == 0) throw new RRException("该订单支付状态已经是最终状态不可作废");
         // 扣除出款员代付中 -- redis
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 增加可用余额,扣除代付中
         balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
-     //   bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        //   bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }
 
@@ -269,7 +269,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         amount = amount.multiply(BigDecimal.valueOf(100));
         String redisKey = BillConstant.BillRedisKey.billOutBusinessBalance(businessId.toString());
         Object balance = redisCacheManager.get(redisKey);
-        if(!ObjectUtils.isEmpty(balance)) {
+        if (!ObjectUtils.isEmpty(balance)) {
             BigDecimal balanceAfter = BigDecimal.valueOf(redisCacheManager.incr(redisKey, Double.valueOf(amount.toString())));
             log.info("代付余额变动，变动前余额：" + balance + "分,变动后余额：" + balanceAfter + "分,变动金额：" + amount + "分");
             return balanceAfter.divide(BigDecimal.valueOf(100));
@@ -288,8 +288,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         Object balance = redisCacheManager.get(redisKey);
         if (ObjectUtils.isEmpty(balance)) {
             BigDecimal businessPaying = mapper.sumByBusinessId(businessId);
-            if(businessPaying == null) {
-                businessPaying =BigDecimal.ZERO;
+            if (businessPaying == null) {
+                businessPaying = BigDecimal.ZERO;
             }
             businessPaying = businessPaying.multiply(BIG_DECIMAL_HUNDRED);
             redisCacheManager.set(redisKey, businessPaying);
@@ -319,8 +319,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         BillOutEntity entity = new BillOutEntity();
         entity.setThirdBillId(thirdBillId);
         int count = mapper.selectCount(entity);
-        if(count !=0 ) {
-            throw new RRException("订单号已存在，orderNo = "+ thirdBillId);
+        if (count != 0) {
+            throw new RRException("订单号已存在，orderNo = " + thirdBillId);
         }
         entity.setCreateTime(new Date());
         entity.setMerchantName(merchantName);
@@ -343,7 +343,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         entity.setPosition(BillConstant.BillPostionEnum.Agent.getCode());
         entity.setLastUpdate(new Date());
         int i = mapper.insert(entity);
-        log.info("服务器订单 step 1 :保存，billOut{}",entity);
+        log.info("服务器订单 step 1 :保存，billOut{}", entity);
         if (i == 0) {
             log.error("订单保存错误 {}", entity.toString());
             throw new RRException("订单保存错误");
@@ -382,6 +382,10 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         log.info("redis自增" + incrId);
         ThreadLocalRandom random = ThreadLocalRandom.current();
         DecimalFormat df = new DecimalFormat("00000");//五位序列号
-        return merchantId + today + random.nextInt(10,99)+ df.format(incrId);
+        return merchantId + today + random.nextInt(10, 99) + df.format(incrId);
+    }
+
+    public int lastNewOrder(Long id, Long orgId, Long businessId) {
+        return mapper.lastNewOrder(id, orgId, businessId);
     }
 }
