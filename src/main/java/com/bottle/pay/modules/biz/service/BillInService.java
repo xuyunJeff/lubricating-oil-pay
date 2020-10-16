@@ -88,9 +88,9 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
      * @return
      */
     public R addBillIn(BillInEntity params){
-        if(BigDecimal.ZERO.compareTo(params.getPrice())>0){
-            log.warn("充值订单金额:{}不能是负数",params.getPrice());
-            throw new RRException("充值订单金额不能是负数");
+        if(BigDecimal.ZERO.compareTo(params.getPrice()) == 0){
+            log.warn("充值订单金额:{}不能是0",params.getPrice());
+            throw new RRException("充值订单金额不能是0");
         }
         SysUserEntity userEntity = super.getCurrentUser();
         String ip = WebUtils.getIpAddr();

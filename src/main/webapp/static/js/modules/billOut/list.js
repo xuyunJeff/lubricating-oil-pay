@@ -32,7 +32,7 @@ function getGrid() {
         columns: [
             // {checkbox: true},
             {
-                title: "操作", width: "106px", formatter: function (value, row, index) {
+                title: "操作", width: "110px", formatter: function (value, row, index) {
                     var _html = '';
                     if (hasPermission('apiV1:billOut:success')) {
                         _html += '<a href="javascript:;" onclick="vm.billSuccess(\'' + row.billId + '\',\'' + index + '\')" title="确认"><i class="fa fa fa-check"></i></a>  ';
@@ -72,7 +72,7 @@ function getGrid() {
             },
             //：1未通知 2 已通知 3 失败
             {
-                field: "notice", title: "通知", width: "180px", formatter: function (index, row) {
+                field: "notice", title: "通知", width: "75px", formatter: function (index, row) {
                     var noticeMsg = ""
                     if (row.noticeMsg && row.noticeMsg != null) {
                         if (row.noticeMsg == "成功,已作废订单" || row.noticeMsg == "成功,已确认出款") {
@@ -101,7 +101,7 @@ function getGrid() {
                 field: "bankAccountName",
                 cellStyle: vm.border,
                 title: "会员名",
-                width: "82px",
+                width: "85px",
                 formatter: function (index, row) {
                     return row.bankAccountName + '<a href="javascript:;" onclick="vm.copyValue(\'' + row.bankAccountName + '\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }
@@ -110,7 +110,7 @@ function getGrid() {
                 field: "bankCardNo",
                 cellStyle: vm.border,
                 title: "会员银行卡号",
-                width: "197px",
+                width: "200px",
                 formatter: function (index, row) {
                     return row.bankCardNo + '<a href="javascript:;" onclick="vm.copyValue(\'' + row.bankCardNo + '\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }
@@ -119,7 +119,7 @@ function getGrid() {
                 field: "bankName",
                 cellStyle: vm.border,
                 title: "银行名称",
-                width: "117px",
+                width: "120px",
                 formatter: function (index, row) {
                     return row.bankName + '<a href="javascript:;" onclick="vm.copyValue(\'' + row.bankName + '\')" title="复制"><i class="fa fa-files-o"></i></a>'
                 }

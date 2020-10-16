@@ -146,8 +146,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         }
         // 扣除出款员付款中
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
-        // 增加出款员可用余额
-        bankCardService.minusBalance(entity.getBusinessId(), entity.getBusinessBankCardNo(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        // 增加出款员可用余额 不需要增加可用余额,因为未支付时没扣
+        //bankCardService.minusBalance(entity.getBusinessId(), entity.getBusinessBankCardNo(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }
 

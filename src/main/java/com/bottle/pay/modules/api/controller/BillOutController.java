@@ -240,7 +240,7 @@ public class BillOutController extends AbstractController {
         }catch (Exception e) {
             log.error("通知订单回调异常，BillOutEntity {}",bill);
         }
-        return R.ok("通知成功，会员银行卡名：" + bill.getBankAccountName());
+        return R.ok("已经重新发起通知,结果以表格为准,<div style='color:red'>一直失败请联系客户人工处理</div>;会员银行卡名：" + bill.getBankAccountName());
     }
     /**
      * 判断是否存在银行卡黑名单

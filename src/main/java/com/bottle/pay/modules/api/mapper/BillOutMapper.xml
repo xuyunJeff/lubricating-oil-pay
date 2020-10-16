@@ -214,7 +214,7 @@
     </update>
 
     <select id="lastNewOrder" resultType="int">
-        select MAX(id) from bill_out where 1=1
+        select IFNULL(MAX(id),0) from bill_out where 1=1
         <if test="businessId != null">  and `business_id` = #{businessId}</if>
         <if test="orgId != null">  and `org_id` = #{orgId}</if>
     </select>
