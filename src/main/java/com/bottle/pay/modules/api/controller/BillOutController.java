@@ -16,6 +16,7 @@ import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.biz.service.MerchantNoticeConfigService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
@@ -34,6 +35,7 @@ import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/apiV1/billOut")
+@Api(value = "出款页面", description = "出款页面")
 @Slf4j
 public class BillOutController extends AbstractController {
 
@@ -60,12 +62,12 @@ public class BillOutController extends AbstractController {
 
     /**
      * 列表
-     * TODO 查询时要判断角色还有机构 @rmi
      *
      * @param params
      * @return
      */
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list",method = {RequestMethod.GET,RequestMethod.POST})
+    @ApiOperation(value = "出款订单列表")
     public Page<BillOutEntity> list(@RequestBody Map<String, Object> params) {
         SysUserEntity userEntity = getUser();
         if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){

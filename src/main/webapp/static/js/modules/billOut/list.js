@@ -270,30 +270,21 @@ var vm = new Vue({
         if (localStorage.getItem("userRoleName").indexOf("机构管理员") > -1) {
             $('#dataGrid').css("background-color", "#FAEBD7")
         }
-        setInterval( function ()  {
-            $.ajax({
-                type : "GET",
-                url : '../../apiV1/billOut/lastNewOrder?id=' + vm.lastOrderId + '&_' + $.now(),
-                success : function(result) {
-                    if (result.code == 0) {
-                        if (vm.lastOrderId < result.lastId) {
-                            document.getElementById("reminder").play();
-                            vm.lastOrderId = result.lastId
-                        }
-                    } else {
-                        dialogAlert(result.msg, 'error');
-                    }
-                }
-            });
-            /*$.AjaxForm({
-                url: '../../apiV1/billOut/lastNewOrder?id=' + vm.lastOrderId + '&_' + $.now(),
-                success: function(data) {
-                    if (vm.lastOrderId < data.lastId) {
-                        document.getElementById("reminder").play();
-                        vm.lastOrderId = data.lastId
-                    }
-                }
-            });*/
-        }, 5000);
+        // setInterval( function ()  {
+        //     $.ajax({
+        //         type : "GET",
+        //         url : '../../apiV1/billOut/lastNewOrder?id=' + vm.lastOrderId + '&_' + $.now(),
+        //         success : function(result) {
+        //             if (result.code == 0) {
+        //                 if (vm.lastOrderId < result.lastId) {
+        //                     document.getElementById("reminder").play();
+        //                     vm.lastOrderId = result.lastId
+        //                 }
+        //             } else {
+        //                 dialogAlert(result.msg, 'error');
+        //             }
+        //         }
+        //     });
+        // }, 5000);
     }
 })
