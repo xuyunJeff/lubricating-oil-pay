@@ -21,6 +21,7 @@ function getGrid() {
             params.merchantName = $('#merchantName').val()
             params.businessName = $('#businessName').val()
             params.billId = $('#billId').val()
+            params.createTime = $('#createTime').val()
 			return removeEmptyField(params);
 		},
 		columns: [

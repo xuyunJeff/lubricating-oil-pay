@@ -94,7 +94,7 @@ public class BillOutController extends AbstractController {
     @RequestMapping("/lastNewOrder")
     public R lastNewOrder(@RequestParam(name = "id")  Long id ){
         SysUserEntity userEntity = getUser();
-        int lastId  = 0 ;
+        Long lastId  = 0L ;
         if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
             // 机构管理员查询机构下的所有数据
             lastId = billOutService.lastNewOrder(id,userEntity.getOrgId(),null);

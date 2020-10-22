@@ -16,6 +16,8 @@ public class BillConstant {
 
     public static final String REPORT_BUSINESS ="report:business:lock";
 
+    public static final String LAST_NEW_ORDER ="bill:out:lastNewOrder";
+
     public static final Integer WHITE_IP_TYPE_SERVER  =1;
 
     public static final Integer WHITE_IP_TYPE_ADMIN  =2;
@@ -27,6 +29,10 @@ public class BillConstant {
 
         static String billOutId(String merchantId, String today) {
             return BILL_OUT_ID + ":" + today + ":" + merchantId;
+        }
+
+        static String billOutLastOrder( Long id,Long orgId, Long businessId) {
+            return LAST_NEW_ORDER +":"+ id + ":" + orgId + ":" + businessId;
         }
 
         static String billInId(String merchantId, String today) {

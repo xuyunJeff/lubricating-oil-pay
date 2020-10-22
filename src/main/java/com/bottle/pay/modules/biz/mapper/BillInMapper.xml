@@ -30,8 +30,7 @@
         <if test="merchantId != null"> AND `merchant_id` = #{merchantId}</if>
         <if test="orgId != null">AND  `org_id` = #{orgId}</if>
         <if test="businessId != null">AND `business_id` = #{businessId}</if>
-        <if test="startTime != null">AND  `create_time` &gt; #{startTime}</if>
-        <if test="endTime">AND  `create_time` &lt; #{endTime}</if>
+        <if test="createTime != null">AND  DATE_FORMAT(`create_time`,'%Y-%m-%d') = #{createTime}</if>
         <if test="billStatus != null">AND  `bill_status` = #{billStatus}</if>
         <if test="billId != null">AND  `bill_id` = #{billId}</if>
         <if test="businessName != null">  AND `business_name` like CONCAT('%','${businessName}','%' ) </if>

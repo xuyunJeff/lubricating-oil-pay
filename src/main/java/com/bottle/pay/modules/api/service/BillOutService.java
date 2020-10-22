@@ -385,7 +385,16 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         return merchantId + today + random.nextInt(10, 99) + df.format(incrId);
     }
 
-    public int lastNewOrder(Long id, Long orgId, Long businessId) {
-        return mapper.lastNewOrder(id, orgId, businessId);
+    public Long lastNewOrder(Long id, Long orgId, Long businessId) {
+        String redisKey = BillConstant.BillRedisKey.billOutLastOrder(id, orgId, businessId);
+        Object lastId = redisCacheManager.get(redisKey);
+        if (ObjectUtils.isEmpty(lastId)) {
+            lastId = mapper.lastNewOrder(id, orgId, businessId);
+            if (ObjectUtils.isEmpty(lastId)) {
+                return id;
+            }
+            redisCacheManager.set(redisKey, lastId, 5L);
+        }
+        return Long.valueOf(lastId.toString());
     }
 }
