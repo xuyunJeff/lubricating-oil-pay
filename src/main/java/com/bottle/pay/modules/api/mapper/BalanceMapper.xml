@@ -157,6 +157,7 @@
         </set>
         WHERE
         id = #{id}
+        and balance <![CDATA[ >= ]]> #{amount}
     </update>
 
     <update id="billOutMerchantChangePayingBalance">

@@ -43,7 +43,7 @@ public class BillConstant {
 
     @AllArgsConstructor
     public enum BillStatusEnum {
-        UnPay(1, "未支付"), Success(2, "成功"), Failed(3, "失败");
+        UnPay(1, "未支付"), Success(2, "成功"), Failed(3, "失败"),BALANCE_ZERO(4,"账户余额不足");
 
         private final Integer code;
         private final String msg;

@@ -72,7 +72,14 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // TODO 去查询商户的发过来的订单是否存在？@mighty
         // 第二步 增加商户代付中余额，扣除商户可用余额
         log.info("服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
-        billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice());
+        try {
+            billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(billOutView.getOrderNo()+ " billsOutAgent error"+e.getMessage());
+            mapper.update(new BillOutEntity().setThirdBillId(billOutView.getOrderNo()).setBillStatus(BillConstant.BillStatusEnum.BALANCE_ZERO.getCode()));
+            bill.setBillStatus(BillConstant.BillStatusEnum.BALANCE_ZERO.getCode());
+        }
         return bill;
     }
 
@@ -178,7 +185,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @param entity
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor=Exception.class)
     public BillOutEntity billsOutPaidFailed(BillOutEntity entity) {
         log.info("出款作废,billId{}", entity);
         BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());

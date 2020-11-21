@@ -35,7 +35,7 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
      * @param userId
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor=Exception.class)
     public BalanceEntity billOutMerchantBalance(BigDecimal amount, Long userId) {
         RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_OUT_MERCHANT_BALANCE_LOCAK+":"+userId);
         if(redisLock.lock()) {
@@ -43,7 +43,14 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
                 BalanceEntity balance = new BalanceEntity(userId);
                 synchronized (this) {
                     balance = mapper.selectForUpdate(balance);
-                    mapper.billoutBalanceMerchantChange(amount, balance.getId());
+                    if(null != balance){
+                        int num = mapper.billoutBalanceMerchantChange(amount, balance.getId());
+                        if(num<1){
+                            throw new  RRException("商户余额不足，更新失败",900);
+                        }
+                    }else {
+                        throw new  RRException("商户账户不存在，更新失败");
+                    }
                 }
                 BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
                 log.info("商户余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
@@ -51,6 +58,9 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
             }catch (Exception e){
                 e.printStackTrace();
                 log.warn("商户余额变动异常"+e.getMessage());
+                if(e instanceof  RRException){
+                    throw new  RRException(((RRException) e).getMsg());
+                }
             }finally {
                 redisLock.unLock();
             }
