@@ -214,8 +214,8 @@
     </update>
 
     <select id="lastNewOrder" resultType="int">
-        select IFNULL(MAX(id),0) from bill_out where id >= #{id}
+        select IFNULL(MAX(id),0) from bill_out where `org_id` = #{orgId}
         <if test="businessId != null">  and `business_id` = #{businessId}</if>
-        <if test="orgId != null">  and `org_id` = #{orgId}</if>
+        and id >= #{id}
     </select>
 </mapper>
