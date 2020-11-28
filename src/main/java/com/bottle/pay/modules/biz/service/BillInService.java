@@ -180,6 +180,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                             .concat("#" + comment);
                     update.setComment(comment);
                 }
+                // TODO 这行代码update要加where语句
                 int num = mapper.updateByPrimaryKeySelective(update);
                 log.info("管理员或出款员:{}-{},确认订单:{}-{},结果:{}",userEntity.getUserId(),WebUtils.getIpAddr(),billId,statusEnum.getCode(),num>1);
                 if(statusEnum == BillConstant.BillStatusEnum.Success){
