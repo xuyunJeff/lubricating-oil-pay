@@ -87,6 +87,12 @@ public class SysUserEntity implements Serializable {
      */
     private List<String> roleNameList;
 
+    /**
+     * Google动态码
+     * key "+" value
+     */
+    private String gToken;
+
     public SysUserEntity() {
         super();
     }
@@ -211,5 +217,13 @@ public class SysUserEntity implements Serializable {
     public String getRoleName() {
         if (null == roleNameList) return null;
         return roleNameList.get(0);
+    }
+
+    public void setgToken(String gToken){
+        this.gToken = gToken;
+    }
+
+    public String getgToken(){
+        return this.gToken;
     }
 }

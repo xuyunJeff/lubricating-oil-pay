@@ -121,4 +121,8 @@ public abstract class AbstractController {
         return page.concat(".html");
     }
 
+    protected String getGKey(String username){
+        return "Google_" + username;
+    }
+
 }

@@ -217,7 +217,5 @@ public class SysLoginController extends AbstractController {
         return R.ok("关闭Google动态身份成功");
     }
 
-    private String getGKey(String username){
-        return "Google_" + username;
-    }
+
 }

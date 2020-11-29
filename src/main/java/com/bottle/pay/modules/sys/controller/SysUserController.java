@@ -2,9 +2,11 @@ package com.bottle.pay.modules.sys.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.bottle.pay.common.utils.CommonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,9 @@ public class SysUserController extends AbstractController {
 
     @Autowired
     private SysUserService sysUserService;
+
+    @Autowired
+    protected StringRedisTemplate stringRedisTemplate;
 
     /**
      * 用户列表
@@ -68,7 +73,9 @@ public class SysUserController extends AbstractController {
      */
     @RequestMapping("/info")
     public R info() {
-        return R.ok().put("user", getUser());
+        SysUserEntity userEntity = getUser();
+        Optional.ofNullable(stringRedisTemplate.opsForValue().get(getGKey(userEntity.getUsername()))).ifPresent(s -> userEntity.setgToken(s));
+        return R.ok().put("user", userEntity);
     }
 
     /**
