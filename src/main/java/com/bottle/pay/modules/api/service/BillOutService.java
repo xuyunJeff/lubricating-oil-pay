@@ -66,7 +66,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Transactional
     public BillOutEntity billsOutAgent(BillOutView billOutView, String ip, SysUserEntity userEntity) {
-        String randmon = new Random().toString();
+        Integer randmon = new Random().nextInt();
         //第一步保存订单
         log.info(randmon+"服务器派单 step 1 保存订单，billout:{}", billOutView);
         BillOutEntity bill = saveNewBillOut(billOutView.getMerchantName(), billOutView.getMerchantId(),
