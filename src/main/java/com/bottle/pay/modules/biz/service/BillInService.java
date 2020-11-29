@@ -176,22 +176,19 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                 update.setLastUpdate(new Date());
                 update.setCreateTime(null);
                 if(StringUtils.isNotEmpty(comment)){
-                    comment = Optional.ofNullable(billInEntity.getComment()).orElse("")
-                            .concat("#" + comment);
+                    comment = Optional.ofNullable(billInEntity.getComment()).orElse("").concat("#" + comment);
                     update.setComment(comment);
                 }
-                // TODO 这行代码update要加where语句
-                int num = mapper.updateByPrimaryKeySelective(update);
+                int num = mapper.updateForUnPay(billInEntity.getId(),billInEntity.getOrgId(),billInEntity.getMerchantId());
+
+                if (num == 0) return R.error("请不要重复提交");
                 log.info("管理员或出款员:{}-{},确认订单:{}-{},结果:{}",userEntity.getUserId(),WebUtils.getIpAddr(),billId,statusEnum.getCode(),num>1);
                 if(statusEnum == BillConstant.BillStatusEnum.Success){
                     //商户可用余额充值
                     BalanceEntity balance = balanceService.createBalanceAccount(billInEntity.getMerchantId());
                     boolean result = balanceService.updateBalance(billInEntity.getMerchantId(),billInEntity.getPrice(),null,null);
                     log.info("更新商户:{}可用余额结果:{}",balance.getUserId(),result);
-                    if(!result){
-                        throw new RRException("确认充值订单时，更新商户余额失败");
-                    }
-
+                    if(!result){  throw new RRException("确认充值订单时，更新商户余额失败");  }
                     //更新专员可用余额
                     BankCardEntity bankCardQuery = new BankCardEntity();
                     bankCardQuery.setBusinessId(billInEntity.getBusinessId());

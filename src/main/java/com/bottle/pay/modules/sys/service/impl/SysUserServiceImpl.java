@@ -276,7 +276,7 @@ public class SysUserServiceImpl implements SysUserService {
         user.setPassword(MD5Utils.encrypt(currUser.getUsername(), user.getPassword()));
         int count = sysUserMapper.updatePswd(user);
         // 删除Redis 缓存
-        String redisKey = SystemConstant.getUserLoginRedisKey(user.getUsername());
+        String redisKey = SystemConstant.getUserLoginRedisKey(currUser.getUsername());
         redisCacheManager.del(redisKey);
         return CommonUtils.msg(count);
     }

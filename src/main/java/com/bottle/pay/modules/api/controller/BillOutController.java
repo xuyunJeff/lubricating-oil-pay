@@ -151,9 +151,9 @@ public class BillOutController extends AbstractController {
         }
         // 第一步保存订单,派单给机构
         BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, merchant);
-        if(bill.getBillStatus().intValue() == BillConstant.BillStatusEnum.BALANCE_ZERO.getCode()){
-            return R.error("商户余额不足，派单失败");
-        }
+//        if(bill.getBillStatus().intValue() == BillConstant.BillStatusEnum.BALANCE_ZERO.getCode()){
+//            return R.error("商户余额不足，派单失败");
+//        }
         if (existBlockCard(billOutView.getBankCardNo(), merchant.getOrgId())) {
             return R.error("银行卡已被拉黑");
         }

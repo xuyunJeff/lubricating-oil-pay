@@ -28,6 +28,7 @@ import java.text.DecimalFormat;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.bottle.pay.common.constant.SystemConstant.BIG_DECIMAL_HUNDRED;
@@ -65,21 +66,24 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Transactional
     public BillOutEntity billsOutAgent(BillOutView billOutView, String ip, SysUserEntity userEntity) {
+        String randmon = new Random().toString();
         //第一步保存订单
+        log.info(randmon+"服务器派单 step 1 保存订单，billout:{}", billOutView);
         BillOutEntity bill = saveNewBillOut(billOutView.getMerchantName(), billOutView.getMerchantId(),
                 billOutView.getOrderNo(), ip, userEntity.getOrgId(), userEntity.getOrgName(), billOutView.getPrice(),
                 billOutView.getBankCardNo(), billOutView.getBankName(), billOutView.getBankAccountName());
         // TODO 去查询商户的发过来的订单是否存在？@mighty
         // 第二步 增加商户代付中余额，扣除商户可用余额
-        log.info("服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
-        try {
+        log.info(randmon+"服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
+//        try {
             billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice());
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(billOutView.getOrderNo()+ " billsOutAgent error"+e.getMessage());
-            mapper.update(new BillOutEntity().setThirdBillId(billOutView.getOrderNo()).setBillStatus(BillConstant.BillStatusEnum.BALANCE_ZERO.getCode()));
-            bill.setBillStatus(BillConstant.BillStatusEnum.BALANCE_ZERO.getCode());
-        }
+        log.info(randmon+"服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            log.error(billOutView.getOrderNo()+ " billsOutAgent error"+e.getMessage());
+//            mapper.update(new BillOutEntity().setThirdBillId(billOutView.getOrderNo()).setBillStatus(BillConstant.BillStatusEnum.BALANCE_ZERO.getCode()));
+//            bill.setBillStatus(BillConstant.BillStatusEnum.BALANCE_ZERO.getCode());
+//        }
         return bill;
     }
 

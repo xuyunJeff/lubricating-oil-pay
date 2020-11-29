@@ -3,6 +3,7 @@ package com.bottle.pay.modules.biz.dao;
 import com.bottle.pay.common.mapper.BottleBaseMapper;
 import com.bottle.pay.modules.biz.entity.BillInEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -28,4 +29,5 @@ public interface BillInMapper extends BottleBaseMapper<BillInEntity> {
     List<BillInEntity> selectPage(Map<String, Object> params);
 
 
+    int updateForUnPay(@Param("id") Long id,@Param("orgId") Long orgId,@Param("merchantId") Long merchantId);
 }
