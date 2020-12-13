@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.bottle</groupId>
-    <artifactId>pay</artifactId>
+    <artifactId>bottle-pay</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>pay</name>
     <description>Bottle Pay</description>
@@ -317,7 +317,7 @@
     </profiles>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>${project.artifactId}-${version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

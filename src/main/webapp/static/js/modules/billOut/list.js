@@ -53,6 +53,7 @@ function getGrid() {
                 }
             },
             {field: "id", title: "序号", width: "30px"},
+            {field: "merchantName", title: "商户名", width: "100px"},
             {field: "createTime", title: "时间", width: "180px"},
 
             {field: "businessId", title: "付款专员ID", width: "100px", visible: false},
@@ -164,13 +165,11 @@ function getGrid() {
                     } else {
                         return row.businessBankAccountName + "</br>" + row.businessBankCardNo + "</br>" + row.businessBankName
                     }
-
                 }
             },
             {field: "noticeMsg", title: "回调返回结果", width: "100px", visible: false},
             {field: "thirdBillId", title: "第三方订单号", width: "100px"},
             {field: "billId", title: "订单号", width: "100px"},
-            {field: "merchantName", title: "商户名", width: "100px"},
             {field: "merchantId", title: "商户ID", width: "100px", visible: false},
             {field: "ip", title: "ip", width: "100px"}
         ]
