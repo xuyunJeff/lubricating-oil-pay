@@ -179,11 +179,10 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                     comment = Optional.ofNullable(billInEntity.getComment()).orElse("").concat("#" + comment);
                     update.setComment(comment);
                 }
-                int num = mapper.updateForUnPay(billInEntity.getId(),billInEntity.getOrgId(),billInEntity.getMerchantId());
-
-                if (num == 0) return R.error("请不要重复提交");
-                log.info("管理员或出款员:{}-{},确认订单:{}-{},结果:{}",userEntity.getUserId(),WebUtils.getIpAddr(),billId,statusEnum.getCode(),num>1);
                 if(statusEnum == BillConstant.BillStatusEnum.Success){
+                    int num = mapper.updateForPay(billInEntity.getId(),billInEntity.getOrgId(),billInEntity.getMerchantId());
+                    if (num == 0) return R.error("请不要重复提交");
+                    log.info("管理员或出款员:{}-{},确认订单:{}-{},结果:{}",userEntity.getUserId(),WebUtils.getIpAddr(),billId,statusEnum.getCode(),num>1);
                     //商户可用余额充值
                     BalanceEntity balance = balanceService.createBalanceAccount(billInEntity.getMerchantId());
                     boolean result = balanceService.updateBalance(billInEntity.getMerchantId(),billInEntity.getPrice(),null,null);
@@ -202,6 +201,11 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                     if(!result){
                         throw new RRException("确认充值订单时，更新专员余额失败");
                     }
+                }
+                if(statusEnum == BillConstant.BillStatusEnum.Failed){
+                    int num = mapper.updateForUnPay(billInEntity.getId(),billInEntity.getOrgId(),billInEntity.getMerchantId());
+                    if (num == 0) return R.error("请不要重复提交");
+                    log.info("管理员或出款员:{}-{},确认订单:{}-{},结果:{}",userEntity.getUserId(),WebUtils.getIpAddr(),billId,statusEnum.getCode(),num>1);
                 }
                 return CommonUtils.msg(1);
             } catch (Exception e) {

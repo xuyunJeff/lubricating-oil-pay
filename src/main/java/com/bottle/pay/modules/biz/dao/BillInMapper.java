@@ -29,5 +29,7 @@ public interface BillInMapper extends BottleBaseMapper<BillInEntity> {
     List<BillInEntity> selectPage(Map<String, Object> params);
 
 
-    int updateForUnPay(@Param("id") Long id,@Param("orgId") Long orgId,@Param("merchantId") Long merchantId);
+    int updateForPay(@Param("id") Long id, @Param("orgId") Long orgId, @Param("merchantId") Long merchantId);
+
+    int updateForUnPay(@Param("id") Long id, @Param("orgId") Long orgId, @Param("merchantId") Long merchantId);
 }

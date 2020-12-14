@@ -132,7 +132,7 @@
     </update>
 
 
-    <update id="updateForUnPay">
+    <update id="updateForPay">
         UPDATE bill_in
         <set>
             `bill_status` = 2
@@ -140,6 +140,17 @@
         WHERE
         id = #{id} and bill_status =1 and org_id = #{orgId} and merchant_id = #{merchantId}
     </update>
+
+
+    <update id="updateForUnPay">
+        UPDATE bill_in
+        <set>
+            `bill_status` = 3
+        </set>
+        WHERE
+        id = #{id} and bill_status =1 and org_id = #{orgId} and merchant_id = #{merchantId}
+    </update>
+
 
     <delete id="batchRemove">
         DELETE
