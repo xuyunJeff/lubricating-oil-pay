@@ -37,9 +37,6 @@ function getGrid() {
                     if (hasPermission('apiV1:billOut:success')) {
                         _html += '<a href="javascript:;" onclick="vm.billSuccess(\'' + row.billId + '\',\'' + index + '\')" title="确认"><i class="fa fa fa-check"></i></a>  ';
                     }
-                    if (hasPermission('apiV1:billOut:failed')) {
-                        _html += '<a href="javascript:;" onclick="vm.billFailed(\'' + row.billId + '\')" title="作废"><i class="fa fa-times"></i></a>  ';
-                    }
                     if (hasPermission('apiV1:billOut:goBack')) {
                         _html += '<a href="javascript:;" onclick="vm.billGoBackOrg(\'' + row.billId + '\')" title="回退"><i class="fa fa-reply"></i></a>  ';
                     }
@@ -73,8 +70,11 @@ function getGrid() {
             },
             //：1未通知 2 已通知 3 失败
             {
-                field: "notice", title: "通知", width: "75px", formatter: function (index, row) {
+                field: "notice", title: "通知", width: "100px", formatter: function (index, row) {
                     var noticeMsg = ""
+                    if (hasPermission('apiV1:billOut:failed')) {
+                        noticeMsg += '<a href="javascript:;" onclick="vm.billFailed(\'' + row.billId + '\')" title="作废"><i class="fa fa-times"></i></a>  ';
+                    }
                     if (row.noticeMsg && row.noticeMsg != null) {
                         if (row.noticeMsg == "成功,已作废订单" || row.noticeMsg == "成功,已确认出款") {
                             noticeMsg = ": " + row.noticeMsg
@@ -83,7 +83,7 @@ function getGrid() {
                         }
                     }
                     if (row.notice == 1) {
-                        return "<div style='color: #FFA500'>未通知</div>"
+                        return  "<div style='color: #FFA500'>未通知"+ noticeMsg +"</div>"
                     }
                     if (row.notice == 2) {
                         return "<div style='color: green'>已通知" + noticeMsg + "</div>"

@@ -25,7 +25,15 @@ function getGrid() {
 			return removeEmptyField(params);
 		},
 		columns: [
-//			{checkbox: true},
+            {title : "操作", formatter : function(value, row, index) {
+                    var _html = '';
+                    if(row.billStatus==1){
+                        _html += '<a href="javascript:;" onclick="vm.success(\''+row.billId+'\')" title="充值成功"><i class="fa fa fa-check"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.fail(\''+row.billId+'\')" title="充值失败"><i class="fa fa-times"></i></a>';
+                    }
+                    return _html;
+                }
+            },
             {field : "createTime", title : "创建时间", width : "180px"},
 //            {field : "lastUpdate", title : "", width : "100px"},
             {field : "merchantName", title : "商户名", width : "100px"},
@@ -52,24 +60,7 @@ function getGrid() {
             {field : "bankAccountName", title : "付款用户名", width : "100px"},
             {field : "orgId", title : "代理商id", width : "100px"},
             {field : "orgName", title : "代理商姓名", width : "100px"},
-            {field : "comment", title : "注解", width : "100px"},
-            {title : "操作", formatter : function(value, row, index) {
-                    var _html = '';
-//                    if (hasPermission('merchant:charge:edit')) {
-//                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.id+'\')" title="编辑"><i class="fa fa-pencil"></i></a>';
-//                    }
-//                    if (hasPermission('merchant:charge:remove')) {
-//                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="删除"><i class="fa fa-trash-o"></i></a>';
-//                    }
-//                    if (hasPermission('merchant:charge:success')) {
-                       if(row.billStatus==1){
-                            _html += '<a href="javascript:;" onclick="vm.success(\''+row.billId+'\')" title="充值成功"><i class="fa fa fa-check"></i></a>';
-                            _html += '<a href="javascript:;" onclick="vm.fail(\''+row.billId+'\')" title="充值失败"><i class="fa fa-times"></i></a>';
-                       }
-//                    }
-                    return _html;
-                }
-            }
+            {field : "comment", title : "注解", width : "100px"}
 		]
 	})
 }
