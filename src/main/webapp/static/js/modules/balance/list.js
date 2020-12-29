@@ -52,7 +52,7 @@ function getGrid() {
                     }
                 }
                 return _html_1 + '</br>' + _html_2;
-            }},
+            }}/*,
             {title : "操作", formatter : function(value, row, index) {
                     var _html = '';
 //                    if (hasPermission('apiV1:balance:edit')) {
@@ -64,7 +64,7 @@ function getGrid() {
 
                     return _html;
                 }
-            }
+            }*/
 		]
 	})
 }
@@ -126,4 +126,4 @@ var vm = new Vue({
             });
         }
 	}
-})
+});

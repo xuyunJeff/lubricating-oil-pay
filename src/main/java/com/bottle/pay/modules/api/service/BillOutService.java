@@ -72,18 +72,10 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         BillOutEntity bill = saveNewBillOut(billOutView.getMerchantName(), billOutView.getMerchantId(),
                 billOutView.getOrderNo(), ip, userEntity.getOrgId(), userEntity.getOrgName(), billOutView.getPrice(),
                 billOutView.getBankCardNo(), billOutView.getBankName(), billOutView.getBankAccountName());
-        // TODO 去查询商户的发过来的订单是否存在？@mighty
         // 第二步 增加商户代付中余额，扣除商户可用余额
         log.info(randmon+"服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
-//        try {
             billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice());
         log.info(randmon+"服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            log.error(billOutView.getOrderNo()+ " billsOutAgent error"+e.getMessage());
-//            mapper.update(new BillOutEntity().setThirdBillId(billOutView.getOrderNo()).setBillStatus(BillConstant.BillStatusEnum.BALANCE_ZERO.getCode()));
-//            bill.setBillStatus(BillConstant.BillStatusEnum.BALANCE_ZERO.getCode());
-//        }
         return bill;
     }
 
@@ -235,8 +227,8 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @return
      */
     public Map<OnlineBusinessEntity, BigDecimal> getBusinessFreeBalance(BillOutEntity entity) {
-        // 第一步获取在线的出款员
-        OnlineBusinessEntity businessOnline = onlineBusinessService.getNextBusiness(entity.getOrgId());
+        // 第一步获取商户绑定的在线出款员
+        OnlineBusinessEntity businessOnline = onlineBusinessService.getNextBusiness(entity.getMerchantId());
         // 第二步判断出款员余额是否够出款
         BigDecimal businessTotalBalance = bankCardService.getAllCardsBalanceWithoutFrozen(businessOnline.getBusinessId());
         BigDecimal businessFreeBalance = getBusinessFreeBalance(businessTotalBalance, businessOnline);

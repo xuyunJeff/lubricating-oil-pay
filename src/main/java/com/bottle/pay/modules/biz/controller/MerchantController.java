@@ -40,7 +40,7 @@ public class MerchantController extends AbstractController {
             params.put("userId",userEntity.getUserId());
             return merchantService.merchantList(params);
         }
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode()) || userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
             params.put("orgId",userEntity.getOrgId());
             return merchantService.merchantList(params);
         }

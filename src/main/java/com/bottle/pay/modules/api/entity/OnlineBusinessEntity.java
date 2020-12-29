@@ -35,6 +35,11 @@ public class OnlineBusinessEntity extends BottleBaseEntity {
      */
     private Integer position;
 
+
+    private Long merchantId;
+
+    private String merchantName;
+
     @Transient
     private BigDecimal payingBalance;
 

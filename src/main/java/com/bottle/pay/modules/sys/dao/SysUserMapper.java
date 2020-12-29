@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.bottle.pay.common.entity.Query;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
+import org.springframework.stereotype.Component;
 
 /**
  * 系统用户dao
@@ -13,6 +14,7 @@ import com.bottle.pay.modules.sys.entity.SysUserEntity;
  * @author zcl<yczclcn@163.com>
  */
 @Mapper
+@Component
 public interface SysUserMapper extends BaseMapper<SysUserEntity> {
 
     /**

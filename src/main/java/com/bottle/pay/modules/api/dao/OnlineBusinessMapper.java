@@ -13,9 +13,9 @@ import java.util.List;
 @Mapper
 public interface OnlineBusinessMapper extends BottleBaseMapper<OnlineBusinessEntity> {
 
-    public OnlineBusinessEntity nextOnlineBusiness(@Param("orgId") Long orgId, @Param("position") Integer position);
+    OnlineBusinessEntity nextOnlineBusiness(@Param("merchantId") Long merchantId, @Param("position") Integer position);
 
-    public OnlineBusinessEntity firstOnlineBusiness(@Param("orgId") Long orgId);
+    OnlineBusinessEntity firstOnlineBusiness(@Param("merchantId") Long merchantId);
 
     int online(OnlineBusinessEntity entity);
 

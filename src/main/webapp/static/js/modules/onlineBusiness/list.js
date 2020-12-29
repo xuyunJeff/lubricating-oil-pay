@@ -34,6 +34,7 @@ function getGrid() {
             {field : "agentId", title : "代理商id", width : "100px",visible : false},
             {field : "agentName", title : "代理商姓名", width : "100px",visible : false},
             {field : "businessName", title : "付款专员姓名", width : "100px"},
+            {field : "merchantName", title : "商户名", width : "100px"},
             {field : "businessId", title : "付款专员ID", width : "100px",visible : false},
             {field : "payingBalance", title : "代付中余额", width : "100px"},
             {field : "balance", title : "余额", width : "100px"},
@@ -63,4 +64,4 @@ var vm = new Vue({
             });
         }
 	}
-})
+});

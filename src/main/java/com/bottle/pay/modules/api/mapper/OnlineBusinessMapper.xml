@@ -10,7 +10,9 @@
         `org_name`,
         `business_name`,
         `business_id`,
-        `position`
+        `position`,
+        `merchant_id`,
+        `merchant_name`
         FROM
         online_business
         where 1=1
@@ -19,27 +21,13 @@
         <if test="businessName != null"> and `business_name` = #{businessName}</if>
         <if test="businessId != null"> and `business_id` = #{businessId}</if>
         <if test="position != null"> and `position` = #{position}</if>
+        <if test="merchantId != null"> and `merchant_Id` = #{merchantId}</if>
+        <if test="merchantName != null"> and `merchant_Name` = #{merchantName}</if>
 
         ORDER BY
         id DESC
     </select>
 
-    <!--<insert id="save">-->
-    <!--INSERT INTO online_business (-->
-    <!--`org_id`,-->
-    <!--`org_name`,-->
-    <!--`business_name`, -->
-    <!--`business_id`, -->
-    <!--`position`-->
-    <!--)-->
-    <!--VALUES (-->
-    <!--#{orgId},-->
-    <!--#{orgName},-->
-    <!--#{businessName}, -->
-    <!--#{businessId}, -->
-    <!--#{position}-->
-    <!--)-->
-    <!--</insert>-->
 
     <select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.OnlineBusinessEntity">
         SELECT
@@ -48,7 +36,9 @@
         `org_name`,
         `business_name`,
         `business_id`,
-        `position`
+        `position`,
+        `merchant_id`,
+        `merchant_name`
         FROM
         online_business
         WHERE
@@ -63,6 +53,8 @@
             <if test="businessName != null">`business_name` = #{businessName},</if>
             <if test="businessId != null">`business_id` = #{businessId},</if>
             <if test="position != null">`position` = #{position}</if>
+            <if test="merchantId != null"> and `merchant_Id` = #{merchantId}</if>
+            <if test="merchantName != null"> and `merchant_Name` = #{merchantName}</if>
         </set>
         WHERE
         id = #{id}
@@ -86,11 +78,13 @@
         `org_name`,
         `business_name`,
         `business_id`,
-        `position`
+        `position`,
+        `merchant_id`,
+        `merchant_name`
         FROM
         online_business
         WHERE
-        org_id = #{orgId} and position > #{position} limit 1
+        merchant_id = #{merchantId} and position > #{position} limit 1
     </select>
     <select id="firstOnlineBusiness" resultType="com.bottle.pay.modules.api.entity.OnlineBusinessEntity">
         SELECT
@@ -99,25 +93,29 @@
         `org_name`,
         `business_name`,
         `business_id`,
-        `position`
+        `position`,
+        `merchant_id`,
+        `merchant_name`
         FROM
         online_business
         WHERE
-        org_id = #{orgId}
+        merchant_id = #{merchantId}
         order by position asc
         limit 1
     </select>
 
     <insert id="online">
         INSERT INTO online_business
-        (org_id,org_name,business_name,business_id,position)
+        (org_id,org_name,business_name,business_id,position,merchant_id,merchant_name)
         VALUES
         (
         #{orgId},
         #{orgName},
         #{businessName},
         #{businessId},
-        (SELECT IFNULL(max(position),0) FROM online_business t)+1
+        (SELECT IFNULL(max(position),0) FROM online_business t)+1,
+        #{merchantId},
+        #{merchantName}
         )
     </insert>
 
@@ -136,6 +134,8 @@
             <if test="businessName != null"> and `business_name` = #{businessName}</if>
             <if test="businessId != null"> and `business_id` = #{businessId}</if>
             <if test="position != null"> and `position` = #{position}</if>
+            <if test="merchantId != null"> and `merchant_Id` = #{merchantId}</if>
+            <if test="merchantName != null"> and `merchant_Name` = #{merchantName}</if>
         </where>
     </select>
 </mapper>

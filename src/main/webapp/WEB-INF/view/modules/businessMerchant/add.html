@@ -1,0 +1,24 @@
+@layout("../../system/layout.html", {title: ""}){
+<table class="form" id="form">
+
+    <tr>
+        <td class="formTitle" style="width: 100px;">代付商户<font face="宋体">*</font></td>
+        <td class="formValue" style="width: 260px;">
+            <select  style="width: 130px;"  v-model="businessMerchant.merchantId" id="merchantId"  class="form-control" >
+                <option value="-1"  style="display:none">请选择</option>
+            </select>
+        </td>
+    </tr>
+
+    <!--联动选择专员以及专员银行卡-->
+    <tr>
+        <td class="formTitle" style="width: 100px;">出款专员<font face="宋体">*</font></td>
+        <td class="formValue" style="width: 260px;">
+            <select  style="width: 130px;"  v-model="businessMerchant.businessId" id="businessId"  class="form-control" \@change="bankCard()">
+                <option value="-1"  style="display:none">请选择</option>
+            </select>
+        </td>
+    </tr>
+</table>
+<script src="${ctxPath}/static/js/modules/businessMerchant/add.js"></script>
+@}

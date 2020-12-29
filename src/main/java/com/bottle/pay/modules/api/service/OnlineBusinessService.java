@@ -5,7 +5,9 @@ import com.bottle.pay.common.exception.NoOnlineBusinessException;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
+import com.bottle.pay.modules.api.dao.BusinessMerchantMapper;
 import com.bottle.pay.modules.api.dao.OnlineBusinessMapper;
+import com.bottle.pay.modules.api.entity.BusinessMerchantEntity;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.sys.dao.SysUserMapper;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
@@ -24,28 +26,35 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
 
     @Autowired
     private RedisCacheManager redisCacheManager;
+
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private BusinessMerchantMapper businessMerchantMapper;
 
-    public OnlineBusinessEntity getNextBusiness(Long orgId) {
-        String redisKey = BusinessConstant.BusinessRedisKey.onlinePosition(orgId);
+
+    public OnlineBusinessEntity getNextBusiness( Long merchantId) {
+        String redisKey = BusinessConstant.BusinessRedisKey.onlinePosition(merchantId);
         OnlineBusinessEntity currentBusiness = redisCacheManager.getBean(redisKey,OnlineBusinessEntity.class);
         if (null != currentBusiness) {
-            OnlineBusinessEntity nextOnlineBusiness = mapper.nextOnlineBusiness(orgId, currentBusiness.getPosition());
+            OnlineBusinessEntity nextOnlineBusiness = mapper.nextOnlineBusiness(merchantId ,currentBusiness.getPosition());
             if (nextOnlineBusiness != null) {
                 redisCacheManager.set(redisKey, nextOnlineBusiness);
                 return nextOnlineBusiness;
             }
         }
         // 为空时返回第一个
-        OnlineBusinessEntity firstOnlineBusiness = mapper.firstOnlineBusiness(orgId);
+        OnlineBusinessEntity firstOnlineBusiness = mapper.firstOnlineBusiness(merchantId);
         if (firstOnlineBusiness != null) {
             redisCacheManager.set(redisKey, firstOnlineBusiness);
             return firstOnlineBusiness;
         }
         throw new NoOnlineBusinessException("无在线出款员，请联系管理员");
     }
+
+
+
 
     public OnlineBusinessEntity getOnlineBusiness(Long businessId, Long orgId) {
         OnlineBusinessEntity entity = new OnlineBusinessEntity();
@@ -77,12 +86,20 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
         entity.setBusinessId(userId);
         entity.setOrgId(userEntity.getOrgId());
         entity.setOrgName(userEntity.getOrgName());
+        // 获取专业对应的商户
+        List<BusinessMerchantEntity> bmeList =  businessMerchantMapper.select(new BusinessMerchantEntity(userId));
+        if(bmeList.isEmpty()){
+            throw new RRException("改专业未绑定对应的商户，无法上线");
+        }
+        if(bmeList.size() >1 ) {
+            throw new RRException("位置异勤联系管理员,错误：该专员绑定了多个商户");
+        }
+        BusinessMerchantEntity bem = bmeList.get(0);
+        entity.setMerchantId(bem.getMerchantId());
+        entity.setMerchantName(bem.getMerchantName());
         int num = mapper.online(entity);
         log.info("专员:{}-{},上线结果:{}", userId, userEntity.getUsername(), num > 0);
-        if (num > 0) {
-            return true;
-        }
-        return false;
+        return num > 0;
     }
 
     /**
@@ -93,10 +110,7 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
     public boolean offline(Long userId) {
         int num = mapper.offline(userId);
         log.info("专员:{},下线结果", userId, num > 0);
-        if (num > 0) {
-            return true;
-        }
-        return false;
+        return num > 0;
     }
 
     public int count() {
