@@ -28,7 +28,8 @@
         `business_bank_card_no`,
         `business_bank_name`,
         `business_bank_account_name`,
-        `notice_msg`
+        `notice_msg`,
+        `is_lock`
         FROM
         bill_out
         <where>
@@ -51,6 +52,7 @@
             <if test="orgId != null">  and `org_id` = #{orgId}</if>
             <if test="orgName != null">  and `org_name` = #{orgName}</if>
             <if test="position != null">  and `position` = #{position}</if>
+            <if test="isLock != null">`is_lock` = #{isLock}</if>
         </where>
         ORDER BY
         id DESC
@@ -76,7 +78,8 @@
         `bill_type`,
         `org_id`,
         `org_name`,
-        `position`
+        `position`,
+        `is_lock`
         )
         VALUES (
         #{createTime},
@@ -97,7 +100,8 @@
         #{billType},
         #{orgId},
         #{orgName},
-        #{position}
+        #{position},
+        #{isLock}
         )
     </insert>
 
@@ -122,7 +126,8 @@
         `bill_type`,
         `org_id`,
         `org_name`,
-        `position`
+        `position`,
+        `is_lock`
         FROM
         bill_out
         WHERE
@@ -151,6 +156,7 @@
             <if test="orgId != null">`org_id` = #{orgId},</if>
             <if test="orgName != null">`org_name` = #{orgName},</if>
             <if test="position != null">`position` = #{position}</if>
+            <if test="isLock != null">`is_lock` = #{isLock}</if>
         </set>
         WHERE
         id = #{id}
@@ -181,6 +187,7 @@
     <select id="sumByBusinessId" resultType="java.math.BigDecimal">
         select sum(price) price from bill_out where business_id= #{businessId} and bill_status = 1 ;
     </select>
+
     <update id="updateBillOutByBillId">
         UPDATE bill_out
         <set>
@@ -191,10 +198,20 @@
             <if test="position != null">`position` = #{position},</if>
             <if test="businessBankCardNo != null">`business_bank_card_no` = #{businessBankCardNo},</if>
             <if test="businessBankName != null">`business_bank_name` = #{businessBankName},</if>
-            <if test="businessBankAccountName != null">`business_bank_account_name` = #{businessBankAccountName}</if>
+            <if test="businessBankAccountName != null">`business_bank_account_name` = #{businessBankAccountName},</if>
+            <if test="isLock != null">`is_lock` = #{isLock}</if>
         </set>
         WHERE
         bill_id = #{billId}
+    </update>
+
+    <update id="updateByBillOutToLock">
+        UPDATE bill_out
+        <set>
+            <if test="isLock != null">`is_lock` = #{isLock}</if>
+        </set>
+        WHERE
+        bill_id = #{billId} and bill_status = '1'
     </update>
 
     <update id="updateBillOutByBillIdForFailed">

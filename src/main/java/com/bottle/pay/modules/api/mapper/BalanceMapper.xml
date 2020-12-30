@@ -170,6 +170,15 @@
         id = #{id}
     </update>
 
+    <update id="billoutBalanceBusinessChange">
+        UPDATE balance
+        <set>
+            `balance` = balance + #{amount}
+        </set>
+        WHERE
+        id = #{id}
+    </update>
+
     <update id="billOutMerchantChangePayingBalance">
         UPDATE balance
         <set>

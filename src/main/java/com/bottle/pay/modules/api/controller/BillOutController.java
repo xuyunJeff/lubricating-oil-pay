@@ -201,6 +201,7 @@ public class BillOutController extends AbstractController {
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("订单无需确认");
+        if(bill.getIsLock().equals(0)) return R.error("此订单未锁定,请锁定后出款");
         bill = billOutService.billsOutPaidSuccess(bill);
         try {
             merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
@@ -212,6 +213,8 @@ public class BillOutController extends AbstractController {
         }catch (Exception e) {
             log.error("出款员汇总异常，BillOutEntity {}",bill);
         }
+
+
         BillOutEntity billFinal = billOutService.selectOne(new BillOutEntity(billId));
         return R.ok().put("bill",billFinal);
     }
@@ -223,6 +226,7 @@ public class BillOutController extends AbstractController {
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getNotice().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("该订单支付状态已经是最终状态不可作废");
+        if(bill.getIsLock().equals(0)) return R.error("此订单未锁定,请锁定后做法");
         billOutService.billsOutPaidFailed(bill);
         try {
             merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
@@ -246,6 +250,29 @@ public class BillOutController extends AbstractController {
             log.error("通知订单回调异常，BillOutEntity {}",bill);
         }
         return R.ok("已经重新发起通知,结果以表格为准,<div style='color:red'>一直失败请联系客户人工处理</div>;会员银行卡名：" + bill.getBankAccountName());
+    }
+
+    @SysLog("锁定订单")
+    @RequestMapping("/bill/lock")
+    public R billsOutLock(@NotNull(message = "billId 不能为空") String billId) {
+        SysUserEntity userEntity = getUser();
+        BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
+        if(bill.getIsLock().equals(1)){
+            return R.error("此订单已经锁定,请刷新列表");
+        }
+        if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) {
+            return R.error("此订单已经出款成功或失败,请勿出款");
+        }
+
+        int i =billOutService.updateByBillOutToLock(new BillOutEntity(billId));
+        if(i == 1){
+            bill = billOutService.selectOne(new BillOutEntity(billId));
+            return R.ok("锁定成功").put("bill",bill);
+        }
+        if(i == 0){
+            return R.error("锁定失败,确认是否有人已经锁定");
+        }
+        return R.error("异常请联系技术");
     }
     /**
      * 判断是否存在银行卡黑名单

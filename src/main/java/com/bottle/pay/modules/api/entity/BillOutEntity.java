@@ -119,5 +119,9 @@ public class BillOutEntity extends BottleBaseEntity {
     // 回调通知的返回消息
     private String noticeMsg;
 
+    /**
+     * 订单是否被锁定
+     */
+    private Integer isLock;
 
 }

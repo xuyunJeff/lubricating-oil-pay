@@ -17,34 +17,37 @@ function getGrid() {
     $('#dataGrid').bootstrapTableEx({
         url: '../../apiV1/billOut/list?_' + $.now(),
         height: $(window).height() - 56,
+        rowStyle: vm.rowStyle, //通过自定义函数设置行样式
         queryParams: function (params) {
-            params.merchantName = $('#merchantName').val()
-            params.businessName = $('#businessName').val()
-            params.bankAccountName = $('#bankAccountName').val()
-            params.thirdBillId = $('#thirdBillId').val()
-            params.billId = $('#billId').val()
-            params.billStatus = $('#billStatus').val()
-            params.notice = $('#notice').val()
-            params.billType = $('#billType').val()
-            params.createTime = $('#createTime').val()
+            params.merchantName = $('#merchantName').val();
+            params.businessName = $('#businessName').val();
+            params.bankAccountName = $('#bankAccountName').val();
+            params.thirdBillId = $('#thirdBillId').val();
+            params.billId = $('#billId').val();
+            params.billStatus = $('#billStatus').val();
+            params.notice = $('#notice').val();
+            params.billType = $('#billType').val();
+            params.createTime = $('#createTime').val();
             return removeEmptyField(params);
         },
         columns: [
-            // {checkbox: true},
             {
-                title: "操作", width: "110px", formatter: function (value, row, index) {
+                title: "操作",height : "40px" ,width: "40px", formatter: function (value, row, index) {
                     var _html = '';
+                    if (hasPermission('apiV1:billOut:lock')) {
+                        _html += '<a href="javascript:;" onclick="vm.billLock(\'' + row.billId + '\',\'' + index + '\')" title="锁定"> <i class="fa fa-key" aria-hidden="true"></i></a> </br> ';
+                    }
                     if (hasPermission('apiV1:billOut:success')) {
-                        _html += '<a href="javascript:;" onclick="vm.billSuccess(\'' + row.billId + '\',\'' + index + '\')" title="确认"><i class="fa fa fa-check"></i></a>  ';
+                        _html += '<a href="javascript:;" onclick="vm.billSuccess(\'' + row.billId + '\',\'' + index + '\')" title="确认"><i class="fa fa-check"></i></a> </br> ';
                     }
                     if (hasPermission('apiV1:billOut:goBack')) {
-                        _html += '<a href="javascript:;" onclick="vm.billGoBackOrg(\'' + row.billId + '\')" title="回退"><i class="fa fa-reply"></i></a>  ';
+                        _html += '<a href="javascript:;" onclick="vm.billGoBackOrg(\'' + row.billId + '\')" title="回退"><i class="fa fa-reply"></i></a></br>  ';
                     }
                     if (hasPermission('apiV1:billOut:appoint:people')) {
-                        _html += '<a href="javascript:;" onclick="vm.appointHuman(\'' + row.billId + '\')" title="指定"><i class="fa fa-hand-pointer-o"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.appointHuman(\'' + row.billId + '\')" title="指定"><i class="fa fa-hand-pointer-o"></i></a></br>';
                     }
                     if (hasPermission('apiV1:billOut:notice')) {
-                        _html += '<a href="javascript:;" onclick="vm.notice(\'' + row.billId + '\')" title="通知"><i class="fa fa-bullhorn" aria-hidden="true"></i></a>';
+                        _html += '<a href="javascript:;" onclick="vm.notice(\'' + row.billId + '\')" title="通知"><i class="fa fa-bullhorn" aria-hidden="true"></i></a></br>';
                     }
                     return _html;
                 }
@@ -58,22 +61,30 @@ function getGrid() {
             {
                 field: "billStatus", title: "订单状态", width: "60px", formatter: function (index, row) {
                     if (row.billStatus == 1) {
-                        return "<div style='color: #FFA500'>未支付</div>"
+                        var msg ="未支付";
+                        if(row.isLock == 1) {
+                            msg += "</br>已锁"
+                        }
+                        if(row.isLock == 0) {
+                            msg += "</br>未锁"
+                        }
+                        return msg
                     }
                     if (row.billStatus == 2) {
-                        return "<div style='color: green'>成功</div>"
+
+                        return "成功"
                     }
                     if (row.billStatus == 3) {
-                        return "<div style='color: blue'>失败</div>"
+                        return "失败"
                     }
                 }
             },
             //：1未通知 2 已通知 3 失败
             {
                 field: "notice", title: "通知", width: "100px", formatter: function (index, row) {
-                    var noticeMsg = ""
+                    var noticeMsg = "";
                     if (hasPermission('apiV1:billOut:failed')) {
-                        noticeMsg += '<a href="javascript:;" onclick="vm.billFailed(\'' + row.billId + '\')" title="作废"><i class="fa fa-times"></i></a>  ';
+                        noticeMsg += '</br><a href="javascript:;" onclick="vm.billFailed(\'' + row.billId + '\')" title="作废"><i class="fa fa-times"></i></a>  ';
                     }
                     if (row.noticeMsg && row.noticeMsg != null) {
                         if (row.noticeMsg == "成功,已作废订单" || row.noticeMsg == "成功,已确认出款") {
@@ -83,13 +94,13 @@ function getGrid() {
                         }
                     }
                     if (row.notice == 1) {
-                        return  "<div style='color: #FFA500'>未通知"+ noticeMsg +"</div>"
+                        return  "<div style='color: #ff383f'>未通知"+ noticeMsg +"</div>"
                     }
                     if (row.notice == 2) {
                         return "<div style='color: green'>已通知" + noticeMsg + "</div>"
                     }
                     if (row.notice == 3) {
-                        return "<div style='color: blue'>通知失败" + noticeMsg + "</div>"
+                        return "<div style='color: #ff1a8f'>通知失败" + noticeMsg + "</div>"
                     }
                 }
             },
@@ -132,7 +143,7 @@ function getGrid() {
                         return "<div style='color: #FFA500'>手动</div>"
                     }
                     if (row.billType == 2) {
-                        return "<div style='color: green'>自动</div>"
+                        return "<div style='color: black'>自动</div>"
                     }
                     if (row.billType == 3) {
                         return "<div style='color: red'>大额</div>"
@@ -242,7 +253,7 @@ var vm = new Vue({
             oInput.value = val;
             document.body.appendChild(oInput);
             oInput.select(); // 选择对象;
-            console.log(oInput.value)
+            console.log(oInput.value);
             document.execCommand("Copy", false);
             oInput.remove()
         },
@@ -255,11 +266,31 @@ var vm = new Vue({
                 }
             });
         },
-        auto: function () {
-            // TODO 自动派单开关 @rmi
+        billLock: function (billId,index) {
+            $.ConfirmAjax({
+                msg: "锁定订单？",
+                url: '../../apiV1/billOut/bill/lock?billId=' + billId + '&_' + $.now(),
+                success: function (data) {
+                    $('#dataGrid').bootstrapTable('updateRow', {index: index, row: data.bill});
+                }
+            });
         },
         border: function () {
             return {css: {"border-color": "red red red red"}}
+        },
+        rowStyle:function (row, index) {
+            if (row.billStatus == 1) {
+                if(row.isLock == 1) {
+                    return  {css:{'background-color':'yellow'}};
+                }
+                return  {css:{'background-color':'white'}};
+            }
+            if (row.billStatus == 2) {
+                return {css:{'background-color':'#e1c4ee'}};
+            }
+            if (row.billStatus == 3) {
+                return {css:{'background-color':'#00C5CD'}};
+            }
         }
     },
     lastOrder:function () {
@@ -286,4 +317,4 @@ var vm = new Vue({
             });
         }, 2000);
     }
-})
+});

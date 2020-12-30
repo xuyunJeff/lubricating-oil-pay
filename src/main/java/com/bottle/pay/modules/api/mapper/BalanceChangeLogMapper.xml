@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bottle.pay.modules.api.dao.BalanceChangeLogMapper">
+	
+	<select id="listForPage" resultType="com.bottle.pay.modules.api.entity.BalanceChangeLogEntity">
+		SELECT
+			`id`, 
+			`user_name`, 
+			`user_id`, 
+			`balance_after`, 
+			`org_id`, 
+			`org_name`, 
+			`role_id`, 
+			`role_name`, 
+			`balance_before`, 
+			`bill_id`, 
+			`message`,
+			`balance`
+		FROM
+			balance_change_log
+			<where>
+				1=1
+				<if test="userName != null"> and `user_name` = #{userName} </if>
+				<if test="userId != null"> and `user_id` = #{userId} </if>
+				<if test="balanceAfter != null"> and `balance_after` = #{balanceAfter} </if>
+				<if test="orgId != null"> and `org_id` = #{orgId} </if>
+				<if test="orgName != null"> and `org_name` = #{orgName} </if>
+				<if test="roleId != null"> and `role_id` = #{roleId} </if>
+				<if test="roleName != null"> and `role_name` = #{roleName} </if>
+				<if test="balanceBefore != null"> and `balance_before` = #{balanceBefore} </if>
+				<if test="billId != null"> and `bill_id` = #{billId} </if>
+				<if test="balance != null"> and `balance` = #{balance} </if>
+				<if test="message != null"> and `message` = #{message}</if>
+			</where>
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO balance_change_log (
+			`user_name`, 
+			`user_id`, 
+			`balance_after`, 
+			`org_id`, 
+			`org_name`, 
+			`role_id`, 
+			`role_name`, 
+			`balance_before`, 
+			`bill_id`, 
+			`message`,
+			`balance`
+		)
+		VALUES (
+			#{userName}, 
+			#{userId}, 
+			#{balanceAfter}, 
+			#{orgId}, 
+			#{orgName}, 
+			#{roleId}, 
+			#{roleName}, 
+			#{balanceBefore}, 
+			#{billId}, 
+			#{message},
+			#{balance}
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.BalanceChangeLogEntity">
+		SELECT
+			`id`, 
+			`user_name`, 
+			`user_id`, 
+			`balance_after`, 
+			`org_id`, 
+			`org_name`, 
+			`role_id`, 
+			`role_name`, 
+			`balance_before`, 
+			`bill_id`, 
+			`message`,
+			`balance`
+		FROM
+			balance_change_log
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE balance_change_log
+	 	<set>
+			<if test="userName != null">`user_name` = #{userName}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="balanceAfter != null">`balance_after` = #{balanceAfter}, </if>
+			<if test="orgId != null">`org_id` = #{orgId}, </if>
+			<if test="orgName != null">`org_name` = #{orgName}, </if>
+			<if test="roleId != null">`role_id` = #{roleId}, </if>
+			<if test="roleName != null">`role_name` = #{roleName}, </if>
+			<if test="balanceBefore != null">`balance_before` = #{balanceBefore}, </if>
+			<if test="billId != null">`bill_id` = #{billId}, </if>
+			<if test="balance != null">`balance` = #{balance}, </if>
+			<if test="message != null">`message` = #{message}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			balance_change_log
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

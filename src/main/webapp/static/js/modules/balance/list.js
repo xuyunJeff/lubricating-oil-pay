@@ -25,8 +25,18 @@ function getGrid() {
             {field : "userId", title : "用户ID", width : "100px"},
             {field : "userName", title : "用户名", width : "100px"},
             {field : "balance", title : "可用余额", width : "100px"},
-            {field : "balanceFrozen", title : "冻结余额", width : "100px"},
-            {field : "balancePaying", title : "支付中余额", width : "100px"},
+            {field : "balanceFrozen", title : "冻结余额", width : "100px",formatter:function(index, row){
+                    if(row.bizType == "出款员"){
+                        return '--';
+                    }
+                    return row.balanceFrozen
+                }},
+            {field : "balancePaying", title : "支付中余额", width : "100px",formatter:function(index, row){
+                    if(row.bizType == "出款员"){
+                        return '--';
+                    }
+                    return row.balancePaying
+                }},
             {field : "createTime", title : "创建时间", width : "100px"},
             {field : "orgName", title : "代理商姓名", width : "100px"},
             {field : "status", title : "状态", width : "100px",formatter:function(value){
@@ -37,34 +47,10 @@ function getGrid() {
                 return '可用';
                 }
             }},
-            {field : "bizType", title : "商户类型", width : "100px",formatter:function(value){return '代付商户'}},
-            {field : "billOutLimit", title : "自动出款额度", width : "100px"},
+            {field : "bizType", title : "用户角色", width : "100px"},
+            {field : "billOutLimit", title : "自动出款额度", width : "100px",formatter:function(value){ return "暂不支持"}},
             {field : "mobile", title : "手机", width : "100px"},
-            {field : "email", title : "邮箱", width : "100px"},
-            {field : "ipList", title : "ip", width : "100px",formatter:function(value){
-                var _html_1 = '商户对应服务器:';
-                var _html_2 = '商户登录后台:';
-                for(var ip in value){
-                    if(ip.type == 1){
-                        _html_1 += ip.ipList;
-                    }else if(ip.type == 2){
-                        _html_2 += ip.ipList;
-                    }
-                }
-                return _html_1 + '</br>' + _html_2;
-            }}/*,
-            {title : "操作", formatter : function(value, row, index) {
-                    var _html = '';
-//                    if (hasPermission('apiV1:balance:edit')) {
-                        _html += '<a href="javascript:;" onclick="vm.edit(\''+row.ipList+'\')" title="修改IP"><i class="fa fa-pencil">修改IP</i></a>';
-//                    }
-//                    if (hasPermission('apiV1:balance:remove')) {
-//                        _html += '<a href="javascript:;" onclick="vm.remove(false,\''+row.id+'\')" title="修改IP"><i class="fa fa-trash-o">IP修改</i></a>';
-//                    }
-
-                    return _html;
-                }
-            }*/
+            {field : "email", title : "邮箱", width : "100px"}
 		]
 	})
 }

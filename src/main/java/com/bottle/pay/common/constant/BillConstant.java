@@ -10,17 +10,19 @@ public class BillConstant {
     // 代付中余额
     public static final String BILL_OUT_BUSINESS_BALANCE = "bill:out:balance";
 
-    public static final String BILL_OUT_MERCHANT_BALANCE_LOCAK ="bill:out:merchant:balanc:lock";
+    public static final String BILL_OUT_MERCHANT_BALANCE_LOCK ="bill:out:merchant:balance:lock";
 
-    public static final String BILL_OUT_BUSINESS_BALANCE_LOCAK ="bill:out:business:balanc:lock";
+    public static final String BILL_BUSINESS_BALANCE_LOCK ="bill:business:balance:lock";
+
+    public static final String BILL_OUT_BUSINESS_BANK_BALANCE_LOCK ="bill:out:business:bank:balance:lock";
 
     public static final String REPORT_BUSINESS ="report:business:lock";
 
     public static final String LAST_NEW_ORDER ="bill:out:lastNewOrder";
 
-    public static final Integer WHITE_IP_TYPE_SERVER  =1;
+    public static final Integer WHITE_IP_TYPE_SERVER  = 1;
 
-    public static final Integer WHITE_IP_TYPE_ADMIN  =2;
+    public static final Integer WHITE_IP_TYPE_ADMIN  = 2;
 
     public interface BillRedisKey {
         static String billOutBusinessBalance(String businessId) {

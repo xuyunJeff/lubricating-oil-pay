@@ -12,13 +12,15 @@ import java.math.BigDecimal;
 @Mapper
 public interface BillOutMapper extends BottleBaseMapper<BillOutEntity> {
 
-    public BigDecimal sumByBusinessId(Long businessId);
+    BigDecimal sumByBusinessId(Long businessId);
 
-    public int updateBillOutByBillId(BillOutEntity entity);
+    int updateBillOutByBillId(BillOutEntity entity);
 
-    public int updateBillOutByBillIdForFailed(BillOutEntity entity);
+    int  updateByBillOutToLock(BillOutEntity entity);
 
-    public int updateByBillOutId(BillOutEntity entity);
+    int updateBillOutByBillIdForFailed(BillOutEntity entity);
 
-    public int lastNewOrder(@Param("id") Long id, @Param("orgId")  Long orgId, @Param("businessId")  Long businessId);
+    int updateByBillOutId(BillOutEntity entity);
+
+    int lastNewOrder(@Param("id") Long id, @Param("orgId") Long orgId, @Param("businessId") Long businessId);
 }

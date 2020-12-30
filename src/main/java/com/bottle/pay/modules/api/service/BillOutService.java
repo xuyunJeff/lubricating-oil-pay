@@ -74,7 +74,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
                 billOutView.getBankCardNo(), billOutView.getBankName(), billOutView.getBankAccountName());
         // 第二步 增加商户代付中余额，扣除商户可用余额
         log.info(randmon+"服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
-            billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice());
+            billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice(),bill.getBillId());
         log.info(randmon+"服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
         return bill;
     }
@@ -170,10 +170,22 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 扣除出款员代付中 -- redis
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中
-        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
+        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId(),entity.getBillId());
         bankCardService.minusBalance(entity.getBusinessId(), entity.getBusinessBankCardNo(), entity.getPrice());
+        // 出款员扣除余额
+        this.billOutBusinessPaySuccess(entity);
         return entity;
     }
+
+    /**
+     * 出款员扣除余额
+     * @param entity
+     */
+    private void billOutBusinessPaySuccess(BillOutEntity entity){
+        balanceService.createBalanceAccount(entity.getBusinessId());
+        balanceService.billOutBusinessBalance(entity.getPrice().multiply(new BigDecimal(-1)),entity.getBusinessId(),entity.getBillId());
+    }
+
 
     /**
      * 出款失败作废订单
@@ -191,7 +203,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 扣除出款员代付中 -- redis
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 增加可用余额,扣除代付中
-        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId());
+        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId(),entity.getBillId());
         //   bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }
@@ -254,9 +266,9 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @param amount
      */
     @Transactional
-    public BalanceEntity billsOutBalanceChangeMerchant(Long merchantId, BigDecimal amount) {
+    public BalanceEntity billsOutBalanceChangeMerchant(Long merchantId, BigDecimal amount,String billId) {
         // step 1: 扣商户可用余额，增加商户代付中余额
-        return balanceService.billOutMerchantBalance(amount, merchantId);
+        return balanceService.billOutMerchantBalance(amount, merchantId, billId);
     }
 
 
@@ -345,6 +357,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         entity.setOrgName(agentName);
         entity.setPosition(BillConstant.BillPostionEnum.Agent.getCode());
         entity.setLastUpdate(new Date());
+        entity.setIsLock(0);
         int i = mapper.insert(entity);
         log.info("服务器订单 step 1 :保存，billOut{}", entity);
         if (i == 0) {
@@ -399,5 +412,10 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
             redisCacheManager.set(redisKey, lastId, 5L);
         }
         return Long.valueOf(lastId.toString());
+    }
+
+    public int updateByBillOutToLock(BillOutEntity bill){
+        bill.setIsLock(1);
+        return mapper.updateByBillOutToLock(bill);
     }
 }

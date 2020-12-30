@@ -138,6 +138,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
         throw new RRException("提交充值订单失败，请稍后在操作。");
     }
 
+
     /**
      * 充值订单确认：成功，失败
      * 机构管理员才能 确认订单
@@ -199,8 +200,9 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                     }
                     result = bankCardService.addBalance(billInEntity.getBusinessId(),billInEntity.getBankCardNo(),billInEntity.getPrice());
                     if(!result){
-                        throw new RRException("确认充值订单时，更新专员余额失败");
+                        throw new RRException("确认充值订单时，更新专员银行卡余额失败");
                     }
+                    this.billInBusinessSuccess(billInEntity);
                 }
                 if(statusEnum == BillConstant.BillStatusEnum.Failed){
                     int num = mapper.updateForUnPay(billInEntity.getId(),billInEntity.getOrgId(),billInEntity.getMerchantId());
@@ -219,6 +221,15 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
         throw new RRException("确认充值订单失败，请稍后在操作。");
     }
 
+
+    /**
+     * 更新出款员账户余额
+     * @param entity
+     */
+    private void billInBusinessSuccess(BillInEntity entity){
+        balanceService.createBalanceAccount(entity.getBusinessId());
+        balanceService.billOutBusinessBalance(entity.getPrice(),entity.getBusinessId(),entity.getBillId());
+    }
 
     /**
      * 生成充值id

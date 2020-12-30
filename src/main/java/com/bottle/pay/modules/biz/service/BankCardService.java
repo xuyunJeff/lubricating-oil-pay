@@ -3,7 +3,6 @@ package com.bottle.pay.modules.biz.service;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -17,7 +16,6 @@ import com.bottle.pay.common.utils.CommonUtils;
 import com.bottle.pay.common.utils.ShiroUtils;
 import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.dao.BalanceMapper;
-import com.bottle.pay.modules.api.entity.BalanceEntity;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.BalanceService;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
@@ -347,7 +345,7 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
      * @return
      */
     public boolean minusBalance(Long userId, String bankCard, BigDecimal balance) {
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_OUT_BUSINESS_BALANCE_LOCAK+":"+userId);
+        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_OUT_BUSINESS_BANK_BALANCE_LOCK +":"+userId);
         if(redisLock.lock()) {
             try {
                 BankCardEntity bankCardEntity = new BankCardEntity();

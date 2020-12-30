@@ -8,6 +8,7 @@ import com.bottle.pay.common.utils.ShiroUtils;
 import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.dao.BalanceMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
+import com.bottle.pay.modules.api.entity.BusinessMerchantEntity;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import com.bottle.pay.modules.biz.service.IpLimitService;
 import com.bottle.pay.modules.biz.view.MerchantView;
@@ -44,10 +45,6 @@ public class MerchantService {
      */
     public Page<MerchantView> merchantList(Map<String, Object> params){
         SysUserEntity userEntity = ShiroUtils.getUserEntity();
-//        if(!(SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId()) || SystemConstant.RoleEnum.BillOutMerchant.getCode().equals(userEntity.getRoleId()))){
-//            log.warn("userId:{}-{},不是机构管理员或商户无权限查看此页面",userEntity.getUserId(), WebUtils.getIpAddr());
-//            throw new RRException("不是机构管理员或商户无权限查看此页面无权限查看此页面");
-//        }
         Query query = new Query(params);
         Page<BalanceEntity> page = new Page<>(query);
         balanceMapper.listForPage(page,query);
@@ -60,9 +57,7 @@ public class MerchantService {
                 SysUserEntity user = sysUserMapper.getObjectById(balance.getUserId());
                 BeanUtils.copyProperties(balance, view);
                 BeanUtils.copyProperties(user, view);
-
                 IpLimitEntity ipLimitEntity = new IpLimitEntity();
-                // TODO @might 这里你看看
                 ipLimitEntity.setMerchantId(balance.getUserId());
                 Optional.ofNullable(ipLimitService.select(ipLimitEntity))
                         .ifPresent(ips->view.setIpList(ips));

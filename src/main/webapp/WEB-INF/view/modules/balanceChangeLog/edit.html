@@ -1,0 +1,65 @@
+@layout("../../system/layout.html", {title: ""}){
+<table class="form" id="form">
+    <tr>
+        <td class="formTitle">用户名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="balanceChangeLog.userName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">用户ID<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户ID" v-model="balanceChangeLog.userId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">可用余额<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="可用余额" v-model="balanceChangeLog.balanceAfter" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">代理商id<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商id" v-model="balanceChangeLog.orgId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">代理商姓名<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="代理商姓名" v-model="balanceChangeLog.orgName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">角色id<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="角色id" v-model="balanceChangeLog.roleId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">角色名称<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="角色名称" v-model="balanceChangeLog.roleName" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle">可用余额<font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="可用余额" v-model="balanceChangeLog.balanceBefore" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="balanceChangeLog.billId" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+    <tr>
+        <td class="formTitle"><font face="宋体">*</font></td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="" v-model="balanceChangeLog.message" isvalid="yes" checkexpession="NotNull">
+        </td>
+    </tr>
+</table>
+<script src="${ctxPath}/static/js/modules/balanceChangeLog/edit.js"></script>
+@}

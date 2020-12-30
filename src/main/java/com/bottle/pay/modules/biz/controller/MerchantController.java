@@ -2,10 +2,13 @@ package com.bottle.pay.modules.biz.controller;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.utils.CommonUtils;
+import com.bottle.pay.modules.api.entity.BusinessMerchantEntity;
+import com.bottle.pay.modules.api.service.BusinessMerchantService;
 import com.bottle.pay.modules.api.service.MerchantService;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import com.bottle.pay.modules.biz.service.IpLimitService;
@@ -31,17 +34,26 @@ public class MerchantController extends AbstractController {
     @Autowired
     private MerchantService merchantService;
 
+    @Autowired
+    private BusinessMerchantService businessMerchantService;
 
     @RequestMapping("/list")
-    public Page<MerchantView>  merchantList(@RequestBody Map<String,Object> params){
+    public Page<MerchantView> merchantList(@RequestBody Map<String, Object> params) {
         SysUserEntity userEntity = getUser();
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
-            params.put("orgId",userEntity.getOrgId());
-            params.put("userId",userEntity.getUserId());
-            return merchantService.merchantList(params);
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())) {
+            params.put("orgId", userEntity.getOrgId());
+            Page<MerchantView> p = merchantService.merchantList(params);
+            List<MerchantView> merchantViewMerchant = p.getRows().stream().filter(it -> it.getUserId().equals(userEntity.getUserId())).collect(Collectors.toList());
+            BusinessMerchantEntity bm = new BusinessMerchantEntity();
+            bm.setMerchantId(userEntity.getUserId());
+            List<Long> businessList = businessMerchantService.select(bm).stream().map(it -> it.getBusinessId()).collect(Collectors.toList());
+            List<MerchantView> MerchantViewBusiness = p.getRows().stream().filter(it -> businessList.contains(it.getUserId())).collect(Collectors.toList());
+            merchantViewMerchant.addAll(MerchantViewBusiness);
+            p.setRows(merchantViewMerchant);
+            return p;
         }
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode()) || userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
-            params.put("orgId",userEntity.getOrgId());
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode()) || userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())) {
+            params.put("orgId", userEntity.getOrgId());
             return merchantService.merchantList(params);
         }
 
