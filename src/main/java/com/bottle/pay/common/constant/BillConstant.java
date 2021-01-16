@@ -17,6 +17,7 @@ public class BillConstant {
     public static final String BILL_OUT_BUSINESS_BANK_BALANCE_LOCK ="bill:out:business:bank:balance:lock";
 
     public static final String REPORT_BUSINESS ="report:business:lock";
+    public static final String REPORT_MERCHANT ="report:merchant:lock";
 
     public static final String LAST_NEW_ORDER ="bill:out:lastNewOrder";
 

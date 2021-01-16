@@ -1,6 +1,8 @@
 package com.bottle.pay.modules.sys.controller;
 
 import com.bottle.pay.common.entity.R;
+import com.bottle.pay.common.utils.HttpServletUtil;
+import com.bottle.pay.common.utils.JwtUtils;
 import com.google.code.kaptcha.Constants;
 import com.bottle.pay.common.annotation.SysLog;
 import com.bottle.pay.common.support.properties.GlobalProperties;
@@ -10,12 +12,15 @@ import com.bottle.pay.modules.sys.service.SysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -31,6 +36,9 @@ public class SysLoginController extends AbstractController {
 
     @Autowired
     private GlobalProperties globalProperties;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     /**
      * 跳转登录页面
@@ -94,7 +102,7 @@ public class SysLoginController extends AbstractController {
      * 登录
      */
     @SysLog("登录")
-    @RequestMapping(value = "/wap/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/wap/login", method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public R wapLogin(Model model) {
         String username = getParam("username").trim();
@@ -122,7 +130,7 @@ public class SysLoginController extends AbstractController {
             UsernamePasswordToken token = new UsernamePasswordToken(username, MD5Utils.encrypt(username, password));
             ShiroUtils.getSubject().login(token);
             SecurityUtils.getSubject().getSession().setAttribute("sessionFlag", true);
-            return R.ok("登录成功");
+            return R.ok("登录成功").put("JSESSIONID",SecurityUtils.getSubject().getSession().getId());
         } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
             return R.error( e.getMessage());
         } catch (AuthenticationException e) {

@@ -10,6 +10,7 @@ import com.bottle.pay.modules.api.entity.BillOutView;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.api.service.ReportBusinessService;
+import com.bottle.pay.modules.api.service.ReportMerchantService;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
 import com.bottle.pay.modules.biz.service.BlockBankCardService;
 import com.bottle.pay.modules.biz.service.IpLimitService;
@@ -60,6 +61,9 @@ public class BillOutController extends AbstractController {
     @Autowired
     ReportBusinessService reportBusinessService;
 
+    @Autowired
+    ReportMerchantService reportMerchantService;
+
     /**
      * 列表
      *
@@ -69,6 +73,33 @@ public class BillOutController extends AbstractController {
     @RequestMapping(value = "/list",method = {RequestMethod.GET,RequestMethod.POST})
     @ApiOperation(value = "出款订单列表")
     public Page<BillOutEntity> list(@RequestBody Map<String, Object> params) {
+        SysUserEntity userEntity = getUser();
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+            // 机构管理员查询机构下的所有数据
+            params.put("orgId",userEntity.getOrgId());
+            return billOutService.listEntity(params);
+        }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+            // 出款员查看自己的数据的所有数据
+            params.put("orgId",userEntity.getOrgId());
+            params.put("businessId",userEntity.getUserId());
+            params.put("position",BillConstant.BillPostionEnum.Business.getCode());
+            return billOutService.listEntity(params);
+        }
+        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
+            // 代付商户查看自己的数据的所有数据
+            params.put("orgId",userEntity.getOrgId());
+            params.put("merchantId",userEntity.getUserId());
+            return billOutService.listEntity(params);
+        }
+        return new Page<>();
+    }
+
+
+    @RequestMapping(value = "/wap/list",method = {RequestMethod.GET,RequestMethod.POST})
+    @ApiOperation(value = "出款订单列表")
+    @ResponseBody
+    public Page<BillOutEntity> listWap(@RequestBody Map<String, Object> params) {
         SysUserEntity userEntity = getUser();
         if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
             // 机构管理员查询机构下的所有数据
@@ -151,9 +182,6 @@ public class BillOutController extends AbstractController {
         }
         // 第一步保存订单,派单给机构
         BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, merchant);
-//        if(bill.getBillStatus().intValue() == BillConstant.BillStatusEnum.BALANCE_ZERO.getCode()){
-//            return R.error("商户余额不足，派单失败");
-//        }
         if (existBlockCard(billOutView.getBankCardNo(), merchant.getOrgId())) {
             return R.error("银行卡已被拉黑");
         }
@@ -178,7 +206,6 @@ public class BillOutController extends AbstractController {
         // 判断出款员是否在线
         OnlineBusinessEntity onlineBusinessEntity = onlineBusinessService.getOnlineBusiness(businessId, userEntity.getOrgId());
         if (null == onlineBusinessEntity) return R.error("所选出款员不在线");
-
         billOutService.billsOutBusinessByHuman(bill, onlineBusinessEntity);
         return R.ok("人工派单成功->" + onlineBusinessEntity.getBusinessName());
     }
@@ -213,8 +240,11 @@ public class BillOutController extends AbstractController {
         }catch (Exception e) {
             log.error("出款员汇总异常，BillOutEntity {}",bill);
         }
-
-
+        try {
+            reportMerchantService.calculateReportMerchant(bill);
+        }catch (Exception e) {
+            log.error("商户汇总异常，BillOutEntity {}",bill);
+        }
         BillOutEntity billFinal = billOutService.selectOne(new BillOutEntity(billId));
         return R.ok().put("bill",billFinal);
     }
