@@ -23,7 +23,7 @@ merchant:
 spring:
   # 环境 aliyun:集成测试环境|pre:预生产环境|prd:生成环境|tencent:腾讯云
   profiles:
-    active: aliyun
+    active: tencent
 #    active: aliyun
   mail:
     username: xxx

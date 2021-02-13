@@ -63,10 +63,6 @@ public class MerchantView {
      */
     private BigDecimal balanceFrozen;
 
-    /**
-     * 支付中余额
-     */
-    private BigDecimal balancePaying;
 
     private Date createTime;
 
@@ -81,5 +77,7 @@ public class MerchantView {
             this.ipList=list;
         }
     }
+
+
 
 }

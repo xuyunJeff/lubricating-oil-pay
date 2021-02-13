@@ -11,7 +11,7 @@
     <groupId>com.bottle</groupId>
     <artifactId>bottle-pay</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <name>pay</name>
+    <name>bottle-pay</name>
     <description>Bottle Pay</description>
 
     <properties>
