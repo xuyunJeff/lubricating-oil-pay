@@ -23,6 +23,9 @@ public abstract class AbstractController {
      */
     protected Logger LOGGER = LoggerFactory.getLogger(getClass());
 
+
+
+
     /**
      * 获取参数
      *
@@ -116,6 +119,10 @@ public abstract class AbstractController {
      */
     protected String html(String page) {
         return page.concat(".html");
+    }
+
+    protected String getGKey(String username){
+        return "Google_" + username;
     }
 
 }
