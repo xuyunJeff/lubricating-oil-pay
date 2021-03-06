@@ -61,6 +61,8 @@ public class SysLogEntity implements Serializable {
      */
     private Timestamp gmtCreate;
 
+    private String googleKaptchaKey;
+
     public SysLogEntity() {
         super();
     }
@@ -137,4 +139,11 @@ public class SysLogEntity implements Serializable {
         this.gmtCreate = gmtCreate;
     }
 
+    public String getGoogleKaptchaKey() {
+        return googleKaptchaKey;
+    }
+
+    public void setGoogleKaptchaKey(String googleKaptchaKey) {
+        this.googleKaptchaKey = googleKaptchaKey;
+    }
 }

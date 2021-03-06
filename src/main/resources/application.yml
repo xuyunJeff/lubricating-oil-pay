@@ -11,7 +11,7 @@ global:
   upload-location: /home/bottle-pay #文件上传目录
   upload-mapping: /upload/ #文件上传目录访问路径
   redis-session-dao: true #是否使用使用redis会话管理器，true为开启，false为关闭
-  kaptcha-enable: false #是否开启验证码，true为开启，false为关闭
+  kaptcha-enable: true #是否开启验证码，true为开启，false为关闭
 
 # jwt配置
 jwt:
@@ -23,7 +23,7 @@ merchant:
 spring:
   # 环境 aliyun:集成测试环境|pre:预生产环境|prd:生成环境|tencent:腾讯云
   profiles:
-    active: tencent
+    active: aliyun
 #    active: aliyun
   mail:
     username: xxx
@@ -44,6 +44,8 @@ spring:
           starttls:
             enable: true
             required: true
+
+
   mvc:
     static-path-pattern: /static/**
   # jackson时间格式化

@@ -1,5 +1,6 @@
 package com.bottle.pay.modules.sys.service.impl;
 
+import com.bottle.pay.common.utils.GoogleGenerator;
 import com.bottle.pay.common.utils.JSONUtils;
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.Page;
@@ -13,10 +14,15 @@ import com.bottle.pay.modules.sys.dao.*;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.entity.SysUserTokenEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 /**
@@ -25,6 +31,7 @@ import java.util.*;
  * @author zcl<yczclcn@163.com>
  */
 @Service("sysUserService")
+@Slf4j
 public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
@@ -336,4 +343,52 @@ public class SysUserServiceImpl implements SysUserService {
         return sysUserMapper.getObjectById(userId);
     }
 
+
+
+    @Override
+    public R getGoogleKaptcha(Long userId, String username) {
+        SysUserEntity userEntity = sysUserMapper.getByUserName(username);
+        if(userEntity.getEnableGoogleKaptcha() == null || userEntity.getEnableGoogleKaptcha().equals(0)){
+            String googleSecure = GoogleGenerator.generateSecretKey();
+            String url = GoogleGenerator.getQRBarcode(userEntity.getUsername(),googleSecure);
+            SysUserEntity user = new SysUserEntity();
+            user.setUserId(userId);
+            user.setGoogleKaptchaKey(googleSecure);
+            int count = sysUserMapper.update(user);
+            if(count > 0) {
+                log.info("生成谷歌验证成功,username:{},sercure:{}",username,googleSecure);
+                return CommonUtils.msg(url);
+            }
+        }else if(userEntity.getEnableGoogleKaptcha() != null && userEntity.getEnableGoogleKaptcha().equals(1)){
+            String url = GoogleGenerator.getQRBarcode(userEntity.getUsername(),userEntity.getGoogleKaptchaKey());
+            return CommonUtils.msg(url);
+        }
+        return R.error("生成二维码失败");
+    }
+    @Override
+    @Transactional
+    public R updateGoogleKaptcha(Long userId,String username , long kaptcha, long timeMsec) {
+        SysUserEntity userEntity = sysUserMapper.getByUserName(username);
+        String googleSecure = userEntity.getGoogleKaptchaKey();
+        if( GoogleGenerator.check_code(googleSecure,kaptcha,System.currentTimeMillis())){
+            SysUserEntity user = new SysUserEntity();
+            user.setUserId(userId);
+            user.setEnableGoogleKaptcha(1);
+            int count = sysUserMapper.update(user);
+            String redisKey = SystemConstant.getUserLoginRedisKey(username);
+            redisCacheManager.del(redisKey);
+            if(count > 0){
+                log.info("生成谷歌验证成功,username:{},sercure:{}",username,googleSecure);
+                return R.ok("绑定谷歌验证成功,<div style='color:red'>请重新退出后登陆</dev>");
+            }
+        }
+        return R.error("绑定谷歌验证失败");
+    }
+
+    @Override
+    public boolean checkGoogleKaptcha(String username, long kaptcha, long timeMsec) {
+        SysUserEntity userEntity = sysUserMapper.getByUserName(username);
+        String googleSecure = userEntity.getGoogleKaptchaKey();
+        return GoogleGenerator.check_code(googleSecure,kaptcha,System.currentTimeMillis());
+    }
 }

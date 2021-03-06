@@ -7,6 +7,7 @@ import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.entity.BillOutView;
+import com.bottle.pay.modules.api.entity.BillOutViewPerson;
 import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.api.service.ReportBusinessService;
@@ -122,12 +123,35 @@ public class BillOutController extends AbstractController {
 
     @SysLog("后台管端派单")
     @RequestMapping("/push/order")
-    public R pushOrder(@RequestBody BillOutView billOutView, HttpServletRequest request) {
+    public R pushOrder(@RequestBody BillOutViewPerson billOutView, HttpServletRequest request) {
         SysUserEntity userEntity = getUser();
         String ip = WebUtils.getIpAddr();
+        Boolean isWhite = ipLimitService.isWhiteIp(ip,userEntity.getUserId(),userEntity.getOrgId(),BillConstant.WHITE_IP_TYPE_SERVER);
+        if(!isWhite) {
+            log.error("ip未加白:ip:"+ip);
+            return R.error("ip未加白");
+        }
         if(!userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())) return R.error("角色越权");
+        if(StringUtils.isEmpty(userEntity.getBillAuto()) ||userEntity.getBillAuto().equals(1) ){
+            return R.error("该商户未开启手动出款");
+        }
+        if(getUser().getEnableGoogleKaptcha() == null &&getUser().getEnableGoogleKaptcha().equals(0)){
+            return R.error("请开启谷歌验证码后再派发订单");
+        }
+        if(!userService.checkGoogleKaptcha(userEntity.getUsername(),billOutView.getGoogleCode(),billOutView.getTimeMsec())){
+            log.error("谷歌验证码错误,username: {}, code: {} ,TimeMsec: {}",userEntity.getUsername(),billOutView.getGoogleCode(),billOutView.getTimeMsec());
+            return R.error("谷歌验证码错误");
+        }
+        BillOutView billOut = new BillOutView();
+        billOut.setBankAccountName(billOutView.getBankAccountName());
+        billOut.setBankCardNo(billOutView.getBankCardNo());
+        billOut.setBankName(billOutView.getBankName());
+        billOut.setMerchantId(userEntity.getUserId());
+        billOut.setMerchantName(userEntity.getUsername());
+        billOut.setPrice(billOutView.getPrice());
+        billOut.setOrderNo(billOutView.getOrderNo());
         // 第一步保存订单,派单给机构
-        BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, userEntity);
+        BillOutEntity bill = billOutService.billsOutAgent(billOut, ip, userEntity);
         if (existBlockCard(billOutView.getBankCardNo(), userEntity.getOrgId())) {
             return R.error("银行卡已被拉黑");
         }

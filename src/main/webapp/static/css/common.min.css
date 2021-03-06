@@ -40,3 +40,4 @@ table .fa-toggle-off{color: #aaa;font-size: 14pt;vertical-align: middle;margin-t
 .bootstrap-table td .btn-group{vertical-align: top}
 .bootstrap-table .more-opt{top:-10px;padding: 5px 0 0 5px;background: #fff;border: 1px solid #ddd;border-radius: 4px;box-shadow: 2px 2px 15px #ccc;position: absolute;z-index: 1;animation-duration: .05s;animation-name: fadeInLeft;}
 .bootstrap-table .more-opt button{margin: 0 4px 4px 0;font-size: 13px;}
+.codeInput{width:100%;border-top-right-radius: 0;border-bottom-right-radius: 0;float:left;}

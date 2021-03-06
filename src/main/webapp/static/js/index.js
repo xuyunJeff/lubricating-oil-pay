@@ -30,6 +30,19 @@ $(window).on('resize', function() {
 
 // 注册菜单组件
 Vue.component('menuItem', menuItem);
+jQuery(function(){
+    $.ajax({
+        type : "POST",
+        url : "sys/user/getGoogleKaptcha?_" + $.now(),
+        dataType : "json",
+        success : function(result) {
+            if (result.code == 0) {
+                jQuery('#qrcode').qrcode(result.rows);
+                $('#qrcode2').text(result.rows);
+            }
+        }
+    });
+});
 
 var vm = new Vue({
 	el : '#dpLTE',
@@ -118,9 +131,35 @@ var vm = new Vue({
 					toUrl('logout');
 				}
 			});
-		}
-	},
+		},
+        googleKaptcha:function () {
+            dialogContent({
+                title : "谷歌验证码",
+                width : '400px',
+                height : '450px',
+                content : $("#googleKaptchaLayer"),
+                btn : [ '确定', '取消' ],
+                yes : function(index) {
+					var code = $("#code").val();
+					console.log(code);
+                    $.ajax({
+                        type : "POST",
+                        url : "sys/user/updateGoogleKaptcha?kaptcha="+code+"&timeMsec="+Date.parse(new Date())+"&_" + $.now(),
+                        dataType : "json",
+                        success : function(result) {
+                            if (result.code == 0) {
+                                dialogMsg(result.msg, 'success');
+                            } else {
+                                dialogAlert(result.msg, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    },
 	created : function() {
+
 		this.getMenuList();
 		this.getPermList();
 		this.getUser();

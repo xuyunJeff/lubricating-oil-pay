@@ -16,6 +16,8 @@ public interface BillOutMapper extends BottleBaseMapper<BillOutEntity> {
 
     int updateBillOutByBillId(BillOutEntity entity);
 
+    int updateBillOutByBillIdForSuccess(BillOutEntity entity);
+
     int  updateByBillOutToLock(BillOutEntity entity);
 
     int updateBillOutByBillIdForFailed(BillOutEntity entity);

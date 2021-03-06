@@ -122,7 +122,7 @@ hr.hr20 {
 }
 
 .codeInput{
-    width:60%;border-top-right-radius: 0;border-bottom-right-radius: 0;float:left;
+    width:100%;border-top-right-radius: 0;border-bottom-right-radius: 0;float:left;
 }
 
 .codeImg{

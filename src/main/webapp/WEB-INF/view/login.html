@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div class="login">
-		<div class="message">bottle_pay 管理登录</div>
+		<div class="message">BOTTLE-PAY 管理登录</div>
 		<div id="darkbannerwrap"></div>
 		<form action="${ctxPath}/login" method="post" id="loginForm">
             <h4 class="tip">${errorMsg!}</h4>
@@ -18,14 +18,14 @@
 			<input placeholder="密码" id="password" name="password" type="password" class="loginInput">
 			<hr class="hr15">
 			@if(kaptchaEnable){
-			<input placeholder="验证码" id="code" name="code" type="text" class="codeInput loginInput">
-			<img src="${ctxPath}/captcha.jpg" alt="验证码" id="imgCode" class="codeImg" title="单击图片刷新！">
+			<input placeholder="谷歌验证码" id="code" name="code" type="text" class="codeInput loginInput">
+			<input placeholder="时间戳" id="timeMsec" name="timeMsec" type="text" style="display: none;">
 			<hr class="hr15">
 			@}
 			<input value="登录" style="width: 100%;" type="button" id="loginBtn">
 			<hr class="hr20">
             <p class="copyright">
-                版权所有 © 2018 DP-BOOT - Powered By Mr.Lin
+                版权所有 © 2020 BOTTLE-PAY - Powered By FRANK.XU
             </p>
 		</form>
 	</div>
@@ -69,10 +69,7 @@
             }
             @if(kaptchaEnable){
 			var code = $('#code').val();
-			if (code === '') {
-				$('.tip').text('验证码不能为空');
-				return false;
-			}
+            $('#timeMsec').val(Date.parse(new Date()))
             @}
             $('#loginForm').submit();
         }

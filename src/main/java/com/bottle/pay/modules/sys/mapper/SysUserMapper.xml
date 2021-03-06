@@ -20,7 +20,10 @@
         u.mobile,
         u.status,
         u.remark,
-        u.gmt_create
+        u.gmt_create,
+        u.enable_google_kaptcha,
+        u.google_kaptcha_key,
+        u.bill_auto
         FROM
         sys_user u
         <where>
@@ -50,7 +53,10 @@
         mobile,
         sys_user.status status,
         sys_user.org_id as orgId,
-        sys_org.name as orgName
+        sys_org.name as orgName,
+        enable_google_kaptcha,
+        google_kaptcha_key,
+        bill_auto
         FROM
         sys_user
         left join sys_org on sys_user.org_id = sys_org.org_id
@@ -88,7 +94,10 @@
         status,
         user_id_create,
         org_id,
-        gmt_create
+        gmt_create,
+        enable_google_kaptcha,
+        google_kaptcha_key,
+        bill_auto
         )
         VALUES (
         #{username},
@@ -98,7 +107,10 @@
         #{status},
         #{userIdCreate},
         #{orgId},
-        NOW()
+        NOW(),
+        #{enableGoogleKaptcha}
+        #{googleKaptchaKey},
+        #{billAuto}
         )
     </insert>
 
@@ -119,7 +131,10 @@
         u.email,
         u.mobile,
         u.remark,
-        u.status
+        u.status,
+        u.enable_google_kaptcha,
+        u.google_kaptcha_key,
+        u.bill_auto
         FROM
         sys_user u
         WHERE
@@ -135,7 +150,11 @@
             <if test="status != null">status = #{status},</if>
             <if test="orgId != null">org_id = #{orgId},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="enableGoogleKaptcha != null">enable_google_kaptcha = #{enableGoogleKaptcha},</if>
+            <if test="googleKaptchaKey != null">google_kaptcha_key = #{googleKaptchaKey},</if>
+            <if test="billAuto != null">bill_auto = #{billAuto},</if>
             gmt_modified = NOW()
+
         </set>
         where user_id = #{userId}
     </update>
@@ -188,7 +207,10 @@
         u.mobile,
         u.status,
         u.remark,
-        u.gmt_create
+        u.gmt_create,
+        u.enable_google_kaptcha,
+        u.google_kaptcha_key,
+        u.bill_auto
         FROM
         sys_user u
         inner join sys_user_role r on u.user_id=r.user_id

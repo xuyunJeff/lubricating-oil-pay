@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bottle.pay.modules.api.dao.BillInPlayerMapper">
+	
+	<select id="listForPage" resultType="com.bottle.pay.modules.api.entity.BillInPlayerEntity">
+		SELECT
+			`id`, 
+			`create_time`, 
+			`last_update`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`bill_id`, 
+			`third_bill_id`, 
+			`ip`, 
+			`business_name`, 
+			`business_id`, 
+			`business_bank_card_no`, 
+			`business_bank_name`, 
+			`bill_status`, 
+			`price`, 
+			`player_account_name`, 
+			`org_id`, 
+			`org_name`, 
+			`comment`, 
+			`bill_in_player_type`
+		FROM
+			bill_in_player
+		ORDER BY
+			id DESC
+	</select>
+	
+	<insert id="save">
+		INSERT INTO bill_in_player (
+			`create_time`, 
+			`last_update`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`bill_id`, 
+			`third_bill_id`, 
+			`ip`, 
+			`business_name`, 
+			`business_id`, 
+			`business_bank_card_no`, 
+			`business_bank_name`, 
+			`bill_status`, 
+			`price`, 
+			`player_account_name`, 
+			`org_id`, 
+			`org_name`, 
+			`comment`, 
+			`bill_in_player_type`
+		)
+		VALUES (
+			#{createTime}, 
+			#{lastUpdate}, 
+			#{merchantName}, 
+			#{merchantId}, 
+			#{billId}, 
+			#{thirdBillId}, 
+			#{ip}, 
+			#{businessName}, 
+			#{businessId}, 
+			#{businessBankCardNo}, 
+			#{businessBankName}, 
+			#{billStatus}, 
+			#{price}, 
+			#{playerAccountName}, 
+			#{orgId}, 
+			#{orgName}, 
+			#{comment}, 
+			#{billInPlayerType}
+		)
+	</insert>
+	
+	<select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.BillInPlayerEntity">
+		SELECT
+			`id`, 
+			`create_time`, 
+			`last_update`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`bill_id`, 
+			`third_bill_id`, 
+			`ip`, 
+			`business_name`, 
+			`business_id`, 
+			`business_bank_card_no`, 
+			`business_bank_name`, 
+			`bill_status`, 
+			`price`, 
+			`player_account_name`, 
+			`org_id`, 
+			`org_name`, 
+			`comment`, 
+			`bill_in_player_type`
+		FROM
+			bill_in_player
+		WHERE
+			id = #{id}
+	</select>
+	
+	<update id="update">
+		UPDATE bill_in_player
+	 	<set>
+			<if test="createTime != null">`create_time` = #{createTime}, </if>
+			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
+			<if test="merchantName != null">`merchant_name` = #{merchantName}, </if>
+			<if test="merchantId != null">`merchant_id` = #{merchantId}, </if>
+			<if test="billId != null">`bill_id` = #{billId}, </if>
+			<if test="thirdBillId != null">`third_bill_id` = #{thirdBillId}, </if>
+			<if test="ip != null">`ip` = #{ip}, </if>
+			<if test="businessName != null">`business_name` = #{businessName}, </if>
+			<if test="businessId != null">`business_id` = #{businessId}, </if>
+			<if test="businessBankCardNo != null">`business_bank_card_no` = #{businessBankCardNo}, </if>
+			<if test="businessBankName != null">`business_bank_name` = #{businessBankName}, </if>
+			<if test="billStatus != null">`bill_status` = #{billStatus}, </if>
+			<if test="price != null">`price` = #{price}, </if>
+			<if test="playerAccountName != null">`player_account_name` = #{playerAccountName}, </if>
+			<if test="orgId != null">`org_id` = #{orgId}, </if>
+			<if test="orgName != null">`org_name` = #{orgName}, </if>
+			<if test="comment != null">`comment` = #{comment}, </if>
+			<if test="billInPlayerType != null">`bill_in_player_type` = #{billInPlayerType}</if>
+		</set>
+		WHERE
+			id = #{id}
+	</update>
+	
+	<delete id="batchRemove">
+		DELETE
+		FROM
+			bill_in_player
+		WHERE
+			id IN
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

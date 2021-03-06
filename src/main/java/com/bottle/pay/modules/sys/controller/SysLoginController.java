@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class SysLoginController extends AbstractController {
 
-
     @Autowired
     private SysUserService sysUserService;
 
@@ -62,46 +61,31 @@ public class SysLoginController extends AbstractController {
     public String login(Model model) {
         String username = getParam("username").trim();
         String password = getParam("password").trim();
-        String googleCode = getParam("code");
+        String code = getParam("code").trim();
         try {
-            // 开启验证码
-            if (globalProperties.isKaptchaEnable()) {
-                String code = getParam("code").trim();
-                if (StringUtils.isBlank(code)) {
-                    model.addAttribute("errorMsg", "验证码不能为空");
-                    return html("/login");
-                }
-                String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-                if (!code.equalsIgnoreCase(kaptcha)) {
-                    model.addAttribute("errorMsg", "验证码错误");
-                    return html("/login");
-                }
-            }
 
             // 用户名验证
             if (StringUtils.isBlank(username)) {
                 model.addAttribute("errorMsg", "用户名不能为空");
                 return html("/login");
             }
-            //Google动态身份口令验证
-            String secretKey = stringRedisTemplate.opsForValue().get("Google_"+username);;
-            if(StringUtils.isNotBlank(secretKey)){
-                if(StringUtils.isBlank(googleCode)){
-                    model.addAttribute("errorMsg", "google验证码不能为空");
-                    return html("/login");
-                }
-                Boolean googleCheck = GoogleAuthenticator.checkCode(secretKey,Long.valueOf(googleCode.trim()),System.currentTimeMillis());
-                if(!googleCheck){
-                    throw new IncorrectCredentialsException("google 动态身份口令验证失败");
-                }
-            }
-
             // 密码验证
             if (StringUtils.isBlank(password)) {
                 model.addAttribute("errorMsg", "密码不能为空");
                 return html("/login");
             }
 
+            SysUserEntity user  = sysUserService.getByUserName(username);
+            if( user.getEnableGoogleKaptcha() != null && user.getEnableGoogleKaptcha().equals(1)){
+                // 开启验证码
+                if (globalProperties.isKaptchaEnable()) {
+                    String timeMsec = getParam("timeMsec").trim();
+                    if (StringUtils.isBlank(code) || !sysUserService.checkGoogleKaptcha(username,Long.valueOf(code),Long.valueOf(timeMsec))) {
+                        model.addAttribute("errorMsg", "谷歌验证码错误");
+                        return html("/login");
+                    }
+                }
+            }
             UsernamePasswordToken token = new UsernamePasswordToken(username, MD5Utils.encrypt(username, password));
             ShiroUtils.getSubject().login(token);
             SecurityUtils.getSubject().getSession().setAttribute("sessionFlag", true);
@@ -124,7 +108,6 @@ public class SysLoginController extends AbstractController {
     public R wapLogin(Model model) {
         String username = getParam("username").trim();
         String password = getParam("password").trim();
-        String googleCode = getParam("code");
         try {
             // 开启验证码
             if (globalProperties.isKaptchaEnable()) {
@@ -141,20 +124,6 @@ public class SysLoginController extends AbstractController {
             if (StringUtils.isBlank(username)) {
                 return R.error("用户名不能为空");
             }
-
-            //Google动态身份口令验证
-            String secretKey = stringRedisTemplate.opsForValue().get(getGKey(username));
-            if(StringUtils.isNotBlank(secretKey)){
-                if(StringUtils.isBlank(googleCode)){
-                    model.addAttribute("errorMsg", "google验证码不能为空");
-                    R.error( "登录服务异常");
-                }
-                Boolean googleCheck = GoogleAuthenticator.checkCode(secretKey,Long.valueOf(googleCode.trim()),System.currentTimeMillis());
-                if(!googleCheck){
-                    throw new IncorrectCredentialsException("google 动态身份口令验证失败");
-                }
-            }
-
             // 密码验证
             if (StringUtils.isBlank(password)) {
                 return R.error("密码不能为空");
@@ -188,34 +157,5 @@ public class SysLoginController extends AbstractController {
         ShiroUtils.logout();
         return html("/login");
     }
-
-    @RequestMapping(value = "/openGToken",method = RequestMethod.GET)
-    @ResponseBody
-    public R openGoogleToken(){
-        SysUserEntity userEntity = super.getUser();
-        if(userEntity == null){
-            return R.error("请先登录");
-        }
-        String gKey = getGKey(userEntity.getUsername());
-        String key = GoogleAuthenticator.generateSecretKey();
-        stringRedisTemplate.opsForValue().setIfPresent(gKey,key);
-        log.info("商户:{}开启Google动态验证码成功:{}",userEntity.getUsername(),stringRedisTemplate.opsForValue().get(gKey));
-        return R.ok("开启Google动态身份成功");
-    }
-
-    @RequestMapping(value = "/closeGToken",method = RequestMethod.GET)
-    @ResponseBody
-    public R closeGoogleToken(){
-        SysUserEntity userEntity = super.getUser();
-        if(userEntity == null){
-            return R.error("请先登录");
-        }
-        boolean set =stringRedisTemplate.delete(getGKey(userEntity.getUsername()));
-        if(set){
-            log.info("商户:{}关闭Google动态验证码成功",userEntity.getUsername());
-        }
-        return R.ok("关闭Google动态身份成功");
-    }
-
 
 }

@@ -5,6 +5,7 @@ import com.bottle.pay.common.exception.NoOnlineBusinessException;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
+import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.common.utils.DateUtils;
 import com.bottle.pay.modules.api.dao.BillOutMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
@@ -165,8 +166,21 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         log.info("出款成功,billId{}", entity);
         BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
         successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
-        int i = mapper.updateBillOutByBillId(successEntity);
-        if (i == 0) throw new RRException("该订单支付状态已经是最终状态,无需确认订单");
+        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_OUT_BUSINESS_CHANGE_TO_SUCCESS_LOCK +":"+entity.getBillId());
+        if(redisLock.lock()) {
+            try {
+                int i = mapper.updateBillOutByBillIdForSuccess(successEntity);
+                if (i == 0) {
+                    log.warn("该订单支付状态已经是最终状态,无需确认订单");
+                    throw new RRException("该订单支付状态已经是最终状态,无需确认订单");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+                log.warn("出款订单改变状态异常"+e.getMessage());
+            }finally {
+                redisLock.unLock();
+            }
+        }
         // 扣除出款员代付中 -- redis
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中

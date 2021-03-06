@@ -54,7 +54,7 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
                 }
                 BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
                 log.info("商户余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
-                balanceChangeLogService.saveBanlanceChangeLog(balance,balanceAfter.getBalance(),amount,billId,"商户余额变动");
+                balanceChangeLogService.saveBanlanceChangeLog(balance,balanceAfter.getBalance(),amount.multiply(new BigDecimal(-1)),billId,"商户余额变动");
                 return balanceAfter;
             }catch (Exception e){
                 e.printStackTrace();

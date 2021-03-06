@@ -55,7 +55,6 @@ function getGrid() {
             {field: "id", title: "序号", width: "30px"},
             {field: "merchantName", title: "商户名", width: "100px"},
             {field: "createTime", title: "时间", width: "180px"},
-
             {field: "businessId", title: "付款专员ID", width: "100px", visible: false},
             //：  1未支付 2 成功 3 失败
             {
@@ -182,7 +181,8 @@ function getGrid() {
             {field: "thirdBillId", title: "第三方订单号", width: "100px"},
             {field: "billId", title: "订单号", width: "100px"},
             {field: "merchantId", title: "商户ID", width: "100px", visible: false},
-            {field: "ip", title: "ip", width: "100px"}
+            {field: "ip", title: "派单ip", width: "50px"}
+
         ]
     })
 }

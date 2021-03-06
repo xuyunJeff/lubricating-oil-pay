@@ -38,8 +38,7 @@
         <div class="btn-toolbar pull-right">
             <div class="btn-group">
                 <a v-if="hasPermission('apiV1:billOut:list')" class="btn btn-default" onclick="reload();" title="刷新" ><i class="fa fa-refresh"></i></a>
-                <!--<a v-if="hasPermission('apiV1:billOut:save')" class="btn btn-default" \@click="save" title="添加出款订单"><i class="fa fa-plus"></i></a>-->
-                <!--<a v-if="hasPermission('apiV1:billOut:appoint:auto')" class="btn btn-default" \@click="auto" title="自动开关"><i class="fa fa-play"></i></a>-->
+                <a v-if="hasPermission('apiV1:billOut:save')" class="btn btn-default" \@click="save" title="添加出款订单"><i class="fa fa-plus"></i></a>
                 <a v-if="hasPermission('apiV1:billOut:list')" class="btn btn-default" title="点击开启声音" ><audio id="reminder" src="${ctxPath}/static/resources/reminder.mp3" controls="controls" style="width: 120px;height: 15px"></audio></a>
             </div>
         </div>

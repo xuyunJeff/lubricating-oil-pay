@@ -29,12 +29,10 @@
 					<ul class="nav navbar-nav">
 						<li><a href="${ctxPath}"><i
 								class="fa fa-home"></i> &nbsp;首页</a></li>
-						<!--<li><a href="http://dp-dev.mydoc.io/" target="_blank"><i
-								class="fa fa-paper-plane"></i> &nbsp;项目文档</a></li>
-						<li><a href="http://www.chenlintech.com/" target="_blank"><i
-								class="fa fa-info-circle"></i> &nbsp;关于作者</a></li>-->
 						<li><a href="javascript:;" \@click="updatePassword"><i
 								class="fa fa-lock"></i> &nbsp;修改密码</a></li>
+						<li><a href="javascript:;" \@click="googleKaptcha"><i
+								class="fa fa-lock"></i> &nbsp;绑定谷歌验证码</a></li>
 						<li><a href="javascript:;" \@click="logout"><i
 								class="fa fa-sign-out"></i> &nbsp;退出系统</a></li>
 					</ul>
@@ -101,6 +99,13 @@
 			</table>
 		</div>
 
+		<!-- 谷歌验证码 -->
+		<div id="googleKaptchaLayer" class="container-fluid" style="display: none;">
+			<div id="qrcode"></div>
+			<div>无法扫码请在谷歌验证器输入:  <div id="qrcode2"></div></div>
+			<input placeholder="扫码后请输入确认,并绑定谷歌验证码" id="code" name="code" type="text" class="codeInput">
+		</div>
+
 	</div>
 
 	<script src="${ctxPath}/static/libs/jquery.min.js"></script>
@@ -111,5 +116,6 @@
 	<script src="${ctxPath}/static/plugins/layer/layer.js"></script>
 	<script src="${ctxPath}/static/js/common.js"></script>
 	<script src="${ctxPath}/static/js/index.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/libs/jquery.qrcode.min.js"></script>
 </body>
 </html>

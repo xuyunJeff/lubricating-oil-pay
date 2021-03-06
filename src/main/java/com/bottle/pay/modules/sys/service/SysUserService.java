@@ -52,6 +52,7 @@ public interface SysUserService {
      */
     R updateUser(SysUserEntity user);
 
+
     /**
      * 删除用户
      *
@@ -156,4 +157,9 @@ public interface SysUserService {
      */
     SysUserEntity getUserByIdForToken(Long userId);
 
+    R updateGoogleKaptcha(Long userId,String username, long kaptcha, long timeMsec);
+
+    R getGoogleKaptcha(Long userId, String username);
+
+    boolean checkGoogleKaptcha(String username, long kaptcha, long timeMsec);
 }

@@ -16,6 +16,8 @@ public class BillConstant {
 
     public static final String BILL_OUT_BUSINESS_BANK_BALANCE_LOCK ="bill:out:business:bank:balance:lock";
 
+    public static final String BILL_OUT_BUSINESS_CHANGE_TO_SUCCESS_LOCK ="bill:out:business:chang:success:lock";
+
     public static final String REPORT_BUSINESS ="report:business:lock";
 
     public static final String LAST_NEW_ORDER ="bill:out:lastNewOrder";
@@ -114,6 +116,29 @@ public class BillConstant {
     @AllArgsConstructor
     public enum BillNoticeResponse {
         NotExists(-1, "订单不存在"), Success(0, "成功,已作废订单"), NoMtch(-2, "订单存在但金额不匹配"), Failed(500, "未知异常"),SuccessPaid(0, "成功,已确认出款");
+
+        private final Integer code;
+        private final String msg;
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+    }
+
+
+    @AllArgsConstructor
+    public enum BillInPlayerType {
+        Alipay(1, "支付宝转账"),
+        AlipayQR(2, "支付宝扫码"),
+        BankCard(3, "银行卡转账"),
+        WeChatQR(4, "微信扫码"),
+        WeChat(5, "微信好友转账"),
+        BankCardQR(6,"银联扫码");
 
         private final Integer code;
         private final String msg;

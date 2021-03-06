@@ -4,7 +4,7 @@
 var vm = new Vue({
 	el:'#dpLTE',
 	data: {
-		billOut: {
+		billInPlayer: {
 			id: 0
 		}
 	},
@@ -13,11 +13,9 @@ var vm = new Vue({
 			if (!$('#form').Validform()) {
 		        return false;
 		    }
-            var billout = vm.billOut;
-            billout.timeMsec= Date.parse(new Date());
 		    $.SaveForm({
-		    	url: '../../apiV1/billOut//push/order?_' + $.now(),
-		    	param: billout,
+		    	url: '../../billInPlayer/save?_' + $.now(),
+		    	param: vm.billInPlayer,
 		    	success: function(data) {
 		    		$.currentIframe().vm.load();
 		    	}

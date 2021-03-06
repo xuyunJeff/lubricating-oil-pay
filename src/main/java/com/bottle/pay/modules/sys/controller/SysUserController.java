@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bottle.pay.common.annotation.SysLog;
@@ -29,9 +30,6 @@ public class SysUserController extends AbstractController {
 
     @Autowired
     private SysUserService sysUserService;
-
-    @Autowired
-    protected StringRedisTemplate stringRedisTemplate;
 
     /**
      * 用户列表
@@ -73,9 +71,7 @@ public class SysUserController extends AbstractController {
      */
     @RequestMapping("/info")
     public R info() {
-        SysUserEntity userEntity = getUser();
-        Optional.ofNullable(stringRedisTemplate.opsForValue().get(getGKey(userEntity.getUsername()))).ifPresent(s -> userEntity.setgToken(s));
-        return R.ok().put("user", userEntity);
+        return R.ok().put("user", getUser());
     }
 
     /**
@@ -124,12 +120,22 @@ public class SysUserController extends AbstractController {
         return sysUserService.updateUser(user);
     }
 
-    /**
-     * 删除
-     *
-     * @param id
-     * @return
-     */
+
+
+    @SysLog("绑定Googley验证码")
+    @RequestMapping("/updateGoogleKaptcha")
+    public R updateGoogleKaptcha(@RequestParam("kaptcha") long kaptcha,@RequestParam("timeMsec")  long timeMsec) {
+        SysUserEntity user = getUser();
+        return sysUserService.updateGoogleKaptcha(user.getUserId(),user.getUsername(),kaptcha,timeMsec);
+    }
+
+    @SysLog("获取Googley验证二维码")
+    @RequestMapping("/getGoogleKaptcha")
+    public R getGoogleKaptcha() {
+        SysUserEntity user = getUser();
+        return sysUserService.getGoogleKaptcha(user.getUserId(),user.getUsername());
+    }
+
     @SysLog("删除用户")
     @RequestMapping("/remove")
     public R batchRemove(@RequestBody Long[] id) {

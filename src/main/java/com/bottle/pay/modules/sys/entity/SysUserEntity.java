@@ -77,6 +77,12 @@ public class SysUserEntity implements Serializable {
      */
     private Timestamp gmtModified;
 
+    private Integer enableGoogleKaptcha;
+
+    private String googleKaptchaKey;
+
+    // 1:自动,0手动
+    private Integer billAuto;
     /**
      * 角色id列表
      */
@@ -86,12 +92,6 @@ public class SysUserEntity implements Serializable {
      * 角色id列表
      */
     private List<String> roleNameList;
-
-    /**
-     * Google动态码
-     * key "+" value
-     */
-    private String gToken;
 
     public SysUserEntity() {
         super();
@@ -219,11 +219,27 @@ public class SysUserEntity implements Serializable {
         return roleNameList.get(0);
     }
 
-    public void setgToken(String gToken){
-        this.gToken = gToken;
+    public Integer getEnableGoogleKaptcha() {
+        return enableGoogleKaptcha;
     }
 
-    public String getgToken(){
-        return this.gToken;
+    public void setEnableGoogleKaptcha(Integer enableGoogleKaptcha) {
+        this.enableGoogleKaptcha = enableGoogleKaptcha;
+    }
+
+    public String getGoogleKaptchaKey() {
+        return googleKaptchaKey;
+    }
+
+    public void setGoogleKaptchaKey(String googleKaptchaKey) {
+        this.googleKaptchaKey = googleKaptchaKey;
+    }
+
+    public Integer getBillAuto() {
+        return billAuto;
+    }
+
+    public void setBillAuto(Integer billAuto) {
+        this.billAuto = billAuto;
     }
 }

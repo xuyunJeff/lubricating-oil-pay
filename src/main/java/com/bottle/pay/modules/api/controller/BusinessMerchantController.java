@@ -19,10 +19,7 @@ import com.bottle.pay.modules.api.entity.BusinessMerchantEntity;
 import com.bottle.pay.modules.api.service.BusinessMerchantService;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 
- * @author ZhouChenglin<yczclcn@163.com>
- */
+
 @RestController
 @RequestMapping("/apiV1/businessMerchant")
 @Slf4j
