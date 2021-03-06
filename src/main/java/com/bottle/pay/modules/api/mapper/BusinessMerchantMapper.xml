@@ -16,6 +16,15 @@
 			`org_name`
 		FROM
 			business_merchant
+			where 1=1
+				<if test="createTime != null"> and `create_time` = #{createTime} </if>
+				<if test="lastUpdate != null"> and `last_update` = #{lastUpdate} </if>
+				<if test="merchantName != null"> and `merchant_name` = #{merchantName} </if>
+				<if test="merchantId != null"> and `merchant_id` = #{merchantId} </if>
+				<if test="businessName != null"> and `business_name` = #{businessName} </if>
+				<if test="businessId != null"> and `business_id` = #{businessId} </if>
+				<if test="orgId != null"> and `org_id` = #{orgId} </if>
+				<if test="orgName != null"> and `org_name` = #{orgName}</if>
 		ORDER BY
 			id DESC
 	</select>
