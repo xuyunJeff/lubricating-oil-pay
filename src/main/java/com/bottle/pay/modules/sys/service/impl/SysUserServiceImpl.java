@@ -117,6 +117,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public R saveUser(SysUserEntity user) {
         user.setPassword(MD5Utils.encrypt(user.getUsername(), user.getPassword()));
+        user.setEnableGoogleKaptcha(0);
         int count = sysUserMapper.save(user);
         Query query = new Query();
         query.put("userId", user.getUserId());

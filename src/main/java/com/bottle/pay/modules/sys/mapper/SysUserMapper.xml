@@ -108,7 +108,7 @@
         #{userIdCreate},
         #{orgId},
         NOW(),
-        #{enableGoogleKaptcha}
+        #{enableGoogleKaptcha},
         #{googleKaptchaKey},
         #{billAuto}
         )
