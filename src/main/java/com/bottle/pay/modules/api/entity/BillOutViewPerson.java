@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @ToString
 public class BillOutViewPerson {
 
-    @NotNull(message = "orderNo 不能为空")
     private String orderNo;
     @NotNull(message = "price 不能为空")
     private BigDecimal price;
@@ -24,8 +23,4 @@ public class BillOutViewPerson {
     private String bankName;
     @NotNull(message = " bankAccountName不能为空")
     private String bankAccountName;
-    @NotNull(message = " 谷歌验证码不能为空")
-    private Long googleCode;
-
-    private Long timeMsec;
 }

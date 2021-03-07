@@ -1,40 +1,189 @@
-@layout("../../system/layout.html", {title: ""}){
+@layout("../../system/layout.html", {title: "新增订单"}){
 <table class="form" id="form">
 
     <tr>
-        <td class="formTitle">订单号<font face="宋体">*</font></td>
+        <td class="formTitle-center"  >订单号<font face="宋体"></font></td>
+        <td class="formTitle-center"  style="width: 50px">金额<font face="宋体">*</font></td>
+        <td class="formTitle-center"  style="width: 200px">银行卡号<font face="宋体">*</font></td>
+        <td class="formTitle-center"  >银行名称<font face="宋体">*</font></td>
+        <td class="formTitle-center"  style="width: 80px">用户名<font face="宋体">*</font></td>
+    </tr>
+    <tr>
         <td class="formValue">
-            <input type="text" class="form-control" placeholder="订单号" v-model="billOut.orderNo" isvalid="yes" checkexpession="NotNull">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[0].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue" >
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[0].price" isvalid="yes"   >
+        </td>
+        <td class="formValue" >
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[0].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[0].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[0].bankAccountName" isvalid="yes"   >
+        </td>
+    </tr>
+    <tr>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[1].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[1].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[1].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[1].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[1].bankAccountName" isvalid="yes"   >
+        </td>
+    </tr>
+    <tr>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[2].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[2].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[2].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[2].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[2].bankAccountName" isvalid="yes"   >
+        </td>
+    </tr>
+    <tr>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[3].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[3].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[3].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[3].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[3].bankAccountName" isvalid="yes"   >
+        </td>
+    </tr>
+    <tr>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[4].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[4].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[4].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[4].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[4].bankAccountName" isvalid="yes"   >
+        </td>
+    </tr>
+    <tr>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[5].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[5].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[5].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[5].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[5].bankAccountName" isvalid="yes"   >
+        </td>
+    </tr>
+    <tr>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[6].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[6].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[6].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[6].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[6].bankAccountName" isvalid="yes"   >
+        </td>
+    </tr>
+    <tr>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[7].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[7].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[7].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[7].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[7].bankAccountName" isvalid="yes"   >
+        </td>
+    </tr>
+    <tr>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[8].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[8].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[8].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[8].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[8].bankAccountName" isvalid="yes"   >
         </td>
     </tr>
 
     <tr>
-        <td class="formTitle">账单金额<font face="宋体">*</font></td>
         <td class="formValue">
-            <input type="text" class="form-control" placeholder="账单金额" v-model="billOut.price" isvalid="yes" checkexpession="NotNull">
+            <input type="text" class="form-control" placeholder="订单号:不填会自动生成" v-model="billOut.billOutViewPersonList[9].orderNo" isvalid="yes" >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="金额" v-model="billOut.billOutViewPersonList[9].price" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行卡号" v-model="billOut.billOutViewPersonList[9].bankCardNo" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.billOutViewPersonList[9].bankName" isvalid="yes"   >
+        </td>
+        <td class="formValue">
+            <input type="text" class="form-control" placeholder="用户名" v-model="billOut.billOutViewPersonList[9].bankAccountName" isvalid="yes"   >
         </td>
     </tr>
-    <tr>
-        <td class="formTitle">付款会员的卡号<font face="宋体">*</font></td>
-        <td class="formValue">
-            <input type="text" class="form-control" placeholder="付款会员的卡号" v-model="billOut.bankCardNo" isvalid="yes" checkexpession="NotNull">
-        </td>
-    </tr>
-    <tr>
-        <td class="formTitle">银行名称<font face="宋体">*</font></td>
-        <td class="formValue">
-            <input type="text" class="form-control" placeholder="银行名称" v-model="billOut.bankName" isvalid="yes" checkexpession="NotNull">
-        </td>
-    </tr>
-    <tr>
-        <td class="formTitle">银行卡用户名<font face="宋体">*</font></td>
-        <td class="formValue">
-            <input type="text" class="form-control" placeholder="付款用户名" v-model="billOut.bankAccountName" isvalid="yes" checkexpession="NotNull">
-        </td>
-    </tr>
-    <tr>
-        <td class="formTitle">谷歌验证码<font face="宋体">*</font></td>
-        <td class="formValue">
+
+
+    <tr >
+        <td class="formTitle-center"  >谷歌验证码<font face="宋体">*</font></td>
+        <td class="formValue" colspan="4">
             <input type="text" class="form-control" placeholder="谷歌验证码" v-model="billOut.googleCode" isvalid="yes" checkexpession="NotNull">
         </td>
     </tr>

@@ -161,5 +161,5 @@ public interface SysUserService {
 
     R getGoogleKaptcha(Long userId, String username);
 
-    boolean checkGoogleKaptcha(String username, long kaptcha, long timeMsec);
+    boolean checkGoogleKaptcha(String username, long kaptcha);
 }

@@ -1,6 +1,7 @@
 package com.bottle.pay.modules.api.service;
 
 import com.bottle.pay.common.constant.BillConstant;
+import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.exception.NoOnlineBusinessException;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
@@ -8,12 +9,11 @@ import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.common.utils.DateUtils;
 import com.bottle.pay.modules.api.dao.BillOutMapper;
-import com.bottle.pay.modules.api.entity.BalanceEntity;
-import com.bottle.pay.modules.api.entity.BillOutEntity;
-import com.bottle.pay.modules.api.entity.BillOutView;
-import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
+import com.bottle.pay.modules.api.entity.*;
 import com.bottle.pay.modules.biz.entity.BankCardEntity;
+import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
 import com.bottle.pay.modules.biz.service.BankCardService;
+import com.bottle.pay.modules.biz.service.BlockBankCardService;
 import com.bottle.pay.modules.external.service.BillOutNotifyService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +23,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.bottle.pay.common.constant.SystemConstant.BIG_DECIMAL_HUNDRED;
@@ -56,6 +54,9 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
 
+    @Autowired
+    private BlockBankCardService blockBankCardService;
+
 
     /**
      * 派单给机构
@@ -78,6 +79,34 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
             billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice(),bill.getBillId());
         log.info(randmon+"服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
         return bill;
+    }
+
+    @Async
+    @Transactional
+    public void billOutBatchAgentByPerson(List<BillOutViewPerson> billOutViewPersonList, String ip, SysUserEntity userEntity) {
+        for ( BillOutViewPerson billOutView: billOutViewPersonList) {
+//            if (StringUtils.isEmpty(billOutView.getOrderNo()) || StringUtils.isEmpty(billOutView.getOrderNo().trim())) {
+//                String orderNo = this.generateBillOutBillId(String.valueOf(userEntity.getUserId()));
+//                billOutView.setOrderNo("P" + orderNo);
+//            }
+            BillOutView billOut = new BillOutView();
+            billOut.setBankAccountName(billOutView.getBankAccountName());
+            billOut.setBankCardNo(billOutView.getBankCardNo());
+            billOut.setBankName(billOutView.getBankName());
+            billOut.setMerchantId(userEntity.getUserId());
+            billOut.setMerchantName(userEntity.getUsername());
+            billOut.setPrice(billOutView.getPrice());
+            billOut.setOrderNo(billOutView.getOrderNo());
+            // 第一步保存订单,派单给机构
+            BillOutEntity bill = this.billsOutAgent(billOut, ip, userEntity);
+            if (existBlockCard(billOutView.getBankCardNo(), userEntity.getOrgId())) {
+                return ;
+            }
+            if (bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())) {
+                // 自动派单给出款员
+                this.billsOutBusiness(bill);
+            }
+        }
     }
 
     /**
@@ -110,7 +139,6 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
             mapper.updateBillOutByBillId(update);
             return entity;
         }
-
         // 第三步派单给出款员(事务)，付款银行卡默认为当前开启的银行卡
         entity = updateBillOutToBusiness(entity, onlineBusinessEntity);
         // 第四步增加出款员代付中余额，扣除可用余额 -- redis
@@ -346,16 +374,20 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 验证第三方订单号是否存在
 
         BillOutEntity entity = new BillOutEntity();
-        entity.setThirdBillId(thirdBillId);
-        int count = mapper.selectCount(entity);
-        if (count != 0) {
-            throw new RRException("订单号已存在，orderNo = " + thirdBillId);
-        }
+
         entity.setCreateTime(new Date());
         entity.setMerchantName(merchantName);
         entity.setMerchantId(merchantId);
         entity.setBillId(generateBillOutBillId(String.valueOf(merchantId)));
-        entity.setThirdBillId(thirdBillId);
+        if(!StringUtils.isEmpty(thirdBillId)) {
+            entity.setThirdBillId(thirdBillId);
+            int count = mapper.selectCount(entity);
+            if (count != 0) {
+                throw new RRException("订单号已存在，orderNo = " + thirdBillId);
+            }
+        }else {
+            entity.setThirdBillId("P"+entity.getBillId());
+        }
         entity.setIp(ip);
         // 第三方服务器派单第一步派单给机构
         entity.setBusinessId(agentId);
@@ -431,5 +463,20 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     public int updateByBillOutToLock(BillOutEntity bill){
         bill.setIsLock(1);
         return mapper.updateByBillOutToLock(bill);
+    }
+
+    /**
+     * 判断是否存在银行卡黑名单
+     *
+     * @param bankCardNo
+     * @param orgId
+     * @return
+     */
+    private boolean existBlockCard(String bankCardNo, Long orgId) {
+        BlockBankCardEntity query = new BlockBankCardEntity();
+        query.setOrgId(orgId);
+        query.setBankCardNo(bankCardNo);
+        BlockBankCardEntity card = blockBankCardService.selectOne(query);
+        return null != card;
     }
 }

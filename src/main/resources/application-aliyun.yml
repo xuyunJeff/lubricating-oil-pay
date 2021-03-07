@@ -13,7 +13,7 @@ spring:
     database: 0
   datasource:
     # http://47.114.41.69/
-    url: jdbc:mysql://localhost:13245/bottle_pay?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://47.114.41.69:13245/bottle_pay?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
 #    username: root
 #    password: 123456
     username: bottle_pay

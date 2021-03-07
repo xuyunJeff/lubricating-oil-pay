@@ -79,8 +79,7 @@ public class SysLoginController extends AbstractController {
             if( user.getEnableGoogleKaptcha() != null && user.getEnableGoogleKaptcha().equals(1)){
                 // 开启验证码
                 if (globalProperties.isKaptchaEnable()) {
-                    String timeMsec = getParam("timeMsec").trim();
-                    if (StringUtils.isBlank(code) || !sysUserService.checkGoogleKaptcha(username,Long.valueOf(code),Long.valueOf(timeMsec))) {
+                    if (StringUtils.isBlank(code) || !sysUserService.checkGoogleKaptcha(username,Long.valueOf(code))) {
                         model.addAttribute("errorMsg", "谷歌验证码错误");
                         return html("/login");
                     }

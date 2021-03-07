@@ -1,14 +1,13 @@
 package com.bottle.pay.modules.api.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import com.bottle.pay.common.annotation.BillOut;
 import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.utils.WebUtils;
-import com.bottle.pay.modules.api.entity.BillOutView;
-import com.bottle.pay.modules.api.entity.BillOutViewPerson;
-import com.bottle.pay.modules.api.entity.OnlineBusinessEntity;
+import com.bottle.pay.modules.api.entity.*;
 import com.bottle.pay.modules.api.service.OnlineBusinessService;
 import com.bottle.pay.modules.api.service.ReportBusinessService;
 import com.bottle.pay.modules.api.service.ReportMerchantService;
@@ -28,7 +27,6 @@ import com.bottle.pay.common.annotation.SysLog;
 import com.bottle.pay.modules.sys.controller.AbstractController;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
-import com.bottle.pay.modules.api.entity.BillOutEntity;
 import com.bottle.pay.modules.api.service.BillOutService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -152,9 +150,12 @@ public class BillOutController extends AbstractController {
     }
 
 
-    @SysLog("后台管端派单")
-    @RequestMapping("/push/order")
-    public R pushOrder(@RequestBody BillOutViewPerson billOutView, HttpServletRequest request) {
+
+
+
+    @SysLog("后台批量管端派单")
+    @RequestMapping("/push/order/batch")
+    public R pushOrderBatch(@RequestBody BillOutBatchVo billOutBatchVo) {
         SysUserEntity userEntity = getUser();
         String ip = WebUtils.getIpAddr();
         Boolean isWhite = ipLimitService.isWhiteIp(ip,userEntity.getUserId(),userEntity.getOrgId(),BillConstant.WHITE_IP_TYPE_SERVER);
@@ -169,30 +170,13 @@ public class BillOutController extends AbstractController {
         if(getUser().getEnableGoogleKaptcha() == null &&getUser().getEnableGoogleKaptcha().equals(0)){
             return R.error("请开启谷歌验证码后再派发订单");
         }
-        if(!userService.checkGoogleKaptcha(userEntity.getUsername(),billOutView.getGoogleCode(),billOutView.getTimeMsec())){
-            log.error("谷歌验证码错误,username: {}, code: {} ,TimeMsec: {}",userEntity.getUsername(),billOutView.getGoogleCode(),billOutView.getTimeMsec());
+        if(!userService.checkGoogleKaptcha(userEntity.getUsername(),billOutBatchVo.getGoogleCode())){
+            log.error("谷歌验证码错误,username: {}, code: {} ",userEntity.getUsername(),billOutBatchVo.getGoogleCode());
             return R.error("谷歌验证码错误");
         }
-        BillOutView billOut = new BillOutView();
-        billOut.setBankAccountName(billOutView.getBankAccountName());
-        billOut.setBankCardNo(billOutView.getBankCardNo());
-        billOut.setBankName(billOutView.getBankName());
-        billOut.setMerchantId(userEntity.getUserId());
-        billOut.setMerchantName(userEntity.getUsername());
-        billOut.setPrice(billOutView.getPrice());
-        billOut.setOrderNo(billOutView.getOrderNo());
-        // 第一步保存订单,派单给机构
-        BillOutEntity bill = billOutService.billsOutAgent(billOut, ip, userEntity);
-        if (existBlockCard(billOutView.getBankCardNo(), userEntity.getOrgId())) {
-            return R.error("银行卡已被拉黑");
-        }
-        if (bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())) {
-            // 自动派单给出款员
-            billOutService.billsOutBusiness(bill);
-        }
-        return R.ok().put("price", bill.getPrice()).put("orderNo", bill.getThirdBillId()).put("billOutId", bill.getBillId());
+        billOutService.billOutBatchAgentByPerson(billOutBatchVo.getBillOutViewPersonList(),ip,userEntity);
+        return R.ok("成功,已经接受订单.实际请查询页面");
     }
-
 
     @SysLog("商户服务器管端派单")
     @RequestMapping("/push/order/server")
@@ -204,6 +188,7 @@ public class BillOutController extends AbstractController {
             log.error("ip未加白:ip:"+ip);
             return R.error("ip未加白");
         }
+        if(StringUtils.isEmpty(billOutView.getOrderNo())) return R.error("订单号不存在");
         // 第一步保存订单,派单给机构
         BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, merchant);
         if (existBlockCard(billOutView.getBankCardNo(), merchant.getOrgId())) {
@@ -217,7 +202,7 @@ public class BillOutController extends AbstractController {
     }
 
 
-    @SysLog("人工派单接口")
+    @SysLog("机构指定订单给出款员")
     @RequestMapping("/appoint/human")
     public R arrangeBillsOutBusinessByHuman(@NotNull(message = "businessId 不能为空") Long businessId, @NotNull(message = "billId 不能为空")String billId) {
         SysUserEntity userEntity = getUser();

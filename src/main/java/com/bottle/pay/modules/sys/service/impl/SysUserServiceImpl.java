@@ -387,7 +387,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public boolean checkGoogleKaptcha(String username, long kaptcha, long timeMsec) {
+    public boolean checkGoogleKaptcha(String username, long kaptcha) {
         SysUserEntity userEntity = sysUserMapper.getByUserName(username);
         String googleSecure = userEntity.getGoogleKaptchaKey();
         return GoogleGenerator.check_code(googleSecure,kaptcha,System.currentTimeMillis());

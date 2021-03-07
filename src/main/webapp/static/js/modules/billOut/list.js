@@ -200,12 +200,13 @@ var vm = new Vue({
         },
         save: function () {
             dialogOpen({
-                title: '新增',
+                title: '新增订单',
                 url: 'modules/billOut/add.html?_' + $.now(),
                 width: '800px',
-                height: '420px',
+                height: '650px',
                 yes: function (iframeId) {
                     top.frames[iframeId].vm.acceptClick();
+                    vm.load();
                 }
             });
         },
