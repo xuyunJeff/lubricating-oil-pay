@@ -16,5 +16,5 @@ public interface ReportBusinessMapper extends BottleBaseMapper<ReportBusinessEnt
 
    ReportBusinessEntity selectForUpdate(@Param("businessId") Long businessId,@Param("resultDate") String resultDate);
 
-   List<ReportBusinessEntity> selectForSum(@Param("createTime") String createTime);
+//   List<ReportBusinessEntity> selectForSum(@Param("createTime") String createTime);
 }

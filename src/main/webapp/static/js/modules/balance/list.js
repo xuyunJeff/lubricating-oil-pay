@@ -31,12 +31,12 @@ function getGrid() {
                     }
                     return row.balanceFrozen
                 }},
-            {field : "balancePaying", title : "支付中余额", width : "100px",formatter:function(index, row){
-                    if(row.bizType == "出款员"){
-                        return '--';
-                    }
-                    return row.balancePaying
-                }},
+            // {field : "balancePaying", title : "支付中余额", width : "100px",formatter:function(index, row){
+            //         if(row.bizType == "出款员"){
+            //             return '--';
+            //         }
+            //         return row.balancePaying
+            //     }},
             {field : "createTime", title : "创建时间", width : "100px"},
             {field : "orgName", title : "代理商姓名", width : "100px"},
             {field : "status", title : "状态", width : "100px",formatter:function(value){

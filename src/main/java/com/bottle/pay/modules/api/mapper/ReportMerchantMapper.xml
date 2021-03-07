@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.bottle.pay.modules.api.dao.ReportBusinessMapper">
+<mapper namespace="com.bottle.pay.modules.api.dao.ReportMerchantMapper">
 	
-	<select id="listForPage" resultType="com.bottle.pay.modules.api.entity.ReportBusinessEntity">
+	<select id="listForPage" resultType="com.bottle.pay.modules.api.entity.ReportMerchantEntity">
 		SELECT
 			`id`, 
 			`create_time`, 
@@ -11,20 +11,21 @@
 			`org_id`, 
 			`org_name`, 
 			`result_date`, 
-			`business_name`, 
-			`business_id`, 
 			`total_pay_count`, 
-			`total_pay_sum`
+			`total_pay_sum`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`total_topup_sum`
 		FROM
-			report_business
+			report_merchant
 		where 1=1
 		<if test="createTime != null"> and `create_time` = #{createTime} </if>
 		<if test="lastUpdate != null"> and `last_update` = #{lastUpdate} </if>
 		<if test="orgId != null"> and `org_id` = #{orgId}</if>
 		<if test="orgName != null"> and `org_name` = #{orgName} </if>
 		<if test="resultDate != null"> and `result_date` = #{resultDate}</if>
-		<if test="businessName != null"> and `business_name` = #{businessName}</if>
-		<if test="businessId != null"> and `business_id` = #{businessId} </if>
+		<if test="merchantName != null"> and `merchant_name` = #{merchantName}</if>
+		<if test="merchant_id != null"> and `merchant_id` = #{merchantId} </if>
 		<if test="totalPayCount != null"> and `total_pay_count` = #{totalPayCount} </if>
 		<if test="totalPaySum != null"> and `total_pay_sum` = #{totalPaySum}</if>
 		ORDER BY
@@ -32,16 +33,17 @@
 	</select>
 	
 	<insert id="save">
-		INSERT INTO report_business (
+		INSERT INTO report_merchant (
 			`create_time`, 
 			`last_update`, 
 			`org_id`, 
 			`org_name`, 
 			`result_date`, 
-			`business_name`, 
-			`business_id`, 
 			`total_pay_count`, 
-			`total_pay_sum`
+			`total_pay_sum`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`total_topup_sum`
 		)
 		VALUES (
 			#{createTime}, 
@@ -49,14 +51,15 @@
 			#{orgId}, 
 			#{orgName}, 
 			#{resultDate}, 
-			#{businessName}, 
-			#{businessId}, 
 			#{totalPayCount}, 
-			#{totalPaySum}
+			#{totalPaySum}, 
+			#{merchantName}, 
+			#{merchantId}, 
+			#{totalTopupSum}
 		)
 	</insert>
 	
-	<select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.ReportBusinessEntity">
+	<select id="getObjectById" resultType="com.bottle.pay.modules.api.entity.ReportMerchantEntity">
 		SELECT
 			`id`, 
 			`create_time`, 
@@ -64,66 +67,39 @@
 			`org_id`, 
 			`org_name`, 
 			`result_date`, 
-			`business_name`, 
-			`business_id`, 
 			`total_pay_count`, 
-			`total_pay_sum`
+			`total_pay_sum`, 
+			`merchant_name`, 
+			`merchant_id`, 
+			`total_topup_sum`
 		FROM
-			report_business
+			report_merchant
 		WHERE
 			id = #{id}
 	</select>
 	
 	<update id="update">
-		UPDATE report_business
+		UPDATE report_merchant
 	 	<set>
 			<if test="createTime != null">`create_time` = #{createTime}, </if>
 			<if test="lastUpdate != null">`last_update` = #{lastUpdate}, </if>
 			<if test="orgId != null">`org_id` = #{orgId}, </if>
 			<if test="orgName != null">`org_name` = #{orgName}, </if>
 			<if test="resultDate != null">`result_date` = #{resultDate}, </if>
-			<if test="businessName != null">`business_name` = #{businessName}, </if>
-			<if test="businessId != null">`business_id` = #{businessId}, </if>
 			<if test="totalPayCount != null">`total_pay_count` = #{totalPayCount}, </if>
-			<if test="totalPaySum != null">`total_pay_sum` = #{totalPaySum}</if>
+			<if test="totalPaySum != null">`total_pay_sum` = #{totalPaySum}, </if>
+			<if test="merchantName != null">`merchant_name` = #{merchantName}, </if>
+			<if test="merchantId != null">`merchant_id` = #{merchantId}, </if>
+			<if test="totalTopupSum != null">`total_topup_sum` = #{totalTopupSum}</if>
 		</set>
 		WHERE
 			id = #{id}
-	</update>
-
-
-	<select id="selectForUpdate" resultType="com.bottle.pay.modules.api.entity.ReportBusinessEntity">
-		SELECT
-		`id`,
-		`create_time`,
-		`last_update`,
-		`org_id`,
-		`org_name`,
-		`result_date`,
-		`business_name`,
-		`business_id`,
-		`total_pay_count`,
-		`total_pay_sum`
-		FROM
-		report_business
-		where
-		`business_id` = #{businessId} and `result_date` = #{resultDate}
-		for update
-
-	</select>
-	<update id="increase">
-		UPDATE report_business
-		<set>
-			`total_pay_count` = total_pay_count +1 ,`total_pay_sum` = total_pay_sum + #{price}
-		</set>
-		WHERE
-		`business_id` = #{businessId} and `result_date` = #{resultDate} and `total_pay_sum` = #{totalPaySum}
 	</update>
 	
 	<delete id="batchRemove">
 		DELETE
 		FROM
-			report_business
+			report_merchant
 		WHERE
 			id IN
 		<foreach item="id" collection="array" open="(" separator="," close=")">
@@ -132,23 +108,34 @@
 	</delete>
 
 
-<!--	<select id="selectForSum" resultType="com.bottle.pay.modules.api.entity.ReportBusinessEntity">
+	<select id="selectForUpdate" resultType="com.bottle.pay.modules.api.entity.ReportBusinessEntity">
 		SELECT
-			   count(1) total_pay_count,
-			   SUM(price) total_pay_sum,
-			   business_id,
-			   business_name,
-			   org_id,
-			   org_name,
-			   DATE_FORMAT(last_update, '%Y-%m-%d') result_date,
-			   now() last_update
+		`id`,
+			`create_time`,
+			`last_update`,
+			`org_id`,
+			`org_name`,
+			`result_date`,
+			`total_pay_count`,
+			`total_pay_sum`,
+			`merchant_name`,
+			`merchant_id`,
+			`total_topup_sum`
 		FROM
-			 bill_out
+		report_merchant
+		where
+		`merchant_id` = #{merchantId} and `result_date` = #{resultDate}
+		for update
+
+	</select>
+
+	<update id="increase">
+		UPDATE report_merchant
+		<set>
+			`total_pay_count` = total_pay_count +1 ,`total_pay_sum` = total_pay_sum + #{price}
+		</set>
 		WHERE
-			 bill_status = 2 and create_time <![CDATA[ > ]]> #{createTime} and create_time <![CDATA[ <= ]]> #{createTime}
-		GROUP BY
-			 business_id,
-			 DATE_FORMAT(last_update, '%Y-%m-%d');
-	</select>-->
+		`merchant_id` = #{merchantId} and `result_date` = #{resultDate} and `total_pay_sum` = #{totalPaySum}
+	</update>
 
 </mapper>
