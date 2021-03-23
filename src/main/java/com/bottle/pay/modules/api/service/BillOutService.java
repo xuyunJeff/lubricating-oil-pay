@@ -81,6 +81,22 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         return bill;
     }
 
+
+    @Transactional
+    public BillOutEntity billsOutAgent(BillOutView2 billOutView, String ip, SysUserEntity userEntity) {
+        Integer randmon = new Random().nextInt();
+        //第一步保存订单
+        log.info(randmon+"服务器派单 step 1 保存订单，billout:{}", billOutView);
+        BillOutEntity bill = saveNewBillOut(billOutView.getMerchantName(), billOutView.getMerchantId(),
+                billOutView.getOrderNo(), ip, userEntity.getOrgId(), userEntity.getOrgName(), billOutView.getPrice(),
+                billOutView.getBankCardNo(), billOutView.getBankName(), billOutView.getBankAccountName());
+        // 第二步 增加商户代付中余额，扣除商户可用余额
+        log.info(randmon+"服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
+        billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice(),bill.getBillId());
+        log.info(randmon+"服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
+        return bill;
+    }
+
     @Async
     @Transactional
     public void billOutBatchAgentByPerson(List<BillOutViewPerson> billOutViewPersonList, String ip, SysUserEntity userEntity) {

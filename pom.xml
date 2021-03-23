@@ -305,6 +305,12 @@
             <version>2.10.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+            <version>5.6.1</version>
+        </dependency>
+
     </dependencies>
 
     <profiles>

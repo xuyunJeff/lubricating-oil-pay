@@ -44,6 +44,9 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     @Autowired
     private BillOutMethodArgumentResolver billOutMethodArgumentResolver;
 
+    @Autowired
+    private BillOut2MethodArgumentResolver billOut2MethodArgumentResolver;
+
     /**
      * 文件上传路径虚拟映射
      *
@@ -70,6 +73,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(billOutMethodArgumentResolver);
+        resolvers.add(billOut2MethodArgumentResolver);
     }
 
     /**
@@ -81,7 +85,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
     public void addInterceptors(InterceptorRegistry registry) {
         // 注册rest拦截器
         registry.addInterceptor(new RestApiInterceptor()).addPathPatterns("/rest/**").excludePathPatterns("/apiV1/billOut/push/order/server")
-                .excludePathPatterns("/apiV1/billOut/get/order");
+                .excludePathPatterns("/apiV1/billOut/get/order").excludePathPatterns("/apiV1/billOut/push2/order/server");
 //        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/apiV1/billOut/push/order/server");
     }
 

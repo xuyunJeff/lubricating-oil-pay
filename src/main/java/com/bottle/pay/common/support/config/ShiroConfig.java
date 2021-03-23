@@ -159,6 +159,7 @@ public class ShiroConfig {
         filterMap.put("/apiV1/billOut/push/order/server", "anon");
         filterMap.put("/apiV1/billOut/get/order","anon");
         filterMap.put("/wap/login", "anon");
+        filterMap.put("/apiV1/billOut/push2/order/server", "anon");
         //TODO 添加匿名访问
         return filterMap;
     }
