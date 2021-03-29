@@ -48,6 +48,8 @@ public class JSONUtils {
     }
 
 
+
+
     /**
      * json转对象
      *
@@ -82,6 +84,12 @@ public class JSONUtils {
     @SuppressWarnings("unchecked")
     public static <T> Map<String, Object> jsonToMap(String jsonStr)
             throws Exception {
+        return objectMapper.readValue(jsonStr, Map.class);
+    }
+
+    public static <T> Map<String, Object> beanToMap(Object obj)
+            throws Exception {
+        String jsonStr = beanToJson(obj);
         return objectMapper.readValue(jsonStr, Map.class);
     }
 

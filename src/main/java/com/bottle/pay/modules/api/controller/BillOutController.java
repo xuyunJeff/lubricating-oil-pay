@@ -7,12 +7,12 @@ import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
+import com.bottle.pay.common.exception.RRException;
+import com.bottle.pay.common.support.config.Md5Util;
+import com.bottle.pay.common.utils.JSONUtils;
 import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.entity.*;
-import com.bottle.pay.modules.api.service.BillOutService;
-import com.bottle.pay.modules.api.service.OnlineBusinessService;
-import com.bottle.pay.modules.api.service.ReportBusinessService;
-import com.bottle.pay.modules.api.service.ReportMerchantService;
+import com.bottle.pay.modules.api.service.*;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
 import com.bottle.pay.modules.biz.service.BlockBankCardService;
 import com.bottle.pay.modules.biz.service.IpLimitService;
@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 
 @RestController
@@ -61,94 +63,94 @@ public class BillOutController extends AbstractController {
     @Autowired
     ReportMerchantService reportMerchantService;
 
+    @Autowired
+    MerchantServerService merchantServerService;
+
     /**
      * 列表
      *
      * @param params
      * @return
      */
-    @RequestMapping(value = "/list",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation(value = "出款订单列表")
     public Page<BillOutEntity> list(@RequestBody Map<String, Object> params) {
         SysUserEntity userEntity = getUser();
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())) {
             // 机构管理员查询机构下的所有数据
-            params.put("orgId",userEntity.getOrgId());
+            params.put("orgId", userEntity.getOrgId());
             return billOutService.listEntity(params);
         }
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())) {
             // 出款员查看自己的数据的所有数据
-            params.put("orgId",userEntity.getOrgId());
-            params.put("businessId",userEntity.getUserId());
-            params.put("position",BillConstant.BillPostionEnum.Business.getCode());
+            params.put("orgId", userEntity.getOrgId());
+            params.put("businessId", userEntity.getUserId());
+            params.put("position", BillConstant.BillPostionEnum.Business.getCode());
             return billOutService.listEntity(params);
         }
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())) {
             // 代付商户查看自己的数据的所有数据
-            params.put("orgId",userEntity.getOrgId());
-            params.put("merchantId",userEntity.getUserId());
+            params.put("orgId", userEntity.getOrgId());
+            params.put("merchantId", userEntity.getUserId());
             return billOutService.listEntity(params);
         }
         return new Page<>();
     }
 
 
-    @RequestMapping(value = "/wap/list",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "/wap/list", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation(value = "出款订单列表")
     @ResponseBody
     public Page<BillOutEntity> listWap(@RequestBody Map<String, Object> params) {
         SysUserEntity userEntity = getUser();
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())) {
             // 机构管理员查询机构下的所有数据
-            params.put("orgId",userEntity.getOrgId());
+            params.put("orgId", userEntity.getOrgId());
             return billOutService.listEntity(params);
         }
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())) {
             // 出款员查看自己的数据的所有数据
-            params.put("orgId",userEntity.getOrgId());
-            params.put("businessId",userEntity.getUserId());
-            params.put("position",BillConstant.BillPostionEnum.Business.getCode());
+            params.put("orgId", userEntity.getOrgId());
+            params.put("businessId", userEntity.getUserId());
+            params.put("position", BillConstant.BillPostionEnum.Business.getCode());
             return billOutService.listEntity(params);
         }
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())){
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())) {
             // 代付商户查看自己的数据的所有数据
-            params.put("orgId",userEntity.getOrgId());
-            params.put("merchantId",userEntity.getUserId());
+            params.put("orgId", userEntity.getOrgId());
+            params.put("merchantId", userEntity.getUserId());
             return billOutService.listEntity(params);
         }
         return new Page<>();
     }
 
     @RequestMapping("/lastNewOrder")
-    public R lastNewOrder(@RequestParam(name = "id")  Long id ){
+    public R lastNewOrder(@RequestParam(name = "id") Long id) {
         SysUserEntity userEntity = getUser();
-        Long lastId  = 0L ;
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())){
+        Long lastId = 0L;
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())) {
             // 机构管理员查询机构下的所有数据
-            lastId = billOutService.lastNewOrder(id,userEntity.getOrgId(),null);
+            lastId = billOutService.lastNewOrder(id, userEntity.getOrgId(), null);
         }
-        if(userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())){
+        if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())) {
             // 出款员查看自己的数据的所有数据
-            lastId = billOutService.lastNewOrder(id,userEntity.getOrgId(),userEntity.getUserId());
+            lastId = billOutService.lastNewOrder(id, userEntity.getOrgId(), userEntity.getUserId());
         }
-        return R.ok().put("lastId",lastId);
+        return R.ok().put("lastId", lastId);
     }
 
     @SysLog("商户服务器查询订单")
     @RequestMapping("/get/order")
-    public R getOrder(@RequestParam(name = "orderNo",required = false) String orderNo,@RequestParam(name = "merchantId",required = false) Long merchantId) {
-        if(StringUtils.isEmpty(orderNo)) return R.error(400,"orderNo不可为空");
-        if(StringUtils.isEmpty(merchantId)) return R.error(400,"merchantId不可为空");
+    public R getOrder(@RequestParam(name = "orderNo", required = false) String orderNo, @RequestParam(name = "merchantId", required = false) Long merchantId) {
+        if (StringUtils.isEmpty(orderNo)) return R.error(400, "orderNo不可为空");
+        if (StringUtils.isEmpty(merchantId)) return R.error(400, "merchantId不可为空");
         BillOutEntity e = new BillOutEntity();
         e.setThirdBillId(orderNo);
         e.setMerchantId(merchantId);
         e = billOutService.selectOne(e);
-        if(e == null ) return R.error(-1,"订单不存在");
-        return R.ok().put("price", e.getPrice()).put("orderNo", e.getThirdBillId()).put("billOutId", e.getBillId()).put("billStatus",e.getBillStatus());
+        if (e == null) return R.error(-1, "订单不存在");
+        return R.ok().put("price", e.getPrice()).put("orderNo", e.getThirdBillId()).put("billOutId", e.getBillId()).put("billStatus", e.getBillStatus());
     }
-
-
-
 
 
     @SysLog("后台批量管端派单")
@@ -156,23 +158,23 @@ public class BillOutController extends AbstractController {
     public R pushOrderBatch(@RequestBody BillOutBatchVo billOutBatchVo) {
         SysUserEntity userEntity = getUser();
         String ip = WebUtils.getIpAddr();
-        Boolean isWhite = ipLimitService.isWhiteIp(ip,userEntity.getUserId(),userEntity.getOrgId(),BillConstant.WHITE_IP_TYPE_SERVER);
-        if(!isWhite) {
-            log.error("ip未加白:ip:"+ip);
+        Boolean isWhite = ipLimitService.isWhiteIp(ip, userEntity.getUserId(), userEntity.getOrgId(), BillConstant.WHITE_IP_TYPE_SERVER);
+        if (!isWhite) {
+            log.error("ip未加白:ip:" + ip);
             return R.error("ip未加白");
         }
-        if(!userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())) return R.error("角色越权");
-        if(StringUtils.isEmpty(userEntity.getBillAuto()) ||userEntity.getBillAuto().equals(1) ){
+        if (!userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())) return R.error("角色越权");
+        if (StringUtils.isEmpty(userEntity.getBillAuto()) || userEntity.getBillAuto().equals(1)) {
             return R.error("该商户未开启手动出款");
         }
-        if(getUser().getEnableGoogleKaptcha() == null &&getUser().getEnableGoogleKaptcha().equals(0)){
+        if (getUser().getEnableGoogleKaptcha() == null && getUser().getEnableGoogleKaptcha().equals(0)) {
             return R.error("请开启谷歌验证码后再派发订单");
         }
-        if(!userService.checkGoogleKaptcha(userEntity.getUsername(),billOutBatchVo.getGoogleCode())){
-            log.error("谷歌验证码错误,username: {}, code: {} ",userEntity.getUsername(),billOutBatchVo.getGoogleCode());
+        if (!userService.checkGoogleKaptcha(userEntity.getUsername(), billOutBatchVo.getGoogleCode())) {
+            log.error("谷歌验证码错误,username: {}, code: {} ", userEntity.getUsername(), billOutBatchVo.getGoogleCode());
             return R.error("谷歌验证码错误");
         }
-        billOutService.billOutBatchAgentByPerson(billOutBatchVo.getBillOutViewPersonList(),ip,userEntity);
+        billOutService.billOutBatchAgentByPerson(billOutBatchVo.getBillOutViewPersonList(), ip, userEntity);
         return R.ok("成功,已经接受订单.实际请查询页面");
     }
 
@@ -181,12 +183,12 @@ public class BillOutController extends AbstractController {
     public R pushOrderServer(@BillOut BillOutView billOutView) {
         String ip = WebUtils.getIpAddr();
         SysUserEntity merchant = userService.getUserEntityById(billOutView.getMerchantId());
-        Boolean isWhite = ipLimitService.isWhiteIp(ip,billOutView.getMerchantId(),merchant.getOrgId(),BillConstant.WHITE_IP_TYPE_SERVER);
-        if(!isWhite) {
-            log.error("ip未加白:ip:"+ip);
+        Boolean isWhite = ipLimitService.isWhiteIp(ip, billOutView.getMerchantId(), merchant.getOrgId(), BillConstant.WHITE_IP_TYPE_SERVER);
+        if (!isWhite) {
+            log.error("ip未加白:ip:" + ip);
             return R.error("ip未加白");
         }
-        if(StringUtils.isEmpty(billOutView.getOrderNo())) return R.error("订单号不存在");
+        if (StringUtils.isEmpty(billOutView.getOrderNo())) return R.error("订单号不存在");
         // 第一步保存订单,派单给机构
         BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, merchant);
         if (existBlockCard(billOutView.getBankCardNo(), merchant.getOrgId())) {
@@ -202,15 +204,16 @@ public class BillOutController extends AbstractController {
 
     @SysLog("商户服务器管端派单")
     @RequestMapping("/push2/order/server")
-    public R push2OrderServer2(@BillOut2 BillOutView2 billOutView) {
+    public R push2OrderServer2(@RequestBody BillOutView2 billOutView) {
         String ip = WebUtils.getIpAddr();
         SysUserEntity merchant = userService.getUserEntityById(billOutView.getMerchantId());
-        Boolean isWhite = ipLimitService.isWhiteIp(ip,billOutView.getMerchantId(),merchant.getOrgId(),BillConstant.WHITE_IP_TYPE_SERVER);
-        if(!isWhite) {
-            log.error("ip未加白:ip:"+ip);
+        Boolean isWhite = ipLimitService.isWhiteIp(ip, billOutView.getMerchantId(), merchant.getOrgId(), BillConstant.WHITE_IP_TYPE_SERVER);
+        if (!isWhite) {
+            log.error("ip未加白:ip:" + ip);
             return R.error("ip未加白");
         }
-        if(StringUtils.isEmpty(billOutView.getOrderNo())) return R.error("订单号不存在");
+        if (!checkMd5Auth(billOutView)) return R.error("加解密错误, request params : " + billOutView.toString());
+        if (StringUtils.isEmpty(billOutView.getOrderNo())) return R.error("订单号不存在");
         // 第一步保存订单,派单给机构
         BillOutEntity bill = billOutService.billsOutAgent(billOutView, ip, merchant);
         if (existBlockCard(billOutView.getBankCardNo(), merchant.getOrgId())) {
@@ -226,14 +229,14 @@ public class BillOutController extends AbstractController {
 
     @SysLog("机构指定订单给出款员")
     @RequestMapping("/appoint/human")
-    public R arrangeBillsOutBusinessByHuman(@NotNull(message = "businessId 不能为空") Long businessId, @NotNull(message = "billId 不能为空")String billId) {
+    public R arrangeBillsOutBusinessByHuman(@NotNull(message = "businessId 不能为空") Long businessId, @NotNull(message = "billId 不能为空") String billId) {
         SysUserEntity userEntity = getUser();
         if (!SystemConstant.RoleEnum.Organization.getCode().equals(userEntity.getRoleId()))
             return R.error("必须的机构管理员才能派单");
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
-        if(bill.getPosition().equals(BillConstant.BillPostionEnum.Business.getCode())) return R.error("此订单已经派单");
-        if(bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())) return R.error("此订单无需人工派单");
+        if (bill.getPosition().equals(BillConstant.BillPostionEnum.Business.getCode())) return R.error("此订单已经派单");
+        if (bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())) return R.error("此订单无需人工派单");
         // 判断出款员是否在线
         OnlineBusinessEntity onlineBusinessEntity = onlineBusinessService.getOnlineBusiness(businessId, userEntity.getOrgId());
         if (null == onlineBusinessEntity) return R.error("所选出款员不在线");
@@ -243,7 +246,7 @@ public class BillOutController extends AbstractController {
 
     @SysLog("出款员订单回退到机构")
     @RequestMapping("/bill/goBackOrg")
-    public R billsOutBusinessGoBack(@NotNull(message = "billId 不能为空")String billId) {
+    public R billsOutBusinessGoBack(@NotNull(message = "billId 不能为空") String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
@@ -254,30 +257,30 @@ public class BillOutController extends AbstractController {
 
     @SysLog("出款员订单确认出款成功")
     @RequestMapping("/bill/success")
-    public R billsOutSuccess(@NotNull(message = "billId 不能为空")String billId) {
+    public R billsOutSuccess(@NotNull(message = "billId 不能为空") String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("订单无需确认");
-        if(bill.getIsLock().equals(0)) return R.error("此订单未锁定,请锁定后出款");
+        if (bill.getIsLock().equals(0)) return R.error("此订单未锁定,请锁定后出款");
         bill = billOutService.billsOutPaidSuccess(bill);
         try {
-            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
-        }catch (Exception e) {
-            log.error("通知订单回调异常，BillOutEntity {}",bill);
+            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(), bill.getMerchantId(), billId);
+        } catch (Exception e) {
+            log.error("通知订单回调异常，BillOutEntity {}", bill);
         }
         try {
             reportBusinessService.calculateReportBusiness(bill);
-        }catch (Exception e) {
-            log.error("出款员汇总异常，BillOutEntity {}",bill);
+        } catch (Exception e) {
+            log.error("出款员汇总异常，BillOutEntity {}", bill);
         }
         try {
             reportMerchantService.calculateReportMerchant(bill);
-        }catch (Exception e) {
-            log.error("商户汇总异常，BillOutEntity {}",bill);
+        } catch (Exception e) {
+            log.error("商户汇总异常，BillOutEntity {}", bill);
         }
         BillOutEntity billFinal = billOutService.selectOne(new BillOutEntity(billId));
-        return R.ok().put("bill",billFinal);
+        return R.ok().put("bill", billFinal);
     }
 
     @SysLog("出款员作废订单")
@@ -287,12 +290,12 @@ public class BillOutController extends AbstractController {
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
         if (!userEntity.getOrgId().equals(bill.getOrgId())) return R.error("订单不属于该机构");
         if (!bill.getNotice().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("该订单支付状态已经是最终状态不可作废");
-        if(bill.getIsLock().equals(0)) return R.error("此订单未锁定,请锁定后做法");
+        if (bill.getIsLock().equals(0)) return R.error("此订单未锁定,请锁定后做法");
         billOutService.billsOutPaidFailed(bill);
         try {
-            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
-        }catch (Exception e) {
-            log.error("出款员作废订单回调异常，BillOutEntity {}",bill);
+            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(), bill.getMerchantId(), billId);
+        } catch (Exception e) {
+            log.error("出款员作废订单回调异常，BillOutEntity {}", bill);
         }
         return R.ok("订单作废，会员银行卡名：" + bill.getBankAccountName());
     }
@@ -306,9 +309,9 @@ public class BillOutController extends AbstractController {
         if (bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) return R.error("该订单未支付");
         if (bill.getNotice().equals(BillConstant.BillNoticeEnum.Noticed.getCode())) return R.error("该订单已通知");
         try {
-            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(),bill.getMerchantId(),billId);
-        }catch (Exception e) {
-            log.error("通知订单回调异常，BillOutEntity {}",bill);
+            merchantNoticeConfigService.sendNotice(userEntity.getOrgId(), bill.getMerchantId(), billId);
+        } catch (Exception e) {
+            log.error("通知订单回调异常，BillOutEntity {}", bill);
         }
         return R.ok("已经重新发起通知,结果以表格为准,<div style='color:red'>一直失败请联系客户人工处理</div>;会员银行卡名：" + bill.getBankAccountName());
     }
@@ -318,23 +321,24 @@ public class BillOutController extends AbstractController {
     public R billsOutLock(@NotNull(message = "billId 不能为空") String billId) {
         SysUserEntity userEntity = getUser();
         BillOutEntity bill = billOutService.selectOne(new BillOutEntity(billId));
-        if(bill.getIsLock().equals(1)){
+        if (bill.getIsLock().equals(1)) {
             return R.error("此订单已经锁定,请刷新列表");
         }
         if (!bill.getBillStatus().equals(BillConstant.BillStatusEnum.UnPay.getCode())) {
             return R.error("此订单已经出款成功或失败,请勿出款");
         }
 
-        int i =billOutService.updateByBillOutToLock(new BillOutEntity(billId));
-        if(i == 1){
+        int i = billOutService.updateByBillOutToLock(new BillOutEntity(billId));
+        if (i == 1) {
             bill = billOutService.selectOne(new BillOutEntity(billId));
-            return R.ok("锁定成功").put("bill",bill);
+            return R.ok("锁定成功").put("bill", bill);
         }
-        if(i == 0){
+        if (i == 0) {
             return R.error("锁定失败,确认是否有人已经锁定");
         }
         return R.error("异常请联系技术");
     }
+
     /**
      * 判断是否存在银行卡黑名单
      *
@@ -349,4 +353,28 @@ public class BillOutController extends AbstractController {
         BlockBankCardEntity card = blockBankCardService.selectOne(query);
         return null != card;
     }
+
+    private boolean checkMd5Auth(BillOutView2 billOutView) {
+
+        MerchantServerEntity merchantServerEntity = merchantServerService.billMerchangtServerByMerchantName(billOutView.getMerchantName(), billOutView.getMerchantId());
+        SysUserEntity merchantServer = userService.getByUserName(merchantServerEntity.getSeverName());
+        try {
+            BillOutView2 billOutView2 = billOutView.clone();
+            billOutView2.setSign(null);
+            try {
+                SortedMap<String, Object> parameters = new TreeMap<>(JSONUtils.beanToMap(billOutView));
+                log.info("parameters : {}", parameters);
+                String sign = Md5Util.createSign(parameters, merchantServer.getPassword());
+                if (sign.equals(billOutView.getSign())) {
+                    return true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        throw new RRException("加解密错误,sign不一致");
+    }
+
 }

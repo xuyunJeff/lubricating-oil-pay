@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BillOutView2 {
+public class BillOutView2 implements Cloneable{
     @NotNull(message = "merchantName 不能为空")
     private String merchantName;
     @NotNull(message = "merchantId 不能为空")
@@ -21,13 +21,16 @@ public class BillOutView2 {
     private BigDecimal price;
     @NotNull(message = "bankCardNo 不能为空")
     private String bankCardNo;
-    @NotNull(message = " bankName不能为空")
+    @NotNull(message = "bankName不能为空")
     private String bankName;
-    @NotNull(message = " bankAccountName不能为空")
+    @NotNull(message = "bankAccountName不能为空")
     private String bankAccountName;
 
-    @NotNull(message = " bankAccountName不能为空")
+    @NotNull(message = "timestamp")
     private long timestamp ;
+
+    @NotNull(message = "sign不能为空")
+    private String sign;
 
     @Override
     public String toString() {
@@ -40,6 +43,12 @@ public class BillOutView2 {
                 ", bankName='" + bankName + '\'' +
                 ", bankAccountName='" + bankAccountName + '\'' +
                 ", timestamp='" + timestamp + '\'' +
+                ", sign='" + sign + '\'' +
                 '}';
+    }
+
+    @Override
+    public BillOutView2 clone() throws CloneNotSupportedException {
+        return (BillOutView2)super.clone();
     }
 }

@@ -1,6 +1,8 @@
 package com.bottle.pay.modules.api.service;
 
 import java.util.Map;
+
+import com.bottle.pay.common.exception.RRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bottle.pay.common.service.BottleBaseService;
@@ -21,16 +23,27 @@ import com.bottle.pay.modules.api.dao.MerchantServerMapper;
  @Slf4j
 public class MerchantServerService  extends BottleBaseService<MerchantServerMapper,MerchantServerEntity> {
 
- /**
-  * 订单号里的商户号和商户服务器是否一致
-  * @return
-  */
- public Boolean billMerchangtAccordanceMerchant(Long merchangtId,String merchantName,Long serverId){
-     MerchantServerEntity entity = new MerchantServerEntity();
-     entity.setMerchantId(merchangtId);
-     entity.setMerchantName(merchantName);
-     entity.setServerId(serverId);
-     int n =mapper.selectCount(entity);
-     return n == 1;
+     /**
+      * 订单号里的商户号和商户服务器是否一致
+      * @return
+      */
+     public Boolean billMerchangtAccordanceMerchant(Long merchangtId,String merchantName,Long serverId){
+         MerchantServerEntity entity = new MerchantServerEntity();
+         entity.setMerchantId(merchangtId);
+         entity.setMerchantName(merchantName);
+         entity.setServerId(serverId);
+         int n =mapper.selectCount(entity);
+         return n == 1;
+        }
+
+    public MerchantServerEntity billMerchangtServerByMerchantName(String merchantName,Long merchangtId){
+        MerchantServerEntity entity = new MerchantServerEntity();
+        entity.setMerchantId(merchangtId);
+        entity.setMerchantName(merchantName);
+        MerchantServerEntity rs  =mapper.selectOne(entity);
+       if(rs == null) {
+        throw  new RRException("订单商户号和服务器不一致");
+       }
+       return rs;
     }
 }
