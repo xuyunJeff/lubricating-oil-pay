@@ -210,6 +210,55 @@ var vm = new Vue({
                 }
             });
         },
+        excel: function () {
+            var params ={};
+            params.merchantName = $('#merchantName').val();
+            params.businessName = $('#businessName').val();
+            params.bankAccountName = $('#bankAccountName').val();
+            params.thirdBillId = $('#thirdBillId').val();
+            params.billId = $('#billId').val();
+            params.billStatus = $('#billStatus').val();
+            params.notice = $('#notice').val();
+            params.billType = $('#billType').val();
+            params.createTime = $('#createTime').val();
+            params.pageNumber = 1;
+            params.sortOrder = "asc";
+
+            var form=$("<form>");
+            form.attr("style","display:none");
+            form.attr("enctype","application/json");
+            form.attr("method","get");
+            form.attr("action",'../../apiV1/billOut/csv?_' + $.now());
+            form.append($("<input name='merchantName' value='"+params.merchantName+"'/>"));
+            form.append($("<input name='businessName' value='"+params.businessName+"'/>"));
+            form.append($("<input name='bankAccountName' value='"+params.bankAccountName+"'/>"));
+            form.append($("<input name='thirdBillId' value='"+params.thirdBillId+"'/>"));
+            form.append($("<input name='billId' value='"+params.billId+"'/>"));
+            form.append($("<input name='billStatus' value='"+params.billStatus+"'/>"));
+            form.append($("<input name='notice' value='"+params.notice+"'/>"));
+            form.append($("<input name='billType' value='"+params.billType+"'/>"));
+            form.append($("<input name='createTime' value='"+params.createTime+"'/>"));
+            form.append($("<input name='pageNumber' value='"+params.pageNumber+"'/>"));
+            form.append($("<input name='sortOrder' value='"+params.sortOrder+"'/>"));
+            $("body").append(form);
+            form.submit();
+
+/*
+            $.ajax({
+                type : "POST",
+                url : '../../apiV1/billOut/csv?_' + $.now(),
+                contentType : 'application/json',
+                data: JSON.stringify(removeEmptyField(params)),
+                dataType:"json",
+                success : function(result) {
+                    if (result.code == 0) {
+                        dialogAlert(result.msg, 'success');
+                    } else {
+                        dialogAlert(result.msg, 'error');
+                    }
+                }
+            });*/
+        },
         billSuccess: function (billId, index) {
             //"确定已经出款？</br>会员名："+bill.bankAccountName+" 金额:"+bill.price,
             $.ConfirmAjax({

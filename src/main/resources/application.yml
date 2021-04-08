@@ -96,3 +96,7 @@ log:
 
   file: ../bottle-pay-log/pay.log
   maxsize: 10MB
+
+excel:
+  path:
+    billout: excelTemplate/shoppingOrder.xls

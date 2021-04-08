@@ -1,6 +1,6 @@
 @layout("../../system/layout.html", {title: "代付订单"}){
 <div class="row">
-    <div class="col-md-4 form-inline pull-left" style="width: 80%;">
+    <div class="col-md-4 form-inline pull-left" style="width: 75%;">
             <input  id="createTime"  class="form-control" type="date" style="width: 140px;"/>
             <input  id="merchantName" \@keyup.enter="load" type="text" class="form-control" placeholder="商户名" style="width: 100px;" />
             <input  id="businessName" \@keyup.enter="load" type="text" class="form-control" placeholder="付款专员姓名" style="width: 100px;" />
@@ -34,12 +34,13 @@
             <a class="btn btn-primary" \@click="load"><i class="fa fa-search"></i>&nbsp;查询</a>
         </div>
         </div>
-    <div class="col-md-8" style="width: 20%;">
+    <div class="col-md-8" style="width: 25%;">
         <div class="btn-toolbar pull-right">
             <div class="btn-group">
                 <a v-if="hasPermission('apiV1:billOut:list')" class="btn btn-default" onclick="reload();" title="刷新" ><i class="fa fa-refresh"></i></a>
                 <a v-if="hasPermission('apiV1:billOut:save')" class="btn btn-default" \@click="save" title="添加出款订单"><i class="fa fa-plus"></i></a>
                 <a v-if="hasPermission('apiV1:billOut:list')" class="btn btn-default" title="点击开启声音" ><audio id="reminder" src="${ctxPath}/static/resources/reminder.mp3" controls="controls" style="width: 120px;height: 15px"></audio></a>
+                <a v-if="hasPermission('apiV1:billOut:appoint:people')" class="btn btn-default" \@click="excel" title="下载"><i class="fa fa-file-excel-o"></i></a>
             </div>
         </div>
     </div>

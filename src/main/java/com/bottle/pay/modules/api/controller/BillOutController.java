@@ -9,9 +9,12 @@ import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.support.config.Md5Util;
+import com.bottle.pay.common.utils.DateUtils;
+import com.bottle.pay.common.utils.ExcelUtil;
 import com.bottle.pay.common.utils.JSONUtils;
 import com.bottle.pay.common.utils.WebUtils;
 import com.bottle.pay.modules.api.entity.*;
+import com.bottle.pay.modules.api.entity.csv.BillOutCsv;
 import com.bottle.pay.modules.api.service.*;
 import com.bottle.pay.modules.biz.entity.BlockBankCardEntity;
 import com.bottle.pay.modules.biz.service.BlockBankCardService;
@@ -20,17 +23,30 @@ import com.bottle.pay.modules.biz.service.MerchantNoticeConfigService;
 import com.bottle.pay.modules.sys.controller.AbstractController;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.supercsv.io.CsvBeanWriter;
+import org.supercsv.io.ICsvBeanWriter;
+import org.supercsv.prefs.CsvPreference;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
+import static com.bottle.pay.common.utils.DateUtils.DATE_TIME_PATTERN;
+import static java.util.Objects.nonNull;
 
 
 @RestController
@@ -66,6 +82,8 @@ public class BillOutController extends AbstractController {
     @Autowired
     MerchantServerService merchantServerService;
 
+    @Value("${excel.path.billout}")
+    private String excelPath;
     /**
      * 列表
      *
@@ -122,6 +140,83 @@ public class BillOutController extends AbstractController {
             return billOutService.listEntity(params);
         }
         return new Page<>();
+    }
+
+  /*  @RequestMapping(value = "/csv", method = RequestMethod.POST)
+    public void bootPercentage(@RequestBody Map<String, Object> params, HttpServletResponse response) throws IOException {
+        SysUserEntity userEntity = getUser();
+        if (!userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode()))  throw new RRException("机构管理员才能下载报表");
+        String current = DateUtils.format(new Date(),DateUtils.DATE_TIME_PATTERN_1);
+        String fileName = URLEncoder.encode("统计表-" + current + ".csv", "UTF-8");
+        params.put("pageSize",1000);
+        List<BillOutEntity> bootPercentageList = this.list(params).getRows(); // 这是一个业务代码 返回我要导出去的数据
+        List<Map<String, Object>> list = Lists.newArrayList();
+        bootPercentageList.stream().forEach(it->{
+            Map<String, Object> paramr = new HashMap<>();
+            paramr.put("merchantName", it.getMerchantName());
+            paramr.put("createTime", it.getCreateTime());
+            paramr.put("businessId", it.getBusinessId());
+            paramr.put("billStatus", it.getBillStatus() == 1 ?"未支付": it.getBillStatus() == 2?"成功":"失败");
+            paramr.put("notice", it.getNotice() == 1?"未通知":it.getNotice() == 2?"已通知":"通知失败");
+            paramr.put("price", it.getPrice());
+            paramr.put("bankAccountName", it.getBankAccountName());
+            paramr.put("bankCardNo", it.getBankCardNo());
+            paramr.put("bankName", it.getBankName());
+            paramr.put("businessName", it.getBusinessName());
+            paramr.put("businessBank", it.getBusinessBankAccountName()+"-"+it.getBusinessBankCardNo()+"-"+it.getBusinessBankName());
+            paramr.put("thirdBillId", it.getThirdBillId());
+            paramr.put("billId", it.getBillId());
+            list.add(paramr);
+        });
+        Workbook workbook = ExcelUtil.commonExcelExportList("mapList", excelPath, list);
+        try {
+            ExcelUtil.writeExcel(response, workbook, fileName);
+        } catch (IOException e) {
+            throw new RRException(e.getMessage());
+        }
+    }
+*/
+    @RequestMapping(value = "/csv", method = RequestMethod.GET)
+    public void bootPercentage(@RequestParam Map<String, Object> params, HttpServletResponse response) throws IOException {
+        params = JSONUtils.mapNoEmpty(params);
+        SysUserEntity userEntity = getUser();
+        if (!userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode()))  throw new RRException("机构管理员才能下载报表");
+        String current = DateUtils.format(new Date(),DateUtils.DATE_TIME_PATTERN_1);
+        String filename = URLEncoder.encode("统计表-" + current + ".csv", "UTF-8");
+        params.put("pageSize",1000);
+        List<BillOutEntity> bootPercentageList = this.list(params).getRows(); // 这是一个业务代码 返回我要导出去的数据
+        List<BillOutCsv> list = Lists.newArrayList();
+        bootPercentageList.stream().forEach(it->{
+            BillOutCsv csv = new BillOutCsv();
+            csv.setMerchantName(it.getMerchantName());
+            csv.setCreateTime(DateUtils.format(it.getCreateTime(),DATE_TIME_PATTERN));
+            csv.setBillStatus(it.getBillStatus() == 1 ?"未支付": it.getBillStatus() == 2?"成功":"失败");
+            csv.setNotice( it.getNotice() == 1?"未通知":it.getNotice() == 2?"已通知":"通知失败");
+            csv.setPrice( it.getPrice());
+            csv.setBankAccountName( it.getBankAccountName());
+            csv.setBankCardNo("NO: "+ it.getBankCardNo());
+            csv.setBankName( it.getBankName());
+            csv.setBusinessName( it.getBusinessName());
+            csv.setBusinessBank( (it.getBusinessBankAccountName()==null?"":it.getBusinessBankAccountName())+"-"+(it.getBusinessBankCardNo()==null?"":it.getBusinessBankCardNo())+"-"+(it.getBusinessBankName()==null?"":it.getBusinessBankName()));
+            csv.setThirdBillId( "ThirdBillId:"+it.getThirdBillId());
+            csv.setBillId( "BillId:"+it.getBillId());
+            list.add(csv);
+        });
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+        // 防止乱码出现
+        Writer writer = new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8);
+        // 写入字节流，让文档以UTF-8编码
+        writer.write('\uFEFF');
+        ICsvBeanWriter csvWriter = new CsvBeanWriter(writer, CsvPreference.STANDARD_PREFERENCE);
+//        String[] header = {"商户名", "时间", "付款专员ID","订单状态","通知","账单金额","会员名","会员银行卡号","银行名称","付款专员姓名","付款银行卡","第三方订单号","订单号"};
+        String[] header = {"merchantName","businessName", "createTime","billStatus","notice","price","bankAccountName","bankCardNo","bankName","businessBank","thirdBillId","billId"};
+        csvWriter.writeHeader(header);
+
+        for (BillOutCsv it : list) {
+            csvWriter.write(it, header);
+        }
+        csvWriter.close();
     }
 
     @RequestMapping("/lastNewOrder")
