@@ -3,6 +3,7 @@ package com.bottle.pay.modules.api.service;
 import com.bottle.pay.common.constant.BillConstant;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
+import com.bottle.pay.common.support.properties.GlobalProperties;
 import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.modules.api.dao.BalanceMapper;
 import com.bottle.pay.modules.api.entity.BalanceEntity;
@@ -26,7 +27,11 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
     @Autowired
     private BalanceChangeLogService balanceChangeLogService;
 
+    @Autowired
+    private GlobalProperties globalProperties;
+
     private static final String CREATE_LOCK_KEY_PREFIX = "balance:create:";
+
     /**
      * 此处必须事务才能生效,扣除商户可用余额,增加商户代付中
      *
@@ -35,64 +40,95 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
      * @param billId
      * @return
      */
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public BalanceEntity billOutMerchantBalance(BigDecimal amount, Long userId, String billId) {
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_OUT_MERCHANT_BALANCE_LOCK +":"+userId);
-        if(redisLock.lock()) {
-            try {
-                BalanceEntity balance = new BalanceEntity(userId);
-                synchronized (this) {
-                    balance = mapper.selectForUpdate(balance);
-                    if(null != balance){
-                        int num = mapper.billoutBalanceMerchantChange(amount, balance.getId());
-                        if(num<1){
-                            throw new  RRException("商户余额不足，更新失败",900);
-                        }
-                    }else {
-                        throw new  RRException("商户账户不存在，更新失败");
+        String key = BillConstant.BILL_OUT_MERCHANT_BALANCE_LOCK + ":" + userId;
+        if (globalProperties.isRedisSessionDao()) {
+            RedisLock redisLock = new RedisLock(stringRedisTemplate, key);
+            if (redisLock.lock()) {
+                try {
+                    return getAndUpdatePayingBalanceEntity(amount, userId, billId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("商户余额变动异常" + e.getMessage());
+                    if (e instanceof RRException) {
+                        throw new RRException(((RRException) e).getMsg());
                     }
+                } finally {
+                    redisLock.unLock();
                 }
-                BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
-                log.info("商户余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
-                balanceChangeLogService.saveBanlanceChangeLog(balance,balanceAfter.getBalance(),amount.multiply(new BigDecimal(-1)),billId,"商户余额变动");
-                return balanceAfter;
-            }catch (Exception e){
+            }
+        } else {
+            try {
+                return getAndUpdatePayingBalanceEntity(amount, userId, billId);
+            } catch (Exception e) {
                 e.printStackTrace();
-                log.warn("商户余额变动异常"+e.getMessage());
-                if(e instanceof  RRException){
-                    throw new  RRException(((RRException) e).getMsg());
+                log.warn("商户余额变动异常" + e.getMessage());
+                if (e instanceof RRException) {
+                    throw new RRException(((RRException) e).getMsg());
                 }
-            }finally {
-                redisLock.unLock();
             }
         }
         throw new RRException("服务繁忙，稍后再试");
     }
 
+    private BalanceEntity getAndUpdatePayingBalanceEntity(BigDecimal amount, Long userId, String billId) {
+        BalanceEntity balance = new BalanceEntity(userId);
+        synchronized (this) {
+            balance = mapper.selectForUpdate(balance);
+            if (null != balance) {
+                int num = mapper.billoutBalanceMerchantChange(amount, balance.getId());
+                if (num < 1) {
+                    throw new RRException("商户余额不足，更新失败", 900);
+                }
+            } else {
+                throw new RRException("商户账户不存在，更新失败");
+            }
+        }
+        BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
+        log.info("商户余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
+        balanceChangeLogService.saveBanlanceChangeLog(balance, balanceAfter.getBalance(), amount.multiply(new BigDecimal(-1)), billId, "商户余额变动");
+        return balanceAfter;
+    }
+
 
     @Transactional
     public BalanceEntity billOutMerchantChangePayingBalance(BigDecimal amount, Long userId, String billId) {
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_OUT_MERCHANT_BALANCE_LOCK +":paying:"+userId);
-        if(redisLock.lock()) {
-            try {
-                BalanceEntity balance = new BalanceEntity(userId);
-                synchronized (this) {
-                    balance = mapper.selectForUpdate(balance);
-                    mapper.billOutMerchantChangePayingBalance(amount, balance.getId());
+        String keyLock = BillConstant.BILL_OUT_MERCHANT_BALANCE_LOCK + ":paying:" + userId;
+        if (globalProperties.isRedisSessionDao()) {
+            RedisLock redisLock = new RedisLock(stringRedisTemplate, keyLock);
+            if (redisLock.lock()) {
+                try {
+                    return getAndUpdatePayingBalanceEntity(amount, userId, billId, keyLock);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("商户支付中余额变动异常" + e.getMessage());
+                } finally {
+                    redisLock.unLock();
                 }
-                BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
-                log.info("商户支付中余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
-                balanceChangeLogService.saveBanlanceChangeLog(balance,balanceAfter.getBalance(),amount,billId,"商户支付中余额变动");
-                return balanceAfter;
-            }catch (Exception e){
-                e.printStackTrace();
-                log.warn("商户支付中余额变动异常"+e.getMessage());
-            }finally {
-                redisLock.unLock();
-            }
 
+            }
+        } else {
+            try {
+                return getAndUpdatePayingBalanceEntity(amount, userId, billId, keyLock);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.warn("商户支付中余额变动异常" + e.getMessage());
+            }
         }
         throw new RRException("服务繁忙，稍后再试");
+    }
+
+    private BalanceEntity getAndUpdatePayingBalanceEntity(BigDecimal amount, Long userId, String billId, String keyLock) {
+        BalanceEntity balance = new BalanceEntity(userId);
+        synchronized (this) {
+            balance = mapper.selectForUpdate(balance);
+            mapper.billOutMerchantChangePayingBalance(amount, balance.getId());
+        }
+        BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
+        log.info("商户支付中余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
+        balanceChangeLogService.saveBanlanceChangeLog(balance, balanceAfter.getBalance(), amount, billId, "商户支付中余额变动");
+        return balanceAfter;
     }
 
     /**
@@ -102,38 +138,47 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
      * @param userId
      * @return
      */
-    @Transactional(rollbackFor=Exception.class)
-    public BalanceEntity billOutBusinessBalance(BigDecimal amount, Long userId,String billId) {
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_BUSINESS_BALANCE_LOCK +":"+userId);
-        if(redisLock.lock()) {
-            try {
-                BalanceEntity balance = new BalanceEntity(userId);
-                synchronized (this) {
-                    balance = mapper.selectForUpdate(balance);
-                    if(null != balance){
-                        int num = mapper.billoutBalanceBusinessChange(amount, balance.getId());
-                        if(num<1){
-                            throw new  RRException("出款员更新失败",900);
-                        }
-                    }else {
-                        throw new  RRException("出款员账户不存在，更新失败");
+    @Transactional(rollbackFor = Exception.class)
+    public BalanceEntity billOutBusinessBalance(BigDecimal amount, Long userId, String billId) {
+        String key = BillConstant.BILL_BUSINESS_BALANCE_LOCK + ":" + userId;
+        if (globalProperties.isRedisSessionDao()) {
+            RedisLock redisLock = new RedisLock(stringRedisTemplate, key);
+            if (redisLock.lock()) {
+                try {
+                    return getAndUpdateBusinessBalanceEntity(amount, userId, billId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("出款员余额变动异常" + e.getMessage());
+                    if (e instanceof RRException) {
+                        throw new RRException(((RRException) e).getMsg());
                     }
+                } finally {
+                    redisLock.unLock();
                 }
-                BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
-                log.info("出款员余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
-                balanceChangeLogService.saveBanlanceChangeLog(balance,balanceAfter.getBalance(),amount,billId,"出款员余额变动");
-                return balanceAfter;
-            }catch (Exception e){
-                e.printStackTrace();
-                log.warn("出款员余额变动异常"+e.getMessage());
-                if(e instanceof  RRException){
-                    throw new  RRException(((RRException) e).getMsg());
-                }
-            }finally {
-                redisLock.unLock();
             }
+        }else {
+            return getAndUpdateBusinessBalanceEntity(amount, userId, billId);
         }
         throw new RRException("服务繁忙，稍后再试");
+    }
+
+    private BalanceEntity getAndUpdateBusinessBalanceEntity(BigDecimal amount, Long userId, String billId) {
+        BalanceEntity balance = new BalanceEntity(userId);
+        synchronized (this) {
+            balance = mapper.selectForUpdate(balance);
+            if (null != balance) {
+                int num = mapper.billoutBalanceBusinessChange(amount, balance.getId());
+                if (num < 1) {
+                    throw new RRException("出款员更新失败", 900);
+                }
+            } else {
+                throw new RRException("出款员账户不存在，更新失败");
+            }
+        }
+        BalanceEntity balanceAfter = mapper.selectOne(new BalanceEntity(userId));
+        log.info("出款员余额变动, userId :" + userId + "，amount:" + amount + "beforeBalance:" + balance.getBalance() + "afterBalance:" + balanceAfter.getBalance());
+        balanceChangeLogService.saveBanlanceChangeLog(balance, balanceAfter.getBalance(), amount, billId, "出款员余额变动");
+        return balanceAfter;
     }
 
 
@@ -144,17 +189,17 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
      */
     public BalanceEntity createBalanceAccount(Long userId) {
         BalanceEntity balance = mapper.selectOne(new BalanceEntity(userId));
-        if(balance != null){
-            log.info("用户:{}余额账户:{}已存在无需再创建",userId,balance.getId());
+        if (balance != null) {
+            log.info("用户:{}余额账户:{}已存在无需再创建", userId, balance.getId());
             return balance;
         }
         SysUserEntity userEntity = super.getUserById(userId);
-        RedisLock redisLock = new RedisLock(stringRedisTemplate,CREATE_LOCK_KEY_PREFIX + userId);
-        if(redisLock.lock()){
+        RedisLock redisLock = new RedisLock(stringRedisTemplate, CREATE_LOCK_KEY_PREFIX + userId);
+        if (redisLock.lock()) {
             try {
                 balance = mapper.selectOne(new BalanceEntity(userId));
-                if(balance != null){
-                    log.info("用户:{}余额账户:{}已存在无需再创建",userId,balance.getId());
+                if (balance != null) {
+                    log.info("用户:{}余额账户:{}已存在无需再创建", userId, balance.getId());
                     return balance;
                 }
                 Date date = new Date();
@@ -180,16 +225,17 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
                 redisLock.unLock();
             }
         }
-        log.warn("创建用户:{}余额账户时分布式锁获取失败",userId);
+        log.warn("创建用户:{}余额账户时分布式锁获取失败", userId);
         throw new RRException("创建用户余额账户时异常，请稍后再试");
     }
 
     /**
      * 根据主键id 或者 userId 更新  可用余额，冻结余额，支付中余额
-     *  增加时正数，减少时负数，不更新时就空值
-     *  且各余额可为负数
-     * @param userId 商户ID
-     * @param balance 可用余额
+     * 增加时正数，减少时负数，不更新时就空值
+     * 且各余额可为负数
+     *
+     * @param userId        商户ID
+     * @param balance       可用余额
      * @param balanceFrozen 冻结余额
      * @param balancePaying 支付中余额
      * @return

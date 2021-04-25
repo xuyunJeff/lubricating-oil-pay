@@ -1,10 +1,10 @@
 package com.bottle.pay.modules.api.service;
 
 import com.bottle.pay.common.constant.BillConstant;
-import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.exception.NoOnlineBusinessException;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
+import com.bottle.pay.common.support.properties.GlobalProperties;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.common.utils.DateUtils;
@@ -18,7 +18,6 @@ import com.bottle.pay.modules.external.service.BillOutNotifyService;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,13 +48,13 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     private BankCardService bankCardService;
 
     @Autowired
-    BillOutNotifyService billOutNotifySercice;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    BillOutNotifyService billOutNotifyService;
 
     @Autowired
     private BlockBankCardService blockBankCardService;
+
+    @Autowired
+    private GlobalProperties globalProperties;
 
 
     /**
@@ -70,14 +69,14 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     public BillOutEntity billsOutAgent(BillOutView billOutView, String ip, SysUserEntity userEntity) {
         Integer randmon = new Random().nextInt();
         //第一步保存订单
-        log.info(randmon+"服务器派单 step 1 保存订单，billout:{}", billOutView);
+        log.info(randmon + "服务器派单 step 1 保存订单，billout:{}", billOutView);
         BillOutEntity bill = saveNewBillOut(billOutView.getMerchantName(), billOutView.getMerchantId(),
                 billOutView.getOrderNo(), ip, userEntity.getOrgId(), userEntity.getOrgName(), billOutView.getPrice(),
                 billOutView.getBankCardNo(), billOutView.getBankName(), billOutView.getBankAccountName());
         // 第二步 增加商户代付中余额，扣除商户可用余额
-        log.info(randmon+"服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
-            billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice(),bill.getBillId());
-        log.info(randmon+"服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
+        log.info(randmon + "服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
+        billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice(), bill.getBillId());
+        log.info(randmon + "服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
         return bill;
     }
 
@@ -86,23 +85,23 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     public BillOutEntity billsOutAgent(BillOutView2 billOutView, String ip, SysUserEntity userEntity) {
         Integer randmon = new Random().nextInt();
         //第一步保存订单
-        log.info(randmon+"服务器派单 step 1 保存订单，billout:{}", billOutView);
+        log.info(randmon + "服务器派单 step 1 保存订单，billout:{}", billOutView);
         BillOutEntity bill = saveNewBillOut(billOutView.getMerchantName(), billOutView.getMerchantId(),
                 billOutView.getOrderNo(), ip, userEntity.getOrgId(), userEntity.getOrgName(), billOutView.getPrice(),
                 billOutView.getBankCardNo(), billOutView.getBankName(), billOutView.getBankAccountName());
         // 第二步 增加商户代付中余额，扣除商户可用余额
-        log.info(randmon+"服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
-        billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice(),bill.getBillId());
-        log.info(randmon+"服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
+        log.info(randmon + "服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
+        billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice(), bill.getBillId());
+        log.info(randmon + "服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
         return bill;
     }
 
     @Async
     @Transactional
     public void billOutBatchAgentByPerson(List<BillOutViewPerson> billOutViewPersonList, String ip, SysUserEntity userEntity) {
-        for ( BillOutViewPerson billOutView: billOutViewPersonList) {
+        for (BillOutViewPerson billOutView : billOutViewPersonList) {
 //            if (StringUtils.isEmpty(billOutView.getOrderNo()) || StringUtils.isEmpty(billOutView.getOrderNo().trim())) {
-//                String orderNo = this.generateBillOutBillId(String.valueOf(userEntity.getUserId()));
+//                String orderNo = this.generateBillOutBillIdFromRedis(String.valueOf(userEntity.getUserId()));
 //                billOutView.setOrderNo("P" + orderNo);
 //            }
             BillOutView billOut = new BillOutView();
@@ -116,7 +115,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
             // 第一步保存订单,派单给机构
             BillOutEntity bill = this.billsOutAgent(billOut, ip, userEntity);
             if (existBlockCard(billOutView.getBankCardNo(), userEntity.getOrgId())) {
-                return ;
+                return;
             }
             if (bill.getBillType().equals(BillConstant.BillTypeEnum.Auto.getCode())) {
                 // 自动派单给出款员
@@ -210,25 +209,36 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         log.info("出款成功,billId{}", entity);
         BillOutEntity successEntity = new BillOutEntity(entity.getBillId());
         successEntity.setBillStatus(BillConstant.BillStatusEnum.Success.getCode());
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_OUT_BUSINESS_CHANGE_TO_SUCCESS_LOCK +":"+entity.getBillId());
-        if(redisLock.lock()) {
-            try {
+        String lockKey = BillConstant.BILL_OUT_BUSINESS_CHANGE_TO_SUCCESS_LOCK + ":" + entity.getBillId();
+        if (globalProperties.isRedisSessionDao()) {
+            RedisLock redisLock = new RedisLock(stringRedisTemplate, lockKey);
+            if (redisLock.lock()) {
+                try {
+                    int i = mapper.updateBillOutByBillIdForSuccess(successEntity);
+                    if (i == 0) {
+                        log.warn("该订单支付状态已经是最终状态,无需确认订单");
+                        throw new RRException("该订单支付状态已经是最终状态,无需确认订单");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("出款订单改变状态异常" + e.getMessage());
+                } finally {
+                    redisLock.unLock();
+                }
+            }
+            // 扣除出款员代付中 -- redis
+            incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
+        } else {
+            synchronized (lockKey) {
                 int i = mapper.updateBillOutByBillIdForSuccess(successEntity);
                 if (i == 0) {
                     log.warn("该订单支付状态已经是最终状态,无需确认订单");
                     throw new RRException("该订单支付状态已经是最终状态,无需确认订单");
                 }
-            }catch (Exception e){
-                e.printStackTrace();
-                log.warn("出款订单改变状态异常"+e.getMessage());
-            }finally {
-                redisLock.unLock();
             }
         }
-        // 扣除出款员代付中 -- redis
-        incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 扣除商户代付中
-        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId(),entity.getBillId());
+        balanceService.billOutMerchantChangePayingBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId(), entity.getBillId());
         bankCardService.minusBalance(entity.getBusinessId(), entity.getBusinessBankCardNo(), entity.getPrice());
         // 出款员扣除余额
         this.billOutBusinessPaySuccess(entity);
@@ -237,11 +247,12 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
 
     /**
      * 出款员扣除余额
+     *
      * @param entity
      */
-    private void billOutBusinessPaySuccess(BillOutEntity entity){
+    private void billOutBusinessPaySuccess(BillOutEntity entity) {
         balanceService.createBalanceAccount(entity.getBusinessId());
-        balanceService.billOutBusinessBalance(entity.getPrice().multiply(new BigDecimal(-1)),entity.getBusinessId(),entity.getBillId());
+        balanceService.billOutBusinessBalance(entity.getPrice().multiply(new BigDecimal(-1)), entity.getBusinessId(), entity.getBillId());
     }
 
 
@@ -251,7 +262,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @param entity
      * @return
      */
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public BillOutEntity billsOutPaidFailed(BillOutEntity entity) {
         log.info("出款作废,billId{}", entity);
         BillOutEntity failedEntity = new BillOutEntity(entity.getBillId());
@@ -261,7 +272,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 扣除出款员代付中 -- redis
         incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         // 增加可用余额,扣除代付中
-        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId(),entity.getBillId());
+        balanceService.billOutMerchantBalance(entity.getPrice().multiply(BigDecimal.valueOf(-1)), entity.getMerchantId(), entity.getBillId());
         //   bankCardService.minusBalance(entity.getBusinessId(),entity.getBusinessBankCardNo(),entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         return entity;
     }
@@ -324,7 +335,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @param amount
      */
     @Transactional
-    public BalanceEntity billsOutBalanceChangeMerchant(Long merchantId, BigDecimal amount,String billId) {
+    public BalanceEntity billsOutBalanceChangeMerchant(Long merchantId, BigDecimal amount, String billId) {
         // step 1: 扣商户可用余额，增加商户代付中余额
         return balanceService.billOutMerchantBalance(amount, merchantId, billId);
     }
@@ -339,14 +350,19 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @param amount     最小1，分为单位
      */
     public synchronized BigDecimal incrBusinessBillOutBalanceRedis(Long businessId, BigDecimal amount) {
+        if (!globalProperties.isRedisSessionDao()) {
+            return getBusinessBillOutBalance(businessId);
+        }
         amount = amount.multiply(BigDecimal.valueOf(100));
+        Object balance = null;
         String redisKey = BillConstant.BillRedisKey.billOutBusinessBalance(businessId.toString());
-        Object balance = redisCacheManager.get(redisKey);
+        balance = redisCacheManager.get(redisKey);
         if (!ObjectUtils.isEmpty(balance)) {
             BigDecimal balanceAfter = BigDecimal.valueOf(redisCacheManager.incr(redisKey, Double.valueOf(amount.toString())));
             log.info("代付余额变动，变动前余额：" + balance + "分,变动后余额：" + balanceAfter + "分,变动金额：" + amount + "分");
             return balanceAfter.divide(BigDecimal.valueOf(100));
         }
+
         return getBusinessBillOutBalance(businessId);
     }
 
@@ -357,17 +373,24 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      * @return 单位分
      */
     public BigDecimal getBusinessBillOutBalance(Long businessId) {
+
         String redisKey = BillConstant.BillRedisKey.billOutBusinessBalance(businessId.toString());
-        Object balance = redisCacheManager.get(redisKey);
+        Object balance = null;
+        if (globalProperties.isRedisSessionDao()) {
+            balance = redisCacheManager.get(redisKey);
+        }
         if (ObjectUtils.isEmpty(balance)) {
             BigDecimal businessPaying = mapper.sumByBusinessId(businessId);
             if (businessPaying == null) {
                 businessPaying = BigDecimal.ZERO;
             }
             businessPaying = businessPaying.multiply(BIG_DECIMAL_HUNDRED);
-            redisCacheManager.set(redisKey, businessPaying);
+            if (globalProperties.isRedisSessionDao()) {
+                redisCacheManager.set(redisKey, businessPaying);
+            }
             return businessPaying;
         }
+
         return new BigDecimal(String.valueOf(balance));
     }
 
@@ -394,15 +417,21 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         entity.setCreateTime(new Date());
         entity.setMerchantName(merchantName);
         entity.setMerchantId(merchantId);
-        entity.setBillId(generateBillOutBillId(String.valueOf(merchantId)));
-        if(!StringUtils.isEmpty(thirdBillId)) {
+        if (globalProperties.isRedisSessionDao()) {
+            entity.setBillId(generateBillOutBillIdFromRedis(String.valueOf(merchantId)));
+        } else {
+            String lastOrderId = this.getCurrentMerchantLastOrderId(merchantId);
+            entity.setBillId(lastOrderId);
+
+        }
+        if (!StringUtils.isEmpty(thirdBillId)) {
             entity.setThirdBillId(thirdBillId);
             int count = mapper.selectCount(entity);
             if (count != 0) {
                 throw new RRException("订单号已存在，orderNo = " + thirdBillId);
             }
-        }else {
-            entity.setThirdBillId("P"+entity.getBillId());
+        } else {
+            entity.setThirdBillId("P" + entity.getBillId());
         }
         entity.setIp(ip);
         // 第三方服务器派单第一步派单给机构
@@ -429,6 +458,20 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         return entity;
     }
 
+    private String getCurrentMerchantLastOrderId(Long merchantId) {
+        synchronized (merchantId) {
+            Long lastId = mapper.lastMerchantNewOrder(merchantId);
+            String today = DateUtils.format(new Date(), DateUtils.DATE_PATTERN_1);
+            ThreadLocalRandom random = ThreadLocalRandom.current();
+            DecimalFormat df = new DecimalFormat("00000");//五位序列号
+            long incrId = 1L;
+            if (lastId != null) {
+                incrId = lastId + 1;
+            }
+            return merchantId + today + random.nextInt(10, 99) + df.format(incrId);
+        }
+    }
+
     /**
      * 判断该订单是自动还是手动：大额？
      *
@@ -453,7 +496,10 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      *
      * @return
      */
-    public String generateBillOutBillId(String merchantId) {
+    public String generateBillOutBillIdFromRedis(String merchantId) {
+        if (!globalProperties.isRedisSessionDao()) {
+            throw new IllegalArgumentException("未开启 redis");
+        }
         String today = DateUtils.format(new Date(), DateUtils.DATE_PATTERN_1);
         String redisKey = BillConstant.BillRedisKey.billOutId(merchantId, today);
         long incrId = redisCacheManager.incr(redisKey, 1L, 24L);
@@ -463,20 +509,29 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         return merchantId + today + random.nextInt(10, 99) + df.format(incrId);
     }
 
+
     public Long lastNewOrder(Long id, Long orgId, Long businessId) {
-        String redisKey = BillConstant.BillRedisKey.billOutLastOrder(id, orgId, businessId);
-        Object lastId = redisCacheManager.get(redisKey);
-        if (ObjectUtils.isEmpty(lastId)) {
+        Object lastId = null;
+        if (globalProperties.isRedisSessionDao()) {
+            String redisKey = BillConstant.BillRedisKey.billOutLastOrder(id, orgId, businessId);
+            lastId = redisCacheManager.get(redisKey);
+            if (ObjectUtils.isEmpty(lastId)) {
+                lastId = mapper.lastNewOrder(id, orgId, businessId);
+                if (ObjectUtils.isEmpty(lastId)) {
+                    return id;
+                }
+                redisCacheManager.set(redisKey, lastId, 5L);
+            }
+        } else {
             lastId = mapper.lastNewOrder(id, orgId, businessId);
             if (ObjectUtils.isEmpty(lastId)) {
                 return id;
             }
-            redisCacheManager.set(redisKey, lastId, 5L);
         }
-        return Long.valueOf(lastId.toString());
+        return 0L;
     }
 
-    public int updateByBillOutToLock(BillOutEntity bill){
+    public int updateByBillOutToLock(BillOutEntity bill) {
         bill.setIsLock(1);
         return mapper.updateByBillOutToLock(bill);
     }

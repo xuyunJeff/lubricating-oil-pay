@@ -4,6 +4,7 @@ import com.bottle.pay.common.constant.BusinessConstant;
 import com.bottle.pay.common.exception.NoOnlineBusinessException;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
+import com.bottle.pay.common.support.properties.GlobalProperties;
 import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.modules.api.dao.BusinessMerchantMapper;
 import com.bottle.pay.modules.api.dao.OnlineBusinessMapper;
@@ -33,10 +34,16 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
     @Autowired
     private BusinessMerchantMapper businessMerchantMapper;
 
+    @Autowired
+    private GlobalProperties globalProperties;
+
 
     public OnlineBusinessEntity getNextBusiness( Long merchantId) {
         String redisKey = BusinessConstant.BusinessRedisKey.onlinePosition(merchantId);
-        OnlineBusinessEntity currentBusiness = redisCacheManager.getBean(redisKey,OnlineBusinessEntity.class);
+        OnlineBusinessEntity currentBusiness = null;
+        if(globalProperties.isRedisSessionDao()) {
+            currentBusiness = redisCacheManager.getBean(redisKey, OnlineBusinessEntity.class);
+        }
         if (null != currentBusiness) {
             OnlineBusinessEntity nextOnlineBusiness = mapper.nextOnlineBusiness(merchantId ,currentBusiness.getPosition());
             if (nextOnlineBusiness != null) {
@@ -47,7 +54,9 @@ public class OnlineBusinessService extends BottleBaseService<OnlineBusinessMappe
         // 为空时返回第一个
         OnlineBusinessEntity firstOnlineBusiness = mapper.firstOnlineBusiness(merchantId);
         if (firstOnlineBusiness != null) {
-            redisCacheManager.set(redisKey, firstOnlineBusiness);
+            if(globalProperties.isRedisSessionDao()) {
+                redisCacheManager.set(redisKey, firstOnlineBusiness);
+            }
             return firstOnlineBusiness;
         }
         throw new NoOnlineBusinessException("无在线出款员，请联系管理员");

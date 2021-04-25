@@ -246,9 +246,14 @@
         bill_id = #{billId} and bill_status = '1'
     </update>
 
-    <select id="lastNewOrder" resultType="int">
+    <select id="lastNewOrder" resultType="long">
         select IFNULL(MAX(id),0) from bill_out where `org_id` = #{orgId}
         <if test="businessId != null">  and `business_id` = #{businessId}</if>
         and id >= #{id}
+    </select>
+
+    <select id="lastMerchantNewOrder" resultType="long">
+        select IFNULL(MAX(id),0) from bill_out
+        where `merchant_id` = #{merchantId}
     </select>
 </mapper>

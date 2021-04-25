@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * 操作set：redisTemplate.opsForSet();
  * 操作有序set：redisTemplate.opsForZSet();
  *
- * @author zcl<yczclcn@163.com>
+ * @author
  */
 @Component
 public class RedisCacheManager {
@@ -122,6 +122,9 @@ public class RedisCacheManager {
         if (key == null) {
             return null;
         }
+        if (redisTemplate == null) {
+            return null;
+        }
         Object value = redisTemplate.opsForValue().get(key);
         return value == null ? null : GsonUtil.fromJson(value.toString(), t);
     }
@@ -135,7 +138,7 @@ public class RedisCacheManager {
      */
     public boolean set(String key, Object value) {
         try {
-            redisTemplate.opsForValue().set(key, GsonUtil.GsonString(value),30, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(key, GsonUtil.GsonString(value), 30, TimeUnit.MINUTES);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

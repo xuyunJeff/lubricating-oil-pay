@@ -1,22 +1,18 @@
 package com.bottle.pay.modules.biz.service;
 
 
-import com.bottle.pay.common.constant.IPConstant;
 import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
-import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.common.utils.CommonUtils;
 import com.bottle.pay.modules.biz.dao.IpLimitMapper;
 import com.bottle.pay.modules.biz.entity.IpLimitEntity;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -24,8 +20,6 @@ import java.util.List;
 public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEntity> {
 
 
-    @Autowired
-    private RedisCacheManager redisCacheManager;
 
     /**
      *
@@ -86,9 +80,6 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
             ipLimit.setOrgName(userEntity.getOrgName());
             num = mapper.save(ipLimit);
             log.info("商户白名单添加成功");
-            String ipList = ipLimit.getIpList();
-            String key = IPConstant.getClientIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
-            redisCacheManager.lSet(key, Arrays.asList(ipList.split("#")));
         }
         return CommonUtils.msg(num);
     }
@@ -109,11 +100,7 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
             update.setIpList(ipLimit.getServerIp());
             int count = mapper.update(ipLimit);
             log.info("商户:{},修改type=1的Ip:{},结果:{}", userEntity.getUserId(), ipLimit.getServerIp(),count>0);
-            if(count>1){
-                num=1;
-                String key = IPConstant.getServerIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
-                redisCacheManager.lSet(key, Arrays.asList(ipLimit.getIpList().split("#")));
-            }
+
         }
 
         if(StringUtils.isNotEmpty(ipLimit.getClientIp())){
@@ -121,11 +108,7 @@ public class IpLimitService extends BottleBaseService<IpLimitMapper, IpLimitEnti
             update.setIpList(ipLimit.getClientIp());
             int count = mapper.update(ipLimit);
             log.info("商户:{},修改type=2的Ip:{},结果:{}", userEntity.getUserId(), ipLimit.getServerIp(),count>0);
-            if(count>1){
-                num=1;
-                String key = IPConstant.getClientIpWhiteListCacheKey(userEntity.getUserId(), ipLimit.getType());
-                redisCacheManager.lSet(key, Arrays.asList(ipLimit.getIpList().split("#")));
-            }
+
         }
         return CommonUtils.msg(num);
     }

@@ -222,4 +222,11 @@
         ORDER BY create_time DESC
         limit #{offSet},#{pageSize}
     </select>
+
+
+    <select id="lastMerchantNewOrder" resultType="long">
+        select IFNULL(MAX(id),0) from bill_in
+        where `merchant_id` = #{merchantId}
+    </select>
+
 </mapper>

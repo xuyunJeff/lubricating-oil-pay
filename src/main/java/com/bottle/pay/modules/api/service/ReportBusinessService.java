@@ -2,6 +2,8 @@ package com.bottle.pay.modules.api.service;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.bottle.pay.common.support.properties.GlobalProperties;
 import com.bottle.pay.common.utils.DateUtils;
 
 import com.bottle.pay.common.constant.BillConstant;
@@ -26,24 +28,43 @@ public class ReportBusinessService extends BottleBaseService<ReportBusinessMappe
     @Autowired
     private BillOutService billOutService;
 
+    @Autowired
+    private GlobalProperties globalProperties;
+
     @Async
     @Transactional
     public void calculateReportBusiness(BillOutEntity bill) {
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.REPORT_BUSINESS + ":" + bill.getBusinessId());
-        if (redisLock.lock()) {
-            try {
-                log.info("出款员汇总,订单：{}",bill);
-                ReportBusinessEntity reportBusinessEveryDay =   this.createReportBusinessEveryDay(bill);
-                ReportBusinessEntity forUpdate  =  mapper.selectForUpdate(bill.getBusinessId(),reportBusinessEveryDay.getResultDate());
-                mapper.increase(bill.getBusinessId(),reportBusinessEveryDay.getResultDate(),bill.getPrice(),forUpdate.getTotalPaySum());
-                log.info("出款员汇总成功，账变前：{}, 订单：{}",forUpdate,bill);
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.warn("出款员汇总异常"+e.getMessage());
-            } finally {
-                redisLock.unLock();
+        String keyLock = BillConstant.REPORT_BUSINESS + ":" + bill.getBusinessId();
+        if(globalProperties.isRedisSessionDao()) {
+            RedisLock redisLock = new RedisLock(stringRedisTemplate, keyLock);
+            if (redisLock.lock()) {
+                try {
+                    executeMinus(bill);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("出款员汇总异常" + e.getMessage());
+                } finally {
+                    redisLock.unLock();
+                }
+            }
+        }else {
+            synchronized (keyLock){
+                try {
+                    executeMinus(bill);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("出款员汇总异常" + e.getMessage());
+                }
             }
         }
+    }
+
+    private void executeMinus(BillOutEntity bill) {
+        log.info("出款员汇总,订单：{}", bill);
+        ReportBusinessEntity reportBusinessEveryDay = this.createReportBusinessEveryDay(bill);
+        ReportBusinessEntity forUpdate = mapper.selectForUpdate(bill.getBusinessId(), reportBusinessEveryDay.getResultDate());
+        mapper.increase(bill.getBusinessId(), reportBusinessEveryDay.getResultDate(), bill.getPrice(), forUpdate.getTotalPaySum());
+        log.info("出款员汇总成功，账变前：{}, 订单：{}", forUpdate, bill);
     }
 
     public ReportBusinessEntity createReportBusinessEveryDay(BillOutEntity bill) {

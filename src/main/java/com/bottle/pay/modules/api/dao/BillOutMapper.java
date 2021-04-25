@@ -24,5 +24,7 @@ public interface BillOutMapper extends BottleBaseMapper<BillOutEntity> {
 
     int updateByBillOutId(BillOutEntity entity);
 
-    int lastNewOrder(@Param("id") Long id, @Param("orgId") Long orgId, @Param("businessId") Long businessId);
+    Long lastNewOrder(@Param("id") Long id, @Param("orgId") Long orgId, @Param("businessId") Long businessId);
+
+    Long lastMerchantNewOrder( @Param("merchantId") Long merchantId);
 }

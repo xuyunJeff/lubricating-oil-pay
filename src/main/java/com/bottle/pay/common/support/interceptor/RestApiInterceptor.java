@@ -1,14 +1,15 @@
 package com.bottle.pay.common.support.interceptor;
 
-import com.bottle.pay.common.constant.IPConstant;
-import com.bottle.pay.common.support.redis.RedisCacheManager;
-import io.jsonwebtoken.JwtException;
 import com.bottle.pay.common.annotation.RestAnon;
+import com.bottle.pay.common.constant.IPConstant;
 import com.bottle.pay.common.constant.RestApiConstant;
+import com.bottle.pay.common.support.properties.GlobalProperties;
+import com.bottle.pay.common.support.redis.RedisCacheManager;
 import com.bottle.pay.common.utils.*;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
 import com.bottle.pay.modules.sys.entity.SysUserTokenEntity;
 import com.bottle.pay.modules.sys.service.SysUserService;
+import io.jsonwebtoken.JwtException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,9 +34,8 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
 
     private SysUserService userService = (SysUserService) SpringContextUtils.getBean("sysUserService");
 
-    private RedisCacheManager redisCacheManager = (RedisCacheManager) SpringContextUtils.getBean(RedisCacheManager.class);
-
     private JwtUtils jwtUtils = SpringContextUtils.getBean("jwtUtils", JwtUtils.class);
+
 
     /**
      * 拦截
@@ -116,11 +116,7 @@ public class RestApiInterceptor extends HandlerInterceptorAdapter {
             WebUtils.write(response, JSONUtils.beanToJson(RestApiConstant.TokenErrorEnum.USER_DISABLE.getResp()));
             return false;
         }
-        String key = IPConstant.getClientIpWhiteListCacheKey(sysUserEntity.getUserId(), IPConstant.MerchantIPEnum.ADMIN.getCode());
-        List<Object> ipList = redisCacheManager.lGet(key, 0, -1);
-        //IP 白名单
-        String ipAddr = WebUtils.getIpAddr();
-        return ipList.stream().anyMatch(ip -> ip.equals(ipAddr));
+        return true;
     }
 
     /**

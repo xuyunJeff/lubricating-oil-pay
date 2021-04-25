@@ -11,6 +11,7 @@ import com.bottle.pay.common.constant.SystemConstant;
 import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.service.BottleBaseService;
+import com.bottle.pay.common.support.properties.GlobalProperties;
 import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.common.utils.CommonUtils;
 import com.bottle.pay.common.utils.ShiroUtils;
@@ -34,11 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class BankCardService extends BottleBaseService<BankCardMapper, BankCardEntity> {
 
-    @Autowired
-    private BalanceMapper balanceMapper;
-
-    @Autowired
-    private BalanceService balanceService;
 
     @Value("${merchant.billOutLimit:50000}")
     private BigDecimal billOutLimit;
@@ -48,6 +44,9 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
 
     @Autowired
     private OnlineBusinessService onlineBusinessService;
+
+    @Autowired
+    private GlobalProperties globalProperties;
 
 
     /**
@@ -345,24 +344,40 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
      * @return
      */
     public boolean minusBalance(Long userId, String bankCard, BigDecimal balance) {
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.BILL_OUT_BUSINESS_BANK_BALANCE_LOCK +":"+userId);
-        if(redisLock.lock()) {
-            try {
-                BankCardEntity bankCardEntity = new BankCardEntity();
-                bankCardEntity.setBusinessId(userId);
-                bankCardEntity.setBankCardNo(bankCard);
-                bankCardEntity.setBalance(balance);
-                bankCardEntity.setLastUpdate(new Date());
-                boolean result = mapper.minusBalance(bankCardEntity) > 0;
-                log.info("专员:{},银行卡:{},增加的金额:{},结果:{}", userId, balance, balance, result);
-                return result;
-            }catch (Exception e){
-                e.printStackTrace();
-                log.warn("专员银行卡余额变动异常"+e.getMessage());
-            }finally {
-                redisLock.unLock();
+        String key = BillConstant.BILL_OUT_BUSINESS_BANK_BALANCE_LOCK +":"+userId;
+        if(globalProperties.isRedisSessionDao()) {
+            RedisLock redisLock = new RedisLock(stringRedisTemplate, key);
+            if (redisLock.lock()) {
+                try {
+                    return minusBalanceInDB(userId, bankCard, balance);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("专员银行卡余额变动异常" + e.getMessage());
+                } finally {
+                    redisLock.unLock();
+                }
+            }
+        }else {
+            synchronized (key){
+                try {
+                    return minusBalanceInDB(userId, bankCard, balance);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("专员银行卡余额变动异常" + e.getMessage());
+                }
             }
         }
         throw new RRException("服务繁忙，稍后再试");
+    }
+
+    private boolean minusBalanceInDB(Long userId, String bankCard, BigDecimal balance) {
+        BankCardEntity bankCardEntity = new BankCardEntity();
+        bankCardEntity.setBusinessId(userId);
+        bankCardEntity.setBankCardNo(bankCard);
+        bankCardEntity.setBalance(balance);
+        bankCardEntity.setLastUpdate(new Date());
+        boolean result = mapper.minusBalance(bankCardEntity) > 0;
+        log.info("专员:{},银行卡:{},增加的金额:{},结果:{}", userId, balance, balance, result);
+        return result;
     }
 }

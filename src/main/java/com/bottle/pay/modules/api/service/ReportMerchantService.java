@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Map;
 
 import com.bottle.pay.common.constant.BillConstant;
+import com.bottle.pay.common.support.properties.GlobalProperties;
 import com.bottle.pay.common.support.redis.RedisLock;
 import com.bottle.pay.common.utils.DateUtils;
 import com.bottle.pay.modules.api.entity.BillOutEntity;
@@ -32,24 +33,43 @@ public class ReportMerchantService extends BottleBaseService<ReportMerchantMappe
     @Autowired
     private BillOutService billOutService;
 
+    @Autowired
+    private GlobalProperties globalProperties;
+
     @Async
     @Transactional
     public void calculateReportMerchant(BillOutEntity bill) {
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BillConstant.REPORT_MERCHANT + ":" + bill.getMerchantId());
-        if (redisLock.lock()) {
-            try {
-                log.info("商户汇总,订单：{}", bill);
-                ReportMerchantEntity reportMerchantEveryDay = this.createReportMerchantEveryDay(bill);
-                ReportBusinessEntity forUpdate = mapper.selectForUpdate(bill.getMerchantId(), reportMerchantEveryDay.getResultDate());
-                mapper.increase(bill.getMerchantId(), reportMerchantEveryDay.getResultDate(), bill.getPrice(), forUpdate.getTotalPaySum());
-                log.info("商户汇总成功，账变前：{}, 订单：{}", forUpdate, bill);
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.warn("商户汇总异常" + e.getMessage());
-            } finally {
-                redisLock.unLock();
+        String keyLock = BillConstant.REPORT_MERCHANT + ":" + bill.getMerchantId();
+        if(globalProperties.isRedisSessionDao()) {
+            RedisLock redisLock = new RedisLock(stringRedisTemplate, keyLock);
+            if (redisLock.lock()) {
+                try {
+                    executeMinus(bill);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("商户汇总异常" + e.getMessage());
+                } finally {
+                    redisLock.unLock();
+                }
+            }
+        }else {
+            synchronized (keyLock){
+                try {
+                    executeMinus(bill);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.warn("商户汇总异常" + e.getMessage());
+                }
             }
         }
+    }
+
+    private void executeMinus(BillOutEntity bill) {
+        log.info("商户汇总,订单：{}", bill);
+        ReportMerchantEntity reportMerchantEveryDay = this.createReportMerchantEveryDay(bill);
+        ReportBusinessEntity forUpdate = mapper.selectForUpdate(bill.getMerchantId(), reportMerchantEveryDay.getResultDate());
+        mapper.increase(bill.getMerchantId(), reportMerchantEveryDay.getResultDate(), bill.getPrice(), forUpdate.getTotalPaySum());
+        log.info("商户汇总成功，账变前：{}, 订单：{}", forUpdate, bill);
     }
 
     public ReportMerchantEntity createReportMerchantEveryDay(BillOutEntity bill) {

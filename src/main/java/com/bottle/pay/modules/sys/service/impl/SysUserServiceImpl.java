@@ -1,5 +1,6 @@
 package com.bottle.pay.modules.sys.service.impl;
 
+import com.bottle.pay.common.support.properties.GlobalProperties;
 import com.bottle.pay.common.utils.GoogleGenerator;
 import com.bottle.pay.common.utils.JSONUtils;
 import com.bottle.pay.common.constant.SystemConstant;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +57,9 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private RedisCacheManager redisCacheManager;
 
+    @Autowired
+    private GlobalProperties globalProperties;
+
     /**
      * 分页查询用户列表
      *
@@ -84,17 +89,26 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUserEntity getByUserName(String username) {
         String redisKey = SystemConstant.getUserLoginRedisKey(username);
-        SysUserEntity userEntity = redisCacheManager.getBean(redisKey, SysUserEntity.class);
-        if (null != userEntity) {
-            return userEntity;
+        if(globalProperties.isRedisSessionDao()) {
+            SysUserEntity userEntity = redisCacheManager.getBean(redisKey, SysUserEntity.class);
+            if (null != userEntity) {
+                return userEntity;
+            }
+            SysUserEntity user = sysUserMapper.getByUserName(username);
+            List<Long> roleIds = sysRoleMapper.listUserRoleIds(user.getUserId());
+            user.setRoleIdList(roleIds);
+            List<String> roleNames = sysRoleMapper.listUserRoleNames(user.getRoleId());
+            user.setRoleNameList(roleNames);
+            redisCacheManager.set(redisKey, JSONUtils.beanToJson(user), jwtProperties.getExpiration() * 1000);
+            return user;
+        }else {
+            SysUserEntity user = sysUserMapper.getByUserName(username);
+            List<Long> roleIds = sysRoleMapper.listUserRoleIds(user.getUserId());
+            user.setRoleIdList(roleIds);
+            List<String> roleNames = sysRoleMapper.listUserRoleNames(user.getRoleId());
+            user.setRoleNameList(roleNames);
+            return user;
         }
-        SysUserEntity user = sysUserMapper.getByUserName(username);
-        List<Long> roleIds = sysRoleMapper.listUserRoleIds(user.getUserId());
-        user.setRoleIdList(roleIds);
-        List<String> roleNames = sysRoleMapper.listUserRoleNames(user.getRoleId());
-        user.setRoleNameList(roleNames);
-        redisCacheManager.set(redisKey, JSONUtils.beanToJson(user), jwtProperties.getExpiration() * 1000);
-        return user;
     }
 
     /**
@@ -162,8 +176,10 @@ public class SysUserServiceImpl implements SysUserService {
         query.put("userId", userId);
         query.put("roleIdList", user.getRoleIdList());
         sysUserRoleMapper.save(query);
-        String redisKey = SystemConstant.getUserLoginRedisKey(user.getUsername());
-        redisCacheManager.del(redisKey);
+        if(globalProperties.isRedisSessionDao()) {
+            String redisKey = SystemConstant.getUserLoginRedisKey(user.getUsername());
+            redisCacheManager.del(redisKey);
+        }
         return CommonUtils.msg(count);
     }
 
@@ -237,8 +253,10 @@ public class SysUserServiceImpl implements SysUserService {
         if (!CommonUtils.isIntThanZero(count)) {
             return R.error("原密码错误");
         }
-        String redisKey = SystemConstant.getUserLoginRedisKey(user.getUsername());
-        redisCacheManager.del(redisKey);
+        if(globalProperties.isRedisSessionDao()) {
+            String redisKey = SystemConstant.getUserLoginRedisKey(user.getUsername());
+            redisCacheManager.del(redisKey);
+        }
         return CommonUtils.msg(count);
     }
 
@@ -283,9 +301,11 @@ public class SysUserServiceImpl implements SysUserService {
         SysUserEntity currUser = sysUserMapper.getObjectById(user.getUserId());
         user.setPassword(MD5Utils.encrypt(currUser.getUsername(), user.getPassword()));
         int count = sysUserMapper.updatePswd(user);
-        // 删除Redis 缓存
-        String redisKey = SystemConstant.getUserLoginRedisKey(currUser.getUsername());
+        if (globalProperties.isRedisSessionDao()){
+            // 删除Redis 缓存
+            String redisKey = SystemConstant.getUserLoginRedisKey(currUser.getUsername());
         redisCacheManager.del(redisKey);
+        }
         return CommonUtils.msg(count);
     }
 
@@ -376,11 +396,13 @@ public class SysUserServiceImpl implements SysUserService {
             user.setUserId(userId);
             user.setEnableGoogleKaptcha(1);
             int count = sysUserMapper.update(user);
-            String redisKey = SystemConstant.getUserLoginRedisKey(username);
-            redisCacheManager.del(redisKey);
-            if(count > 0){
-                log.info("生成谷歌验证成功,username:{},sercure:{}",username,googleSecure);
-                return R.ok("绑定谷歌验证成功,<div style='color:red'>请重新退出后登陆</dev>");
+            if(globalProperties.isRedisSessionDao()) {
+                String redisKey = SystemConstant.getUserLoginRedisKey(username);
+                redisCacheManager.del(redisKey);
+                if (count > 0) {
+                    log.info("生成谷歌验证成功,username:{},sercure:{}", username, googleSecure);
+                    return R.ok("绑定谷歌验证成功,<div style='color:red'>请重新退出后登陆</dev>");
+                }
             }
         }
         return R.error("绑定谷歌验证失败");
