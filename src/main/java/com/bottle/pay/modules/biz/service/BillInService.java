@@ -95,7 +95,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                 }
             }
         } else {
-            synchronized (lockKey) {
+            synchronized (lockKey.intern()) {
                 try {
                     num = saveBillInOrder(params, userEntity, ip, inBankCard, num);
                 } catch (Exception e) {
@@ -249,7 +249,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
 
 
     private String getCurrentMerchantLastOrderId(String merchantId) {
-        synchronized (merchantId) {
+        synchronized (merchantId.intern()) {
             Long lastId = mapper.lastMerchantNewOrder(merchantId);
             String today = DateUtils.format(new Date(), DateUtils.DATE_PATTERN_1);
             ThreadLocalRandom random = ThreadLocalRandom.current();

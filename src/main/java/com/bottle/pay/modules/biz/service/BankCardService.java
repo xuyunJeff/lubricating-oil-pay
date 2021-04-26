@@ -358,7 +358,7 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
                 }
             }
         }else {
-            synchronized (key){
+            synchronized (key.intern()){
                 try {
                     return minusBalanceInDB(userId, bankCard, balance);
                 } catch (Exception e) {

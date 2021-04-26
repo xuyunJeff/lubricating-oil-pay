@@ -53,7 +53,7 @@ public class ReportMerchantService extends BottleBaseService<ReportMerchantMappe
                 }
             }
         }else {
-            synchronized (keyLock){
+            synchronized (keyLock.intern()){
                 try {
                     executeMinus(bill);
                 } catch (Exception e) {

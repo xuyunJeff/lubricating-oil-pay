@@ -48,7 +48,7 @@ public class ReportBusinessService extends BottleBaseService<ReportBusinessMappe
                 }
             }
         }else {
-            synchronized (keyLock){
+            synchronized (keyLock.intern()){
                 try {
                     executeMinus(bill);
                 } catch (Exception e) {

@@ -229,7 +229,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
             // 扣除出款员代付中 -- redis
             incrBusinessBillOutBalanceRedis(entity.getBusinessId(), entity.getPrice().multiply(BigDecimal.valueOf(-1)));
         } else {
-            synchronized (lockKey) {
+            synchronized (lockKey.intern()) {
                 int i = mapper.updateBillOutByBillIdForSuccess(successEntity);
                 if (i == 0) {
                     log.warn("该订单支付状态已经是最终状态,无需确认订单");
@@ -459,7 +459,7 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     }
 
     private String getCurrentMerchantLastOrderId(Long merchantId) {
-        synchronized (merchantId) {
+        synchronized (merchantId.toString().intern()) {
             Long lastId = mapper.lastMerchantNewOrder(merchantId);
             String today = DateUtils.format(new Date(), DateUtils.DATE_PATTERN_1);
             ThreadLocalRandom random = ThreadLocalRandom.current();
