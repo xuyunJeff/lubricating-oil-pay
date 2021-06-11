@@ -47,6 +47,7 @@ public class BillOutMethodArgumentResolver implements HandlerMethodArgumentResol
         SysUserEntity user  =userService.getByUserName(valueMap[1]);
         String value = AESUtil.decrypt1(valueMap[0],user.getPassword());
         BillOutView billOutView= GsonUtil.GsonToBean(value,BillOutView.class);
+        log.info("successful get bill: {} ",billOutView);
         Boolean accordance=merchantServerService.billMerchangtAccordanceMerchant(billOutView.getMerchantId(),billOutView.getMerchantName(),user.getUserId());
         if (accordance){
             return billOutView;

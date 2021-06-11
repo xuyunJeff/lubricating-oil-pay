@@ -180,7 +180,7 @@ public class BillOutController extends AbstractController {
     public void bootPercentage(@RequestParam Map<String, Object> params, HttpServletResponse response) throws IOException {
         params = JSONUtils.mapNoEmpty(params);
         SysUserEntity userEntity = getUser();
-        if (!userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode()))  throw new RRException("机构管理员才能下载报表");
+//        if (!userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode()))  throw new RRException("机构管理员才能下载报表");
         String current = DateUtils.format(new Date(),DateUtils.DATE_TIME_PATTERN_1);
         String filename = URLEncoder.encode("统计表-" + current + ".csv", "UTF-8");
         params.put("pageSize",1000);

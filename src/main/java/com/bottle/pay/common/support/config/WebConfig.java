@@ -16,13 +16,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Properties;
 
@@ -43,6 +47,16 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
 
     @Autowired
     private BillOutMethodArgumentResolver billOutMethodArgumentResolver;
+
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.add(responseBodyConverter());
+    }
+
+    public HttpMessageConverter responseBodyConverter() {
+        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        return converter;
+    }
 
 
     /**
@@ -73,6 +87,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
         resolvers.add(billOutMethodArgumentResolver);
 
     }
+
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

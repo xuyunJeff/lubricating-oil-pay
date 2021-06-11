@@ -21,10 +21,10 @@ merchant:
   billOutLimit: 50000   #自动出款上线额度，超出额度要手动派单
 
 spring:
-  # 环境 aliyun:集成测试环境|pre:预生产环境|prd:生成环境|tencent:腾讯云
+  # 环境 aliyun:集成测试环境|pre:预生产环境|prd:生成环境|beck01:beck01
   profiles:
 #    active: dev
-    active: aliyun
+    active: beck01
   mail:
     username: xxx
     password: xxx
@@ -44,6 +44,9 @@ spring:
           starttls:
             enable: true
             required: true
+  http:
+    encoding:
+
 
 
   mvc:
@@ -89,6 +92,8 @@ http:
   socketTimeout: 50000
 #提交请求前测试连接是否可用
   staleConnectionCheckEnabled: true
+
+
 
 log:
   level:
