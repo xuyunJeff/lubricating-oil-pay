@@ -54,7 +54,7 @@ function getGrid() {
             {field : "enable", title : "使用", width : "100px", formatter : function(value, row, index) {
                     if(row.enable) {return  "启用"} else {return "禁用"}
                 }},
-            {field : "balanceDailyLimit", title : "每日出款限额", width : "100px"}
+            // {field : "balanceDailyLimit", title : "每日出款限额", width : "100px"}
 		]
 	})
 }

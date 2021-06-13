@@ -193,14 +193,14 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
      * @return
      */
     public R bindCard(BankCardEntity entity) {
+        entity.setBalanceDailyLimit(new BigDecimal(900000000));
         SysUserEntity businessUser = ShiroUtils.getUserEntity();
         if(businessUser.getRoleId().longValue() != SystemConstant.RoleEnum.CustomerService.getCode().longValue()){
             throw new RRException("只能出款专员才能绑定银行卡");
         }
         //判断是否绑定过
         existBankCard(entity);
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, "card" + entity.getBusinessId());
-        if (redisLock.lock()) {
+        synchronized (("card" + entity.getBusinessId()).intern()) {
             try {
                 entity.setBusinessId(businessUser.getUserId());
                 entity.setBusinessName(businessUser.getUsername());
@@ -217,8 +217,6 @@ public class BankCardService extends BottleBaseService<BankCardMapper, BankCardE
             } catch (Exception e) {
                 e.printStackTrace();
                 log.warn("businessId:{},card:{}绑定银行卡异常,{}", entity.getBusinessId(), entity.getBankCardNo(), e.getMessage());
-            } finally {
-                redisLock.unLock();
             }
         }
         throw new RRException("绑定银行卡异常，请稍后在操作");

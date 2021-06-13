@@ -138,6 +138,29 @@ var vm = new Vue({
                     vm.load();
                 }
             });
+        },
+        excel: function () {
+            var params ={};
+            params.createTime = $('#createTime').val();
+            params.businessName = $('#businessName').val();
+            params.billId = $('#billId').val();
+            params.merchantName = $('#merchantName').val();
+            params.pageNumber = 1;
+            params.sortOrder = "asc";
+
+            var form=$("<form>");
+            form.attr("style","display:none");
+            form.attr("enctype","application/json");
+            form.attr("method","get");
+            form.attr("action",'../../merchant/charge/csv?_' + $.now());
+            form.append($("<input name='createTime' value='"+params.createTime+"'/>"));
+            form.append($("<input name='businessName' value='"+params.businessName+"'/>"));
+            form.append($("<input name='billId' value='"+params.billId+"'/>"));
+            form.append($("<input name='merchantName' value='"+params.merchantName+"'/>"));
+            form.append($("<input name='pageNumber' value='"+params.pageNumber+"'/>"));
+            form.append($("<input name='sortOrder' value='"+params.sortOrder+"'/>"));
+            $("body").append(form);
+            form.submit();
         }
 	}
 })

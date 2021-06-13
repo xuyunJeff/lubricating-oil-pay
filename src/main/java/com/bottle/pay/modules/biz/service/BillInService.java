@@ -159,8 +159,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
             log.warn("订单:{}的机构{}不属于当前管理员:{}的机构:{}", billId, billInEntity.getOrgId(), userEntity.getUserId(), userEntity.getOrgId());
             throw new RRException("订单的机构不属于当前管理员的机构");
         }
-        RedisLock redisLock = new RedisLock(stringRedisTemplate, BILL_IN_UPDATE + billInEntity.getMerchantId());
-        if (redisLock.lock()) {
+        synchronized ((BILL_IN_UPDATE + billInEntity.getMerchantId()).intern()){
             try {
                 BillInEntity update = new BillInEntity();
                 update.setId(billInEntity.getId());
@@ -178,7 +177,7 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
                     log.info("管理员或出款员:{}-{},确认订单:{}-{},结果:{}", userEntity.getUserId(), WebUtils.getIpAddr(), billId, statusEnum.getCode(), num > 1);
                     //商户可用余额充值
                     BalanceEntity balance = balanceService.createBalanceAccount(billInEntity.getMerchantId());
-                    boolean result = balanceService.updateBalance(billInEntity.getMerchantId(), billInEntity.getPrice(), null, null);
+                    boolean result = balanceService.updateBalance(balance,billInEntity.getPrice(),billInEntity.getBillId());
                     log.info("更新商户:{}可用余额结果:{}", balance.getUserId(), result);
                     if (!result) {
                         throw new RRException("确认充值订单时，更新商户余额失败");
@@ -207,8 +206,6 @@ public class BillInService extends BottleBaseService<BillInMapper, BillInEntity>
             } catch (Exception e) {
                 e.printStackTrace();
                 log.warn("商户:{}充值订单:{}确认异常:{}", billInEntity.getMerchantId(), billId, e.getMessage());
-            } finally {
-                redisLock.unLock();
             }
         }
         log.warn("商户:{}确认充值订单失败，未获取分布式锁", userEntity.getUserId());

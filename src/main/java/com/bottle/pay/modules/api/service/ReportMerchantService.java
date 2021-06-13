@@ -74,7 +74,7 @@ public class ReportMerchantService extends BottleBaseService<ReportMerchantMappe
 
     public ReportMerchantEntity createReportMerchantEveryDay(BillOutEntity bill) {
         BillOutEntity billPaid = billOutService.selectOne(new BillOutEntity(bill.getBillId()));
-        String resultDate = DateUtils.formatUAT(billPaid.getLastUpdate(), DateUtils.DATE_PATTERN);
+        String resultDate = DateUtils.format(billPaid.getLastUpdate(), DateUtils.DATE_PATTERN);
         log.info("时间格式化{} -> ,{}", billPaid.getLastUpdate(), resultDate);
         ReportMerchantEntity entity = new ReportMerchantEntity();
         entity.setMerchantId(billPaid.getMerchantId());

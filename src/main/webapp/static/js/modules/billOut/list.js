@@ -242,22 +242,6 @@ var vm = new Vue({
             form.append($("<input name='sortOrder' value='"+params.sortOrder+"'/>"));
             $("body").append(form);
             form.submit();
-
-/*
-            $.ajax({
-                type : "POST",
-                url : '../../apiV1/billOut/csv?_' + $.now(),
-                contentType : 'application/json',
-                data: JSON.stringify(removeEmptyField(params)),
-                dataType:"json",
-                success : function(result) {
-                    if (result.code == 0) {
-                        dialogAlert(result.msg, 'success');
-                    } else {
-                        dialogAlert(result.msg, 'error');
-                    }
-                }
-            });*/
         },
         billSuccess: function (billId, index) {
             //"确定已经出款？</br>会员名："+bill.bankAccountName+" 金额:"+bill.price,

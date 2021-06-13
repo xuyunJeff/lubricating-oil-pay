@@ -182,7 +182,7 @@ public class BillOutController extends AbstractController {
         SysUserEntity userEntity = getUser();
 //        if (!userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode()))  throw new RRException("机构管理员才能下载报表");
         String current = DateUtils.format(new Date(),DateUtils.DATE_TIME_PATTERN_1);
-        String filename = URLEncoder.encode("统计表-" + current + ".csv", "UTF-8");
+        String filename = URLEncoder.encode("出款统计表-" + current + ".csv", "UTF-8");
         params.put("pageSize",1000);
         List<BillOutEntity> bootPercentageList = this.list(params).getRows(); // 这是一个业务代码 返回我要导出去的数据
         List<BillOutCsv> list = Lists.newArrayList();

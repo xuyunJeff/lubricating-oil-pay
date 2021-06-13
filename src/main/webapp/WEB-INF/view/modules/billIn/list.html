@@ -14,12 +14,9 @@
     <div class="col-md-8"  style="width: 12%;">
         <div class="btn-toolbar pull-right">
             <div class="btn-group">
-                <!--<a v-if="hasPermission('merchant:charge:list')" class="btn btn-default" onclick="reload();"><i class="fa fa-refresh"></i>&nbsp;刷新</a>-->
                 <a class="btn btn-default" onclick="reload();"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
-                <!--<a v-if="hasPermission('merchant:charge:save')" class="btn btn-default" \@click="save"><i class="fa fa-plus"></i>&nbsp;新增</a>-->
                 <a class="btn btn-default" \@click="save"><i class="fa fa-plus"></i>&nbsp;新增</a>
-                <!--<a v-if="hasPermission('merchant:charge:remove')" class="btn btn-default" \@click="remove(false)"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
-                <!--<a class="btn btn-default" \@click="remove(false)"><i class="fa fa-trash-o"></i>&nbsp;删除</a>-->
+                <a class="btn btn-default" \@click="excel" title="下载"><i class="fa fa-file-excel-o"></i></a>
             </div>
         </div>
     </div>

@@ -20,10 +20,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.io.File;
 import java.nio.charset.Charset;
@@ -94,6 +91,11 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
         // 注册rest拦截器
         registry.addInterceptor(new RestApiInterceptor()).addPathPatterns("/rest/**").excludePathPatterns("/apiV1/billOut/push/order/server")
                 .excludePathPatterns("/apiV1/billOut/get/order").excludePathPatterns("/apiV1/billOut/push2/order/server");
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*").allowCredentials(true).allowedMethods("*").maxAge(3600);
     }
 
     /**

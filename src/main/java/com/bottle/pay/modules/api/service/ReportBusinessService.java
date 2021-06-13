@@ -69,7 +69,7 @@ public class ReportBusinessService extends BottleBaseService<ReportBusinessMappe
 
     public ReportBusinessEntity createReportBusinessEveryDay(BillOutEntity bill) {
         BillOutEntity billPaid = billOutService.selectOne(new BillOutEntity(bill.getBillId()));
-        String resultDate = DateUtils.formatUAT(billPaid.getLastUpdate(),DateUtils.DATE_PATTERN );
+        String resultDate = DateUtils.format(billPaid.getLastUpdate(),DateUtils.DATE_PATTERN );
         log.info("时间格式化{} -> ,{}",billPaid.getLastUpdate(),resultDate);
         ReportBusinessEntity entity = new ReportBusinessEntity();
         entity.setBusinessId(billPaid.getBusinessId());

@@ -234,24 +234,22 @@ public class BalanceService extends BottleBaseService<BalanceMapper, BalanceEnti
      * 增加时正数，减少时负数，不更新时就空值
      * 且各余额可为负数
      *
-     * @param userId        商户ID
-     * @param balance       可用余额
-     * @param balanceFrozen 冻结余额
-     * @param balancePaying 支付中余额
+     * @param balance       用户余额
      * @return
      */
-    public boolean updateBalance(Long userId, BigDecimal balance, BigDecimal balanceFrozen, BigDecimal balancePaying) {
-        if (userId == null) {
+    public boolean updateBalance(BalanceEntity balance,BigDecimal price,String billId) {
+        if (balance.getUserId() == null) {
             throw new RRException("更新余额前请设置userId");
         }
         BalanceEntity entity = new BalanceEntity();
-        entity.setUserId(userId);
-        entity.setBalance(balance);
-        entity.setBalanceFrozen(balanceFrozen);
-        entity.setBalancePaying(balancePaying);
+        entity.setUserId(balance.getUserId());
+        entity.setBalance(price);
+        entity.setBalanceFrozen(BigDecimal.ZERO);
+        entity.setBalancePaying(BigDecimal.ZERO);
         entity.setLastUpdate(new Date());
         int num = mapper.updateBalance(entity);
-        log.info("更新商户余额userId:{},balance:{},frozen:{},payIng:{}", userId, balance, balanceFrozen, balancePaying);
+        log.info("更新商户余额userId:{},balance:{},frozen:{},payIng:{}", balance.getUserId(), balance, BigDecimal.ZERO, BigDecimal.ZERO);
+        balanceChangeLogService.saveBanlanceChangeLog(balance, balance.getBalance().add(price), price, billId, "商户余额变动");
         return num > 0;
 
     }

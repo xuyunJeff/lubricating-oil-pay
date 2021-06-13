@@ -3,6 +3,7 @@ package com.bottle.pay.modules.sys.controller;
 import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.utils.GoogleAuthenticator;
 import com.bottle.pay.modules.sys.entity.SysUserEntity;
+import com.bottle.pay.modules.sys.entity.dto.LoginDto;
 import com.google.code.kaptcha.Constants;
 import com.bottle.pay.common.annotation.SysLog;
 import com.bottle.pay.common.support.properties.GlobalProperties;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -104,19 +106,19 @@ public class SysLoginController extends AbstractController {
     @SysLog("登录")
     @RequestMapping(value = "/wap/login", method = RequestMethod.POST)
     @ResponseBody
-    public R wapLogin(Model model) {
-        String username = getParam("username").trim();
-        String password = getParam("password").trim();
+    public R wapLogin(@RequestBody LoginDto loginDto) {
+        String username = loginDto.getUsername().trim();
+        String password = loginDto.getPassword().trim();
         try {
             // 开启验证码
-            if (globalProperties.isKaptchaEnable()) {
-                String code = getParam("code").trim();
-                if (StringUtils.isBlank(code)) {
-                    return R.error("验证码不能为空");
-                }
-                String kaptcha = ShiroUtils.getKaptcha(Constants.KAPTCHA_SESSION_KEY);
-                if (!code.equalsIgnoreCase(kaptcha)) {
-                    return R.error("验证码错误");
+            SysUserEntity user  = sysUserService.getByUserName(username);
+            if( user.getEnableGoogleKaptcha() != null && user.getEnableGoogleKaptcha().equals(1)){
+                String code = loginDto.getCode().trim();
+                // 开启验证码
+                if (globalProperties.isKaptchaEnable()) {
+                    if (StringUtils.isBlank(code) || !sysUserService.checkGoogleKaptcha(username,Long.valueOf(code))) {
+                        return R.error("验证码错误");
+                    }
                 }
             }
             // 用户名验证
@@ -130,7 +132,7 @@ public class SysLoginController extends AbstractController {
             UsernamePasswordToken token = new UsernamePasswordToken(username, MD5Utils.encrypt(username, password));
             ShiroUtils.getSubject().login(token);
             SecurityUtils.getSubject().getSession().setAttribute("sessionFlag", true);
-            return R.ok("登录成功");
+            return R.ok("登录成功").put("token",SecurityUtils.getSubject().getSession().getId().toString());
         } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
             return R.error( e.getMessage());
         } catch (AuthenticationException e) {

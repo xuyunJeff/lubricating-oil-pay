@@ -1,15 +1,9 @@
 package com.bottle.pay.modules.api.entity.csv;
 
-import com.bottle.pay.common.entity.BottleBaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
-import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.Date;
 
 
 @Data

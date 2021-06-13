@@ -59,6 +59,16 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
     private GlobalProperties globalProperties;
 
 
+    public Boolean isDuplicated(Long merchantId,String orderNo){
+        BillOutEntity e = new BillOutEntity();
+        e.setThirdBillId(orderNo);
+        e.setMerchantId(merchantId);
+        List<BillOutEntity> bills =  mapper.select(e);
+        if(bills.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
     /**
      * 派单给机构
      *
@@ -69,6 +79,14 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
      */
     @Transactional
     public BillOutEntity billsOutAgent(BillOutView billOutView, String ip, SysUserEntity userEntity) {
+        // 判断是否重复
+        if(isDuplicated(billOutView.getMerchantId(),billOutView.getOrderNo())){
+          throw new RRException("orderNo is exists,please check again；订单号重复", -1 );
+        }
+        // judgement for balance enough
+        if(isOutOfBalance(billOutView)){
+            throw new RRException("balance is not enough; 余额不足", -2 );
+        }
         Integer randmon = new Random().nextInt();
         //第一步保存订单
         log.info(randmon + "服务器派单 step 1 保存订单，billout:{}", billOutView);
@@ -78,8 +96,16 @@ public class BillOutService extends BottleBaseService<BillOutMapper, BillOutEnti
         // 第二步 增加商户代付中余额，扣除商户可用余额
         log.info(randmon + "服务器派单 step 2 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
         billsOutBalanceChangeMerchant(billOutView.getMerchantId(), billOutView.getPrice(), bill.getBillId());
-        log.info(randmon + "服务器派单 step 2余额变动成功 增加商户代付中余额，扣除商户可用余额，billout:{}", bill);
         return bill;
+    }
+
+    private boolean isOutOfBalance(BillOutView billOutView) {
+        BalanceEntity entity = balanceService.createBalanceAccount(billOutView.getMerchantId());
+        if(billOutView.getPrice().compareTo(entity.getBalance().add(BigDecimal.valueOf(800))) == 1 ){
+            // balance add 800  in case of need to test for new merchant account
+            return true;
+        }
+        return false;
     }
 
 
