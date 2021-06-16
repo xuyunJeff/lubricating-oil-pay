@@ -43,6 +43,11 @@ public class R extends HashMap<String, Object> {
         r.putAll(map);
         return r;
     }
+    public static R okWithPage(Page page) {
+        R r = new R();
+        r.put("page",page);
+        return r;
+    }
 
     public static R ok() {
         return new R();

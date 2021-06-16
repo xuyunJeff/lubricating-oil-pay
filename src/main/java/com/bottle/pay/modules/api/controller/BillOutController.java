@@ -9,10 +9,7 @@ import com.bottle.pay.common.entity.Page;
 import com.bottle.pay.common.entity.R;
 import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.support.config.Md5Util;
-import com.bottle.pay.common.utils.DateUtils;
-import com.bottle.pay.common.utils.ExcelUtil;
-import com.bottle.pay.common.utils.JSONUtils;
-import com.bottle.pay.common.utils.WebUtils;
+import com.bottle.pay.common.utils.*;
 import com.bottle.pay.modules.api.entity.*;
 import com.bottle.pay.modules.api.entity.csv.BillOutCsv;
 import com.bottle.pay.modules.api.service.*;
@@ -82,8 +79,6 @@ public class BillOutController extends AbstractController {
     @Autowired
     MerchantServerService merchantServerService;
 
-    @Value("${excel.path.billout}")
-    private String excelPath;
     /**
      * 列表
      *
@@ -119,27 +114,27 @@ public class BillOutController extends AbstractController {
     @RequestMapping(value = "/wap/list", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation(value = "出款订单列表")
     @ResponseBody
-    public Page<BillOutEntity> listWap(@RequestBody Map<String, Object> params) {
-        SysUserEntity userEntity = getUser();
+    public R listWap(@RequestBody Map<String, Object> params) {
+        SysUserEntity userEntity = userService.getByUserName(getHttpServletRequest().getHeader("username"));
         if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.Organization.getCode())) {
             // 机构管理员查询机构下的所有数据
             params.put("orgId", userEntity.getOrgId());
-            return billOutService.listEntity(params);
+            return R.okWithPage(billOutService.listEntity(params));
         }
         if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.CustomerService.getCode())) {
             // 出款员查看自己的数据的所有数据
             params.put("orgId", userEntity.getOrgId());
             params.put("businessId", userEntity.getUserId());
             params.put("position", BillConstant.BillPostionEnum.Business.getCode());
-            return billOutService.listEntity(params);
+            return R.okWithPage(billOutService.listEntity(params));
         }
         if (userEntity.getRoleId().equals(SystemConstant.RoleEnum.BillOutMerchant.getCode())) {
             // 代付商户查看自己的数据的所有数据
             params.put("orgId", userEntity.getOrgId());
             params.put("merchantId", userEntity.getUserId());
-            return billOutService.listEntity(params);
+            return R.okWithPage(billOutService.listEntity(params));
         }
-        return new Page<>();
+        return R.ok();
     }
 
   /*  @RequestMapping(value = "/csv", method = RequestMethod.POST)

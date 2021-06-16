@@ -1,6 +1,7 @@
 package com.bottle.pay.modules.sys.shiro;
 
 import com.bottle.pay.common.entity.R;
+import com.bottle.pay.common.exception.RRException;
 import com.bottle.pay.common.utils.JSONUtils;
 import com.bottle.pay.common.utils.WebUtils;
 import org.apache.shiro.SecurityUtils;
@@ -53,7 +54,11 @@ public class UserFilter extends AccessControlFilter {
                 saveRequestAndRedirectToLogin(request, response);
                 return false;
             } else {
-
+                if(httpServletRequest.getRequestURI().contains("/wap")){
+                    httpServletRequest.setAttribute("errorMsg", "登录超时，请重新登录");
+                    httpServletRequest.getRequestDispatcher("/wap/login").forward(request, response);
+                    return false;
+                }
                 /**
                  * 从别的页面跳转过来的
                  */

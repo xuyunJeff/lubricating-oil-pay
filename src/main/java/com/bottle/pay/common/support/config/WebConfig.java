@@ -24,6 +24,7 @@ import org.springframework.web.servlet.config.annotation.*;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -95,7 +96,7 @@ public class WebConfig implements WebMvcConfigurer, ErrorPageRegistrar {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("*").allowCredentials(true).allowedMethods("*").maxAge(3600);
+        registry.addMapping("/**").allowedOrigins("http://localhost:8080","http://5.63.124.216:8080","http://127.0.0.1:8080").allowCredentials(true).allowedMethods("*").maxAge(3600);
     }
 
     /**

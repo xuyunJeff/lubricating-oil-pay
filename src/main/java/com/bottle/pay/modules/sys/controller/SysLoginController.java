@@ -61,11 +61,11 @@ public class SysLoginController extends AbstractController {
     @SysLog("登录")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(Model model) {
-        String username = getParam("username").trim();
-        String password = getParam("password").trim();
-        String code = getParam("code").trim();
-        try {
 
+        try {
+            String username = getParam("username").trim();
+            String password = getParam("password").trim();
+            String code = getParam("code").trim();
             // 用户名验证
             if (StringUtils.isBlank(username)) {
                 model.addAttribute("errorMsg", "用户名不能为空");
@@ -107,9 +107,9 @@ public class SysLoginController extends AbstractController {
     @RequestMapping(value = "/wap/login", method = RequestMethod.POST)
     @ResponseBody
     public R wapLogin(@RequestBody LoginDto loginDto) {
-        String username = loginDto.getUsername().trim();
-        String password = loginDto.getPassword().trim();
         try {
+            String username = loginDto.getUsername().trim();
+            String password = loginDto.getPassword().trim();
             // 开启验证码
             SysUserEntity user  = sysUserService.getByUserName(username);
             if( user.getEnableGoogleKaptcha() != null && user.getEnableGoogleKaptcha().equals(1)){
@@ -134,9 +134,11 @@ public class SysLoginController extends AbstractController {
             SecurityUtils.getSubject().getSession().setAttribute("sessionFlag", true);
             return R.ok("登录成功").put("token",SecurityUtils.getSubject().getSession().getId().toString());
         } catch (UnknownAccountException | IncorrectCredentialsException | LockedAccountException e) {
-            return R.error( e.getMessage());
+            return R.error( -1,e.getMessage());
         } catch (AuthenticationException e) {
             return R.error( "登录服务异常");
+        } catch (Exception e){
+            return R.error( -1,"请重新登录");
         }
     }
     /**

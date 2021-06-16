@@ -34,7 +34,7 @@
         bill_out
         <where>
             1=1
-            <if test="createTime != null">  and DATE_FORMAT(`create_time`,'%Y-%m-%d') = #{createTime}</if>
+            <if test="createTime != null">  and DATE_FORMAT(DATE_ADD(`create_time`,INTERVAL 8 HOUR),'%Y-%m-%d') = #{createTime}</if>
             <if test="merchantName != null">  and `merchant_name` = #{merchantName}</if>
             <if test="merchantId != null">  and `merchant_id` = #{merchantId}</if>
             <if test="billId != null">  and `bill_id` = #{billId}</if>
